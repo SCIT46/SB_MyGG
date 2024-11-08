@@ -1,10 +1,10 @@
-package com.mysite.sbb;
+package com.mygg.sb;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SbMyggApplicationTests {
+class MyggApplicationTests {
 
 	@Test
 	void contextLoads() {

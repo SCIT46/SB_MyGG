@@ -1,13 +1,13 @@
-package com.mysite.sbb;
+package com.mygg.sb;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SbMyggApplication {
+public class MyggApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SbMyggApplication.class, args);
+		SpringApplication.run(MyggApplication.class, args);
 	}
 
 }

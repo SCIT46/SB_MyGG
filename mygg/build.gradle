@@ -2,6 +2,8 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0-RC1'
 	id 'io.spring.dependency-management' version '1.1.6'
+		id 'com.github.node-gradle.node' version '3.5.1'
+	
 }
 
 group = 'com.mygg.sb'
@@ -40,10 +42,49 @@ dependencies {
 	//Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	
+	//H2
+	implementation 'com.h2database:h2'
+	
+	
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+node {
+    version = '22.9.0'           // 사용하려는 Node.js 버전
+    npmVersion = '10.8.3'          // 사용하려는 npm 버전
+    download = true               // Gradle 빌드 시 Node.js를 자동으로 다운로드
+    workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.buildDir}/npm")
+}
+
+def frontendDir = file("${projectDir}/src/main/front")
+def frontendBuildDir = file("${frontendDir}/build")
+
+// npmInstall 작업 정의
+task npmInstallFrontend(type: NpmTask) {
+    args = ['install']
+    workingDir = frontendDir
+}
+
+// buildFrontend 작업 정의 (npmInstall에 의존)
+task buildFrontend(type: NpmTask) {
+    dependsOn npmInstallFrontend
+    args = ['run', 'build']
+    workingDir = frontendDir
+}
+
+// copyFrontendBuild 작업 정의 (buildFrontend에 의존)
+task copyFrontendBuild(type: Copy) {
+    dependsOn buildFrontend
+    from frontendBuildDir
+    into "${projectDir}/src/main/resources/static"
+}
+
+// processResources 작업이 copyFrontendBuild에 의존하도록 설정
+processResources.dependsOn copyFrontendBuild
 
 

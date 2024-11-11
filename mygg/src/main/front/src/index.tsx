@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import router from "./Router";
 
+//index.html 의 root element에서 모든 랜더링 시작
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );

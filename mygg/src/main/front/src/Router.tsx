@@ -7,6 +7,7 @@ import ChampionDetail from "./pages/ChampionDetail";
 import ItemDetail from "./pages/ItemDetail";
 import SearchPlayer from "./pages/SearchPlayer";
 
+//라우터 생성
 const router = createBrowserRouter([
   {
     // path의 라우트로 이동시 Root 컴포넌트 렌더링

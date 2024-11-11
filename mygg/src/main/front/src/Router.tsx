@@ -6,6 +6,8 @@ import Champions from "./pages/Champions";
 import ChampionDetail from "./pages/ChampionDetail";
 import ItemDetail from "./pages/ItemDetail";
 import SearchPlayer from "./pages/SearchPlayer";
+import NotFound from "./pages/NotFound";
+import Test from "./pages/Test";
 
 //라우터 생성
 const router = createBrowserRouter([
@@ -21,6 +23,10 @@ const router = createBrowserRouter([
       { path: "champion", element: <Champions /> },
       { path: "champion/:id", element: <ChampionDetail /> },
       { path: "search/:id", element: <SearchPlayer /> },
+      //테스트 페이지
+      { path: "test", element: <Test /> },
+      //not found 페이지
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);

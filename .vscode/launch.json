@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MyggApplication<mygg>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.mygg.sb.MyggApplication",
+            "projectName": "mygg",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

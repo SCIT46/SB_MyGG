@@ -37,6 +37,7 @@ const SearchInput = styled.input`
   border: none;
   padding-left: 8px;
   background-color: ${({ theme }) => theme.colors.text};
+  box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.2);
 
   &:focus {
     outline: none;

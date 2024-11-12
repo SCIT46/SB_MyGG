@@ -9,7 +9,7 @@ ${reset}
 
 //디폴드 bgcolor 및 폰트색상 설정
 body {
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text}
 }
 

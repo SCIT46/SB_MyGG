@@ -1,13 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import Root from "./Root";
 import Home from "./pages/Home";
-import Items from "./pages/Items";
 import Champions from "./pages/Champions";
 import ChampionDetail from "./pages/ChampionDetail";
 import ItemDetail from "./pages/ItemDetail";
 import SearchPlayer from "./pages/SearchPlayer";
 import NotFound from "./pages/NotFound";
 import Test from "./pages/Test";
+import Items from "./pages/Item/Items";
 
 //라우터 생성
 const router = createBrowserRouter([

@@ -44,9 +44,11 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	
 	//H2
-	implementation 'com.h2database:h2'
+	//implementation 'com.h2database:h2'
 	
-	
+	// MySQL
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'mysql:mysql-connector-java'
 }
 
 tasks.named('test') {

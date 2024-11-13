@@ -3,11 +3,11 @@ import Root from "./Root";
 import Home from "./pages/Home";
 import Champions from "./pages/Champions";
 import ChampionDetail from "./pages/ChampionDetail";
-import ItemDetail from "./pages/ItemDetail";
 import SearchPlayer from "./pages/SearchPlayer";
 import NotFound from "./pages/NotFound";
 import Test from "./pages/Test";
-import Items from "./pages/Item/Items";
+import Itempage from "./pages/Item/ItemPage";
+import ItemDetailPage from "./pages/Item/ItemDetailPage";
 
 //라우터 생성
 const router = createBrowserRouter([
@@ -18,8 +18,8 @@ const router = createBrowserRouter([
     // 하위 컴포넌트 지정
     children: [
       { path: "", element: <Home /> },
-      { path: "item", element: <Items /> },
-      { path: "item/:id", element: <ItemDetail /> },
+      { path: "item", element: <Itempage /> },
+      { path: "item/:id", element: <ItemDetailPage /> },
       { path: "champion", element: <Champions /> },
       { path: "champion/:id", element: <ChampionDetail /> },
       { path: "search/:id", element: <SearchPlayer /> },

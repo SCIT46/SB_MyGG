@@ -14,4 +14,3 @@ public class UrlController {
         return "forward:/index.html";
     }
 }
-

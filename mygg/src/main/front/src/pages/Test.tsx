@@ -1,11 +1,33 @@
 import { useEffect, useState } from "react";
 import { getHello } from "../services/Api";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const SearchIcon = styled(MagnifyingGlassIcon)`
   width: 20px;
   height: 20px;
+`;
+
+const rotation = keyframes`
+    from{
+        transform: rotate(0deg);
+    }
+
+    to{
+        transform: rotate(360deg);
+    }
+
+`;
+
+const Spinner = styled.div`
+  height: 30px;
+  width: 30px;
+  border: 1px solid ${({ theme }) => theme.colors.text};
+  border-radius: 50%;
+  border-top: none;
+  border-right: none;
+  margin: 16px auto;
+  animation: ${rotation} 1s linear infinite;
 `;
 
 //테스트 페이지
@@ -29,6 +51,7 @@ export default function Test() {
     <>
       <div>test : {message}</div>
       <SearchIcon />
+      <Spinner />
     </>
   );
 }

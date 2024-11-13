@@ -10,10 +10,14 @@ export interface IItem {
   colloq: string;
   plaintext: string;
   into: string[];
+  inStore?: boolean;
   image: {
     full: string;
     sprite: string;
     group: string;
   };
   tags: string[];
+  maps: {
+    [mapId: string]: boolean;
+  };
 }

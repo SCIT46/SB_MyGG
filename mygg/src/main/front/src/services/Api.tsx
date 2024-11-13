@@ -1,4 +1,5 @@
 import axios from "axios";
+import { cacheAdapterEnhancer } from "axios-extensions";
 
 //api Fetch 함수
 export const getHello = async () => {
@@ -14,14 +15,18 @@ export const getVersions = async () => {
     method: "get",
     url: `https://ddragon.leagueoflegends.com/api/versions.json`,
   });
-  const data = versionResponse.data as String[];
+  const data = versionResponse.data as string[];
   return data;
 };
 
 export const getItems = async (version: String) => {
-  const itemResponse = await axios({
-    method: "get",
-    url: `https://ddragon.leagueoflegends.com/cdn/${version}/data/ko_KR/item.json`,
-  });
-  return itemResponse.data;
+  try {
+    const itemResponse = await axios({
+      method: "get",
+      url: `https://ddragon.leagueoflegends.com/cdn/${version}/data/ko_KR/item.json`,
+    });
+    return itemResponse.data;
+  } catch (error: any) {
+    console.log(error);
+  }
 };

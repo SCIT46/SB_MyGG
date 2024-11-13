@@ -46,6 +46,8 @@ dependencies {
 	//H2
 	implementation 'com.h2database:h2'
 	
+	//JSON Parser
+	implementation 'com.googlecode.json-simple:json-simple:1.1'
 	
 }
 

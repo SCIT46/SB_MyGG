@@ -1,6 +1,5 @@
 package com.mygg.sb.match;
 
-import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -10,30 +9,48 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-public class PublicMatch {
 
-	// final static String RIOT_API_URL = "https://asia.api.riotgames.com";
-	// final static String RIOT_API_MATCH = "/lol/match/v5/matches/";
-	// final static String API_KEY = "RGAPI-bb0375ec-3fc1-4ec0-933a-8800ef3a673e";
+/*
+ * Field
+ *  유저 경기 정보(info.participants.) //0~4 0팀 / 5~9 1팀
+ *    승패여부(win)
+ *    포지션(teamPosition/individualPosition/lane)
+ *    소환사명(riotIdGameName+riotIdTagline)
+ *    챔피언(championName) //-> (https://ddragon.leagueoflegends.com/cdn/14.22.1/data/ko_KR/champion.json).data.{championName}.name
+ *    KDA(challenges.kda)
+ *    전체딜량(totalDamageDealt)
+ *    분당골드(challenges.goldPerMinute)
+ *    남은골드(goldEarned-goldSpent)
+ */
+
+public class PublicMatch {
+  private static Dotenv dotenv = Dotenv.load();
+  private static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
+	final private static String RIOT_API_URL = "https://asia.api.riotgames.com";
+	final private static String RIOT_API_MATCH = "/lol/match/v5/matches/";
+  
+
+  public ArrayList<String> arr = new ArrayList<>();
 
 
 	public PublicMatch(String matchId) {
 		try{
 			JSONParser parser = new JSONParser();
-
+      BufferedReader bf;
+      URL request_url;
 			//RIOT API JSON
-			// String url = String.format("%s%s%s?api_key=%s",RIOT_API_URL,RIOT_API_MATCH,matchId,API_KEY);
-			// URL request_url = new URL(url);
-			// BufferedReader bf = new BufferedReader(new InputStreamReader(request_url.openStream(),"UTF-8"));
-			// String result=bf.readLine();
+      String match_url = String.format("%s%s%s?api_key=%s",RIOT_API_URL,RIOT_API_MATCH,matchId,API_KEY);
+			request_url = new URL(match_url);
+			bf = new BufferedReader(new InputStreamReader(request_url.openStream(),"UTF-8"));
+			String matchJSON=bf.readLine();
 
 			//Local JSON TEST
-			FileReader result = new FileReader("C:\\Spring_git\\sb_MyGG\\mygg\\src\\main\\resources\\testMatch.json");
+			//FileReader result = new FileReader("mygg/src/main/resources/testMatch.json");
 
-			ArrayList player = new ArrayList<String>();
+			ArrayList<String> player = new ArrayList<String>();
 			//JSON Parsing
 
-			JSONObject jsonObject = (JSONObject)parser.parse(result);
+			JSONObject jsonObject = (JSONObject)parser.parse(matchJSON);
 			for(Object key : jsonObject.keySet()){
 				Object value = jsonObject.get(key);
 
@@ -42,7 +59,7 @@ public class PublicMatch {
 					JSONObject jsonObj = (JSONObject)value;
 					JSONArray participants = (JSONArray)jsonObj.get("participants");
 					for(int i=0; i<participants.size(); i++){
-						player.add(participants.get(i));
+						player.add((String)participants.get(i));
 					}
 				}
 				
@@ -56,7 +73,7 @@ public class PublicMatch {
 						JSONObject partPlayer = (JSONObject) participants.get(i);
 
 						
-						String champion = (String) partPlayer.get("championName");
+						String champion = (String) partPlayer.get("championName"); //
 						String position = (String) partPlayer.get("lane");	//individualPosition, teamPosition
 						String userName = partPlayer.get("riotIdGameName")+"#"+partPlayer.get("riotIdTagline");
 						Long userLevel = (Long) partPlayer.get("summonerLevel");
@@ -65,6 +82,8 @@ public class PublicMatch {
 						JSONObject playerChall = (JSONObject) partPlayer.get("challenges");
 						Double goldPerMin = (Double) playerChall.get("goldPerMinute");
 						System.out.println();
+
+            //TODO
 					}
 				}
 
@@ -79,6 +98,9 @@ public class PublicMatch {
 	}
 	public static void main(String[] args){
 		PublicMatch match = new PublicMatch("KR_7334845449");
+
+    // String versionJSON = new BufferedReader(new InputStreamReader(new URL("https://ddragon.leagueoflegends.com/api/versions.json").openStream(),"UTF-8")).readLine();
+    // String languageJSON = new BufferedReader(new InputStreamReader(new URL("https://ddragon.leagueoflegends.com/cdn/languages.json").openStream(),"UTF-8")).readLine();
 	}
 
 }

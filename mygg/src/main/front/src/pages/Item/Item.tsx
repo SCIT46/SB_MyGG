@@ -2,7 +2,6 @@ import styled, { keyframes } from "styled-components";
 import { IItem } from "./type";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { StringLiteral } from "typescript";
 
 interface ItemImgProps {
   loaded: string;
@@ -54,10 +53,13 @@ const Container = styled.div`
 `;
 
 const DetailBox = styled.div`
-  width: 70px;
+  width: 100px;
   height: 70px;
+  padding: 10px 5px 10px 5px;
+  border-radius: 7px;
   background-color: #000000c2;
   position: absolute;
+  color: ${({ theme }) => theme.colors.textWhite};
   top: 50px;
   z-index: 1;
 `;

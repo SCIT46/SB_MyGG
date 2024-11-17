@@ -10,13 +10,21 @@ const LoadingContainer = styled.div`
 `;
 
 const TitleBox = styled.div`
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 50px;
   width: 60vw;
 `;
 
+const TitleLine = styled.div`
+  margin-top: 25px;
+  margin-bottom: 17px;
+
+  width: 60vw;
+  height: 3px;
+  background-color: ${({ theme }) => theme.colors.primaryGold};
+`;
+
 const Title = styled.div`
-  color: black;
+  color: ${({ theme }) => theme.colors.lightText};
   font-weight: 600;
   font-size: 24px;
 `;
@@ -81,8 +89,9 @@ export default function Itempage() {
   return (
     <ItemsContainer>
       <TitleBox>
-        <Title>아이템</Title>
+        <Title>아이템 분석</Title>
       </TitleBox>
+      <TitleLine />
       <ItemContainer>
         {items &&
           Object.entries(items.data)

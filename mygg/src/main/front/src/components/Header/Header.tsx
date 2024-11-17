@@ -1,30 +1,29 @@
 import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import PatchNote from "./PatchNote";
 
 const HeaderContainer = styled.nav`
   display: flex;
   align-items: center;
   width: 100vw;
   height: 50px;
-  background-color: ${({ theme }) => theme.colors.primary};
+  background-color: ${({ theme }) => theme.colors.backgroundWhite};
   box-shadow: 0px 4px 4px -2px rgba(0, 0, 0, 0.2);
 `;
 
 const LinkBtn = styled(NavLink)<{ isActive?: boolean }>`
-  padding: 12px;
-  margin-left: 5px;
-  margin-right: 5px;
+  padding: 12px 5px 12px 5px;
+  margin-left: 7px;
+  margin-right: 7px;
   margin-bottom: 2px;
-  border-radius: 10px;
-  color: ${({ theme }) => theme.colors.lightText};
-  transition: color 0.15s ease;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.textBlack};
   &:hover {
-    color: ${({ theme }) => theme.colors.text};
-    background-color: ${({ theme }) => theme.colors.secondary};
+    border-bottom: 3px solid ${({ theme }) => theme.colors.primarySky};
   }
   &.active {
-    color: white;
+    border-bottom: 3px solid ${({ theme }) => theme.colors.primarySky};
   }
 `;
 
@@ -35,9 +34,10 @@ const LogoImg = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.primaryGold};
   font-weight: 800;
   margin-left: 5px;
+  margin-right: 20px;
   font-size: 18px;
 `;
 
@@ -55,6 +55,8 @@ export default function Header() {
       <LinkBtn to={"champion"}>챔피언</LinkBtn>
       <LinkBtn to={"search/123"}>플레이어</LinkBtn>
       <LinkBtn to={"test"}>테스트</LinkBtn>
+      {/* 패치노트 컴포넌트 */}
+      <PatchNote />
     </HeaderContainer>
   );
 }

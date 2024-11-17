@@ -1,13 +1,13 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import Root from "./Root";
-import Home from "./pages/Home";
 import Champions from "./pages/Champions";
 import ChampionDetail from "./pages/ChampionDetail";
-import SearchPlayer from "./pages/SearchPlayer";
 import NotFound from "./pages/NotFound";
 import Test from "./pages/Test";
 import Itempage from "./pages/Item/ItemPage";
 import ItemDetailPage from "./pages/Item/ItemDetailPage";
+import Home from "./pages/Home/Home";
+import SearchPlayer from "./pages/SearchPlayer/SearchPlayer";
 
 //라우터 생성
 const router = createBrowserRouter([
@@ -28,6 +28,10 @@ const router = createBrowserRouter([
       //not found 페이지
       { path: "*", element: <NotFound /> },
     ],
+  },
+  {
+    path: "/api/*",
+    loader: () => redirect("/"),
   },
 ]);
 

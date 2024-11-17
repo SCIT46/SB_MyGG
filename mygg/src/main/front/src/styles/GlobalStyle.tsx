@@ -7,10 +7,11 @@ export const GlobalStyle = createGlobalStyle`
 ${reset}
 
 
+
 //디폴드 bgcolor 및 폰트색상 설정
 body {
-    background-color: ${({ theme }) => theme.colors.background};
-    color: ${({ theme }) => theme.colors.text}
+    background-color: ${({ theme }) => theme.colors.backgroundGray};
+    color: ${({ theme }) => theme.colors.textBlack}
 }
 
 //기본 하이퍼링크 Css 속성 제거

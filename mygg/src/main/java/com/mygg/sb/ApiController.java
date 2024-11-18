@@ -15,7 +15,7 @@ public class ApiController {
 	}
 	
 	@GetMapping(path="/api/match/public/{matchId}")
-	public PublicMatch publicMatch(@PathVariable String matchId) {
+	public PublicMatch publicMatch(@PathVariable String matchId) throws Exception{
 		return new PublicMatch(matchId);
 	}
 }

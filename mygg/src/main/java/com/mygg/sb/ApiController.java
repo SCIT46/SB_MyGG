@@ -9,13 +9,12 @@ import com.mygg.sb.match.PublicMatch;
 
 @RestController
 public class ApiController {
-	
-	@GetMapping(path="/match/private/{matchId}")
+	@GetMapping(path="/api/match/private/{matchId}")
 	public PrivateMatch privateMatch(@PathVariable String matchId) {
 		return new PrivateMatch(matchId);
 	}
 	
-	@GetMapping(path="/match/public/{matchId}")
+	@GetMapping(path="/api/match/public/{matchId}")
 	public PublicMatch publicMatch(@PathVariable String matchId) {
 		return new PublicMatch(matchId);
 	}

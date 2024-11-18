@@ -29,19 +29,26 @@ public class PrivateMatch {
 	public PrivateMatch(String matchId){
 
 		try{
+			//RIOT API JSON 수신부
+
+			//JSON 데이터를 분석해주는 JSONParser 객체 생성
 			JSONParser parser = new JSONParser();
-			BufferedReader bf;
-			URL request_url;
-			//RIOT API JSON
-     		String match_url = String.format("%s%s%s?api_key=%s",statics.RIOT_API_URL,statics.RIOT_API_MATCH,matchId,statics.API_KEY);
-			request_url = new URL(match_url);
-			bf = new BufferedReader(new InputStreamReader(request_url.openStream(),"UTF-8"));
+			//API 주소값
+      		String match_url = String.format("%s%s%s?api_key=%s",statics.RIOT_API_URL,statics.RIOT_API_MATCH,matchId,statics.API_KEY);
+			//API 키를 요청할 주소값을 URL 타입으로 생성
+			URL request_url = new URL(match_url);
+			//URL을 openStream() UTF-8을 통해 열고 받은 데이터를 inputStreamReader를 통해 받아 BufferedReader를 통해 bf에 저장
+			BufferedReader bf = new BufferedReader(new InputStreamReader(request_url.openStream(),"UTF-8"));
+			//bf에 저장한 데이터를 String 형태로 저장(JSONParser가 String으로 된 JSON 데이터를 분석)
 			String matchJSON=bf.readLine();
+
 
 			//Local JSON TEST
 			//FileReader result = new FileReader("mygg/src/main/resources/testMatch.json");
 
 			ArrayList<String> player = new ArrayList<String>();
+
+			
 			//JSON Parsing
 
 			JSONObject jsonObject = (JSONObject)parser.parse(matchJSON);

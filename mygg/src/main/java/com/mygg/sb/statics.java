@@ -13,9 +13,10 @@ public class statics {
 	public static Dotenv dotenv = Dotenv.load();
 	public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
 	public final static String RIOT_API_URL = "https://asia.api.riotgames.com";
+	public final static String RIOT_API_URL_KR = "https://kr.api.riotgames.com";
 	public final static String RIOT_API_MATCH = "/lol/match/v5/matches/";
 	public final static String RIOT_API_USER_UID = "/riot/account/v1/accounts/by-riot-id/";
-	public final static String RIOT_API_CHAMPION_MASTERY = "/lol/champion-mastery/v4/champion-masteries/by-puuid/";
+	public final static String RIOT_API_SUMNONER_INFO = "/lol/summoner/v4/summoners/by-puuid/";
 
 	// public static String getVersion(){
 	// 	String versionJSON = new BufferedReader(new InputStreamReader(new
@@ -45,6 +46,8 @@ public class statics {
 	}
 
 	public static String nametag2Pid(String gameName, String tagLine) throws Exception {
+        //이름에 공백이 있으면 %20(URL escape code(space))로 변환
+        gameName = gameName.replace(" ","%20");
 		// API 주소값
         String user_url = String.format("%s%s%s/%s?api_key=%s", statics.RIOT_API_URL, statics.RIOT_API_USER_UID, gameName, tagLine,
                 statics.API_KEY);
@@ -64,7 +67,7 @@ public class statics {
 
         // jsonObject의 JSON Key값으로 모든 데이터 조회
         String puuid = (String)jsonObject.get("puuid");
-
+        System.out.println(puuid);
 		return puuid;
 	}
 }

@@ -10,7 +10,7 @@ import com.mygg.sb.statics;
 
 /*
    Match Field
-	유저 초상화 	//User
+	유저 초상화
 	유저 이름/태그)
 	유저 레벨
 

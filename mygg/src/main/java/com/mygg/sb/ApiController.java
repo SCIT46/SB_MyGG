@@ -18,4 +18,9 @@ public class ApiController {
 	public PublicMatch publicMatch(@PathVariable String matchId) throws Exception{
 		return new PublicMatch(matchId);
 	}
+
+	// @GetMapping(path="/api/user/{name}/{tag}")
+	// public User user(@PathVariable String name, @PathVariable String tag) throws Exception{
+	// 	return new User(name,tag);
+	// }
 }

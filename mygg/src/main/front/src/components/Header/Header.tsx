@@ -18,6 +18,7 @@ const LinkBtn = styled(NavLink)<{ isActive?: boolean }>`
   margin-right: 7px;
   margin-bottom: 2px;
   font-size: 14px;
+  font-weight: 600;
   color: ${({ theme }) => theme.colors.textBlack};
   &:hover {
     border-bottom: 3px solid ${({ theme }) => theme.colors.primarySky};
@@ -39,6 +40,7 @@ const LogoImg = styled.div`
   margin-left: 5px;
   margin-right: 20px;
   font-size: 18px;
+  text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
 `;
 
 //헤더 컴포넌트

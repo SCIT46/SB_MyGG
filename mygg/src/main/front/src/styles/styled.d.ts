@@ -10,10 +10,8 @@ declare module "styled-components" {
       backgroundWhite: string;
       primarySky: string;
       backgroundDarkerGray: string;
-      //백그라운드 대비 기존 텍스트 컬러
       textWhite: string;
       textBlack: string;
-      //
       lightText: string;
     };
   }

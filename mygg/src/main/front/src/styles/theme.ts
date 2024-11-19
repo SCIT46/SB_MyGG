@@ -12,7 +12,6 @@ const theme: DefaultTheme = {
     textWhite: "#EDEDED",
     textBlack: "#111111",
     lightText: "969696",
-    //메인 포인트 컬러
   },
 };
 

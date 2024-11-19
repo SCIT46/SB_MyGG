@@ -17,8 +17,9 @@ const TitleBox = styled.div`
 
 const Title = styled.div`
   color: ${({ theme }) => theme.colors.primaryGold};
-  font-size: 64px;
+  font-size: 72px;
   font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 `;
 
 const SearchBox = styled.div`
@@ -87,7 +88,7 @@ export default function Home() {
           <SearchInput
             onFocus={() => setIsSearchInputFocused(true)}
             onBlur={() => setIsSearchInputFocused(false)}
-            placeholder="소환사 이름을 입력해주세요! 소환사#태그" 
+            placeholder="소환사 이름을 입력해주세요! 소환사#태그"
           ></SearchInput>
           {isSearchInputFocused ? (
             <SearchDetailContainer></SearchDetailContainer>

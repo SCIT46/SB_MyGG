@@ -1,0 +1,11 @@
+<table>
+	<thead>
+	</thead>
+	
+	<tbody>
+		<tr th:each = "obj : ${questionList}">
+			<td th:text = "${obj.subject}"></td>
+			<td th:text = "${obj.data}"></td>
+		</tr>
+	</tbody>
+</table>

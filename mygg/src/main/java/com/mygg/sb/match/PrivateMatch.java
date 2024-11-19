@@ -41,7 +41,7 @@ public class PrivateMatch {
 					statics.API_KEY);
 
 			//url을 json으로 변환
-			String matchJSON = statics.url2Json(match_url);
+			String matchJSON = statics.urlToJson(match_url);
 
 			// ======================================================================================================================
 

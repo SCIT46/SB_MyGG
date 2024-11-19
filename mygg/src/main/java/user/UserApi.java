@@ -1,5 +1,8 @@
 package user;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -15,10 +18,13 @@ public class UserApi {
     //유저 레벨
     int summonerLevel;
     //유저 등급
-    
+
     //유저 lp점수
 
     //유저 승패 
+    Boolean win;
+    //최근 갱신 날짜
+    LocalDateTime revisionDate;
 
 
     public UserApi(String gameName, String tagLine) throws Exception{
@@ -42,14 +48,23 @@ public class UserApi {
 		JSONObject jsonObject = (JSONObject) parser.parse(summoJSON);
 
 		// jsonObject의 JSON Key값으로 모든 데이터 조회
+        int cnt=0;
 		for (Object key : jsonObject.keySet()) {
             // key 값으로 받은 데이터를 value에 저장
             Object value = jsonObject.get(key);
-            if(key.equals("profileIconId")){
-                profileIconId = (Integer)value;
+            switch(cnt){
+                case 1: profileIconId = (int)(long)value;    break;  //profileIconId
+                case 2: System.out.println(value); revisionDate = statics.epochToLocalDateTime((Long)value);  break;
+                case 5: summonerLevel = (int)(long)value;    break; 
             }
+            //if(key.equals("profileIconId")){}
+            cnt++;
             //System.out.println(key+" : "+value);
         }
+        System.out.println(profileIconId);
+        System.out.println(statics.localDateTimeToEpoch(revisionDate));
+        System.out.println(revisionDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS")));
+        System.out.println(summonerLevel);
 
 	}
 

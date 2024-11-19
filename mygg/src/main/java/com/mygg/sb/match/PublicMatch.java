@@ -8,36 +8,39 @@ import org.json.simple.parser.JSONParser;
 
 import com.mygg.sb.statics;
 
-/*
-   Match Field
-	유저 초상화
-	유저 이름/태그)
-	유저 레벨
+import user.UserApi;
 
-	등급
-	lp 점수
-	승패, 승률
 
-	챔피언별 통계(KDA, 승률, 게임수)
-	같이 플레이한 유저(이름/태그, 레벨, 승률, 게임수(승/패))
-
-	매치 당 데이터
-		게임 타입(일반게임(솔로))
-		조회 날짜로부터 경과한 시간
-		경기시간
-		챔피언(이미지) + 경기 중 달성 레벨
-		사용한 스펠, 룬(이미지), 아이템
-		KDA
-		시야 기여도
-		골드 총 금액
-
-		매치에 같이 참여한 유저들(participants)
- */
+   
+ 
 // riot api로 부터 받아온 match JSON 파일을 DB에 저장(matchId / match.JSON)
 // /api/user/{userId} -> DB에 userId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
 // /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
 
 public class PublicMatch {
+
+	//Match Field
+	//유저 초상화, id유저 이름/태그, 유저 레벨 => UserApi
+	UserApi userApi;
+
+	//등급
+	//lp 점수
+	//승패, 승률
+
+	//챔피언별 통계(KDA, 승률, 게임수)
+	//같이 플레이한 유저(이름/태그, 레벨, 승률, 게임수(승/패))
+
+	//매치 당 데이터
+		//게임 타입(일반게임(솔로))
+		//조회 날짜로부터 경과한 시간
+		//경기시간
+		//챔피언(이미지) + 경기 중 달성 레벨
+		//사용한 스펠, 룬(이미지), 아이템
+		//KDA
+		//시야 기여도
+		//골드 총 금액
+
+		//매치에 같이 참여한 유저들(participants)
 
 	// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
 	ArrayList<String> player;

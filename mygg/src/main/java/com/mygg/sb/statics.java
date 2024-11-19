@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -78,7 +79,7 @@ public class statics {
 	}
 
     //puuid(String)를 주면 gameName, tagLine(String[])으로 변환
-    public static String[] pid2Nametag(String pid) throws Exception {
+    public static String[] pidToNametag(String pid) throws Exception {
 		// API 주소값
         String user_url = String.format("%s%s%s?api_key=%s", statics.RIOT_API_URL, "/riot/account/v1/accounts/by-puuid/", pid,
                 statics.API_KEY);
@@ -105,11 +106,12 @@ public class statics {
 
     //시간을 Epoch(TimeStamp)으로
     public static long localDateTimeToEpoch(LocalDateTime localDateTime) {
-        return localDateTime.toEpochSecond(ZoneOffset.UTC);
+        return localDateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
 
     //Epoch(TimeStamp)를 시간으로
-    public static LocalDateTime epochToLocalDateTime(long epoch) {
-        return LocalDateTime.ofEpochSecond(epoch, 0, ZoneOffset.UTC);
+    public static LocalDateTime epochToLocalDateTime(long epochMillis) {
+        Instant instant = Instant.ofEpochMilli(epochMillis);
+        return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
     }
 }

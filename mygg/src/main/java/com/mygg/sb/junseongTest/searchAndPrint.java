@@ -1,4 +1,4 @@
-package junseongTest;
+package com.mygg.sb.junseongTest;
 
 import java.util.ArrayList;
 

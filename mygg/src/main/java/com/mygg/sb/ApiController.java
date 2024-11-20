@@ -26,3 +26,7 @@ public class ApiController {
 		return new UserApi(name,tag);
 	}
 }
+
+// URL 
+// USERAPI -> Json 뿌려주고
+// fatch -> 가공

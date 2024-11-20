@@ -15,8 +15,13 @@ java {
 	}
 }
 
-compileJava {
-	options.parameters = true
+//compileJava {
+//	options.parameters = true
+//}
+
+tasks.withType(JavaCompile) {
+    // 메소드 파라미터 이름을 보존하려면 '-parameters' 옵션을 추가
+    options.compilerArgs << '-parameters' 
 }
 
 repositories {
@@ -61,6 +66,7 @@ dependencies {
 	//dotenv-java
 	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 	
+	implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 tasks.named('test') {

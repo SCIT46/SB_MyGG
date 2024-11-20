@@ -2,10 +2,12 @@ import { Outlet } from "react-router-dom";
 import { GlobalStyle } from "./styles/GlobalStyle";
 import Footer from "./components/Footer";
 import Header from "./components/Header/Header";
+import InitLoader from "./components/InitLoader";
 
 function Root() {
   return (
     <>
+      <InitLoader />
       {/* 전역 css스타일 */}
       <GlobalStyle />
       {/* 헤더 네비게이션 바 */}

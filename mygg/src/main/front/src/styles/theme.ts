@@ -7,8 +7,10 @@ const theme: DefaultTheme = {
     backgroundGray: "#F5F5F5",
     backgroundDarkerGray: "#E2E2E2",
     backgroundWhite: "#ffffff",
+    //테마 컬러
     primaryGold: "#C4AB75",
     primarySky: "#72BFDB",
+    //텍스트 컬러
     textWhite: "#EDEDED",
     textBlack: "#111111",
     lightText: "969696",

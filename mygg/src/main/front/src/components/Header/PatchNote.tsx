@@ -39,8 +39,10 @@ const PatchNoteSpan = styled.div`
   }
 `;
 
+//더미 데이터
 const patchNotes = ["14-22", "14-21", "14.20", "14.19", "14.18"];
 
+//헤더 내의 패치노트 박스 컴포넌트
 export default function PatchNote() {
   const [isPatchNoteClicked, setIsPatchNoteClicked] = useState<boolean>(false);
 
@@ -49,6 +51,7 @@ export default function PatchNote() {
       <PatchNoteBtn onClick={() => setIsPatchNoteClicked((prev) => !prev)}>
         패치노트
       </PatchNoteBtn>
+      {/* patchnoteBtn 컴포넌트가 클릭시 patchNoteBox 랜더링 & Patchnote 데이터를 이용해 버튼 생성 */}
       {isPatchNoteClicked && (
         <PatchNoteBox>
           {patchNotes.map((note, index) => (

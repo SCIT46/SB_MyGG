@@ -1,6 +1,5 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
 import Root from "./Root";
-import Champions from "./pages/Champions";
 import ChampionDetail from "./pages/ChampionDetail";
 import NotFound from "./pages/NotFound";
 import Test from "./pages/Test";
@@ -8,6 +7,7 @@ import Itempage from "./pages/Item/ItemPage";
 import ItemDetailPage from "./pages/Item/ItemDetailPage";
 import Home from "./pages/Home/Home";
 import SearchPlayer from "./pages/SearchPlayer/SearchPlayer";
+import Champions from "./pages/Champion/Champions";
 
 //라우터 생성
 const router = createBrowserRouter([

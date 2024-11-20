@@ -12,6 +12,8 @@ const HeaderContainer = styled.nav`
   box-shadow: 0px 4px 4px -2px rgba(0, 0, 0, 0.2);
 `;
 
+//헤더 링크 버튼
+//hover 시 bottom border 생성 & active 시 bottom border 유지
 const LinkBtn = styled(NavLink)<{ isActive?: boolean }>`
   padding: 12px 5px 12px 5px;
   margin-left: 7px;
@@ -28,7 +30,7 @@ const LinkBtn = styled(NavLink)<{ isActive?: boolean }>`
   }
 `;
 
-//이미지로 수정 필요
+//*이미지로 수정 필요
 const LogoImg = styled.div`
   height: 50px;
   width: 80px;

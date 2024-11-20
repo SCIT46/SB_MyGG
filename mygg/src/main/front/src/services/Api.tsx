@@ -1,5 +1,4 @@
 import axios from "axios";
-import { cacheAdapterEnhancer } from "axios-extensions";
 
 //api Fetch 함수
 export const getHello = async () => {
@@ -27,6 +26,18 @@ export const getItems = async (version: String) => {
     });
     return itemResponse.data;
   } catch (error: any) {
-    console.log(error);
+    console.log("item fetch error! ", error);
+  }
+};
+
+export const getChamps = async () => {
+  try {
+    const chamResponse = await axios({
+      method: "get",
+      url: `https://ddragon.leagueoflegends.com/cdn/14.23.1/data/ko_KR/champion.json`,
+    });
+    return chamResponse.data;
+  } catch (error: any) {
+    console.log("champion fetch error! ", error);
   }
 };

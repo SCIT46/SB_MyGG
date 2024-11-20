@@ -15,10 +15,6 @@ java {
 	}
 }
 
-compileJava {
-	options.parameters = true
-}
-
 repositories {
 	mavenCentral()
 	maven { url 'https://repo.spring.io/milestone' }

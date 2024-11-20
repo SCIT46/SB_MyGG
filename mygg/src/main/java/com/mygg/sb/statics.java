@@ -7,7 +7,6 @@ import java.net.URLEncoder;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.HashMap;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -63,7 +62,7 @@ public class statics {
     public static String nameTagToPid(String gameName, String tagLine) throws Exception {
         // 이름을 URL인코딩하여 처리(영어 외에 처리 안되는 문제 해결)
         gameName = URLEncoder.encode(gameName, "UTF-8");
-
+        tagLine = URLEncoder.encode(tagLine, "UTF-8");
         // API 주소값
         String user_url = String.format("%s%s%s/%s?api_key=%s", RIOT_API_URL, RIOT_API_ACCOUNT_RID, gameName, tagLine,
                 API_KEY);
@@ -132,11 +131,12 @@ public class statics {
         return summonerId; // size : 63(max)
     }
 
-    // API : SummonerId(String)로 소환사 정보(JSONObject) 변환
+    // API : SummonerId(String), isExp(Boolean)로 소환사 정보(JSONObject) 변환
     public static JSONObject getLeagueBySummonerId(String summonerId) throws Exception {
         // puuid로 소환사의 정보를 받아오는 API
         String user_url = String.format("%s%s%s%s?api_key=%s", RIOT_API_URL_KR, RIOT_API_LEAGUE, "entries/by-summoner/",
                 summonerId, API_KEY);
+
 
         // url을 json으로 변환
         String userJSON = urlToJson(user_url);
@@ -146,10 +146,21 @@ public class statics {
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
 
-        // Array안에 담긴 Object 형식으로 오기 때문에 parsing
-        JSONObject jsonObject = (JSONObject)((JSONArray) parser.parse(userJSON)).get(0);
-
-        return jsonObject;
+        // JSON 데이터가 Array로 오기 때문에 JSONArray로 변환
+        JSONArray jsonArray = (JSONArray) parser.parse(userJSON);
+    
+        // 리그 정보가 없는 경우 기본값을 가진 JSONObject 반환
+        if (jsonArray.isEmpty()) {
+            JSONObject defaultObj = new JSONObject();
+            defaultObj.put("tier", "UNRANKED");
+            defaultObj.put("rank", "");
+            defaultObj.put("leaguePoints", 0L);
+            defaultObj.put("wins", 0L);
+            defaultObj.put("losses", 0L);
+            return defaultObj;
+        }
+    
+        return (JSONObject) jsonArray.get(0);
     }
 
     // 시간을 Epoch(TimeStamp)으로

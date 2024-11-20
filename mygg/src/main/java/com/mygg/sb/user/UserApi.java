@@ -1,4 +1,4 @@
-package user;
+package com.mygg.sb.user;
 
 import java.time.LocalDateTime;
 
@@ -49,17 +49,17 @@ public class UserApi {
 		// 소환사 정보 JSON
 		JSONObject jsonObject = (JSONObject) parser.parse(summoJSON);
         summonerId = (String) jsonObject.get("id");
-        profileIconId = (int)(long) jsonObject.get("profileIconId");
+        profileIconId = ((Long) jsonObject.get("profileIconId")).intValue();
         revisionDate = statics.epochToLocalDateTime((long)jsonObject.get("revisionDate"));
-        summonerLevel = (int)(long) jsonObject.get("summonerLevel");
+        summonerLevel = ((Long) jsonObject.get("summonerLevel")).intValue();
 
         // summonerId를 통해 리그정보 JSON 받아옴
         JSONObject jsonObject2 = statics.getLeagueBySummonerId(summonerId);
         tier = (String) jsonObject2.get("tier");
         rank = (String) jsonObject2.get("rank");
-        leaguePoints = (int)(long) jsonObject2.get("leaguePoints");
-        wins = (int)(long) jsonObject2.get("wins");
-        losses = (int)(long) jsonObject2.get("losses");
+        leaguePoints = ((Long) jsonObject2.get("leaguePoints")).intValue();
+        wins = ((Long) jsonObject2.get("wins")).intValue();
+        losses = ((Long) jsonObject2.get("losses")).intValue();
 
 
         this.gameName = gameName;

@@ -7,8 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.mygg.sb.statics;
-
-import user.UserApi;
+import com.mygg.sb.user.UserApi;
 
 
    

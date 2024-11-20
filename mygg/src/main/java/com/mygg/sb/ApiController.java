@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mygg.sb.match.PrivateMatch;
 import com.mygg.sb.match.PublicMatch;
-
-import user.UserApi;
+import com.mygg.sb.user.UserApi;
 
 @RestController
 public class ApiController {

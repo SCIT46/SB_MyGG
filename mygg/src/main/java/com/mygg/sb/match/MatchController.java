@@ -1,8 +1,8 @@
-package com.mygg.sb.match;
+// package com.mygg.sb.match;
 
-import org.springframework.stereotype.Controller;
+// import org.springframework.stereotype.Controller;
 
-@Controller
-public class MatchController {
+// @Controller
+// public class MatchController {
     
-}
+// }

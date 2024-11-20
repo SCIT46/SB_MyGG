@@ -120,7 +120,7 @@ public class PrivateMatch {
 	}
 
 	public static void main(String[] args) throws Exception {
-		PublicMatch match = new PublicMatch("KR_7334845449");
+		PrivateMatch match = new PrivateMatch("KR_7334845449");
 	}
 
 

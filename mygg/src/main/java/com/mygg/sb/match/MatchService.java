@@ -1,8 +1,8 @@
-package com.mygg.sb.match;
+// package com.mygg.sb.match;
 
-import org.springframework.stereotype.Service;
+// import org.springframework.stereotype.Service;
 
-@Service
-public class MatchService {
-    private MatchRepository matchRepository;
-}
+// @Service
+// public class MatchService {
+//     private MatchRepository matchRepository;
+// }

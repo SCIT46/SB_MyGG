@@ -25,3 +25,4 @@ replay_pid*
 
 # Ignore .env Files
 .env
+src/main/resources/.env

@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "UserApi",
+            "request": "launch",
+            "mainClass": "user.UserApi",
+            "projectName": "mygg"
+        },
+        {
+            "type": "java",
             "name": "PublicMatch",
             "request": "launch",
             "mainClass": "com.mygg.sb.match.PublicMatch",

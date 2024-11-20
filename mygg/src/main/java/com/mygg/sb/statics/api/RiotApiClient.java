@@ -1,35 +1,14 @@
-package com.mygg.sb;
+package com.mygg.sb.statics.api;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import com.mygg.sb.statics.util.UrlToJson;
 
-public class statics {
-    public static Dotenv dotenv = Dotenv.load();
-    public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
-    // =============================================================================================
-    public final static String RIOT_API_URL = "https://asia.api.riotgames.com";
-    public final static String RIOT_API_URL_KR = "https://kr.api.riotgames.com";
-    // =============================================================================================
-    public final static String RIOT_API_ACCOUNT_RID = "/riot/account/v1/accounts/by-riot-id/"; // public match
-    public final static String RIOT_API_ACCOUNT_PID = "/riot/account/v1/accounts/by-puuid/"; // public match
-    public final static String RIOT_API_MATCH = "/lol/match/v5/matches/"; // public match
-    public final static String RIOT_API_MATCH_P = "/lol/rso-match/v1/matches/"; // private match
-    public final static String RIOT_API_SUMMONER_INFO = "/lol/summoner/v4/summoners/by-puuid/";
-    public final static String RIOT_API_LEAGUE = "/lol/league/v4/"; // Iron ~ Diamond
-    public final static String RIOT_API_LEAGUE_EXP = "/lol/league-exp/v4/"; // Master ~ Challenger
-    // =============================================================================================
-
+public class RiotApiClient {
     // public static String getVersion(){
     // String versionJSON = new BufferedReader(new InputStreamReader(new
     // URL("https://ddragon.leagueoflegends.com/api/versions.json").openStream(),"UTF-8")).readLine();
@@ -39,24 +18,7 @@ public class statics {
     // URL("https://ddragon.leagueoflegends.com/cdn/languages.json").openStream(),"UTF-8")).readLine();
     // }
 
-    public static String urlToJson(String url) throws Exception {
-        /* JSON 파일 불러오기/변환 */
-
-        // API 키를 요청할 주소값을 URL 타입으로 생성
-        URL request_url = new URL(url);
-
-        // URL을 openStream() UTF-8을 통해 열고 받은 데이터를 inputStreamReader를 통해 받아
-        // BufferedReader를 통해 bf에 저장
-        BufferedReader bf = new BufferedReader(new InputStreamReader(request_url.openStream(), "UTF-8"));
-
-        // bf에 저장한 데이터를 String 형태로 저장(JSONParser가 String으로 된 JSON 데이터를 분석)
-        String userJSON = bf.readLine();
-
-        // 버퍼 닫기
-        bf.close();
-
-        return userJSON;
-    }
+    
 
     // API : gameName(String)과 tagLine(String)를 주면 puuid(String)로 변환
     public static String nameTagToPid(String gameName, String tagLine) throws Exception {
@@ -64,11 +26,11 @@ public class statics {
         gameName = URLEncoder.encode(gameName, "UTF-8");
         tagLine = URLEncoder.encode(tagLine, "UTF-8");
         // API 주소값
-        String user_url = String.format("%s%s%s/%s?api_key=%s", RIOT_API_URL, RIOT_API_ACCOUNT_RID, gameName, tagLine,
-                API_KEY);
+        String user_url = String.format("%s%s%s/%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_ACCOUNT_RID, gameName, tagLine,
+                RiotApiConstants.API_KEY);
 
         // url을 json으로 변환
-        String userJSON = urlToJson(user_url);
+        String userJSON = UrlToJson.urlToJson(user_url);
 
         /* JSON Parsing 부 */
 
@@ -87,11 +49,11 @@ public class statics {
     // API : puuid(String)를 주면 gameName, tagLine(String[])으로 변환
     public static String[] pidToNametag(String pid) throws Exception {
         // API 주소값
-        String user_url = String.format("%s%s%s?api_key=%s", RIOT_API_URL, RIOT_API_ACCOUNT_PID, pid,
-                API_KEY);
+        String user_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_ACCOUNT_PID, pid,
+                RiotApiConstants.API_KEY);
 
         // url을 json으로 변환
-        String userJSON = urlToJson(user_url);
+        String userJSON = UrlToJson.urlToJson(user_url);
 
         /* JSON Parsing 부 */
 
@@ -111,11 +73,11 @@ public class statics {
     // API : puuid(String)로 summonerId(String) 변환
     public static String pidToSummonerId(String pid) throws Exception {
         
-        String user_url = String.format("%s%s%s?api_key=%s", RIOT_API_URL, RIOT_API_SUMMONER_INFO, pid,
-                API_KEY);
+        String user_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_SUMMONER_INFO, pid,
+                RiotApiConstants.API_KEY);
 
         // url을 json으로 변환
-        String userJSON = urlToJson(user_url);
+        String userJSON = UrlToJson.urlToJson(user_url);
 
         /* JSON Parsing 부 */
 
@@ -134,12 +96,12 @@ public class statics {
     // API : SummonerId(String), isExp(Boolean)로 소환사 정보(JSONObject) 변환
     public static JSONObject getLeagueBySummonerId(String summonerId) throws Exception {
         // puuid로 소환사의 정보를 받아오는 API
-        String user_url = String.format("%s%s%s%s?api_key=%s", RIOT_API_URL_KR, RIOT_API_LEAGUE, "entries/by-summoner/",
-                summonerId, API_KEY);
+        String user_url = String.format("%s%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL_KR, RiotApiConstants.RIOT_API_LEAGUE, "entries/by-summoner/",
+                summonerId, RiotApiConstants.API_KEY);
 
 
         // url을 json으로 변환
-        String userJSON = urlToJson(user_url);
+        String userJSON = UrlToJson.urlToJson(user_url);
 
         /* JSON Parsing 부 */
 
@@ -161,16 +123,5 @@ public class statics {
         }
     
         return (JSONObject) jsonArray.get(0);
-    }
-
-    // 시간을 Epoch(TimeStamp)으로
-    public static long localDateTimeToEpoch(LocalDateTime localDateTime) {
-        return localDateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
-    }
-
-    // Epoch(TimeStamp)를 시간으로
-    public static LocalDateTime epochToLocalDateTime(long epochMillis) {
-        Instant instant = Instant.ofEpochMilli(epochMillis);
-        return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
     }
 }

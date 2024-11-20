@@ -6,7 +6,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import com.mygg.sb.statics;
+import com.mygg.sb.statics.api.RiotApiConstants;
+import com.mygg.sb.statics.util.UrlToJson;
 
 	/*
 	* Field
@@ -37,11 +38,11 @@ public class PrivateMatch {
 			// RIOT API JSON 수신부
 
 			// API 주소값
-			String match_url = String.format("%s%s%s?api_key=%s", statics.RIOT_API_URL, statics.RIOT_API_MATCH, matchId,
-					statics.API_KEY);
+			String match_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_MATCH, matchId,
+					RiotApiConstants.API_KEY);
 
 			//url을 json으로 변환
-			String matchJSON = statics.urlToJson(match_url);
+			String matchJSON = UrlToJson.urlToJson(match_url);
 
 			// ======================================================================================================================
 

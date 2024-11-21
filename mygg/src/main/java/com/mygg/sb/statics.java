@@ -17,7 +17,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class statics {
     public static Dotenv dotenv = Dotenv.load();
-    public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
+    public static final String API_KEY = "RGAPI-f89611ea-e446-4cd6-8ea0-3a17be2ba38e";
     // =============================================================================================
     public final static String RIOT_API_URL = "https://asia.api.riotgames.com";
     public final static String RIOT_API_URL_KR = "https://kr.api.riotgames.com";

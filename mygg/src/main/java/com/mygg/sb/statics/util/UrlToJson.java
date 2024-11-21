@@ -57,4 +57,15 @@ public class UrlToJson {
                 return null;
         }
     }
+
+    // url : 타입에 따라 url 생성
+    // matchList - puuid로 매치 목록 조회 (/match/v5/matchlists/by-puuid/{puuid}/ids?start={start}&count={count})
+    public static String urlConvertor(String type, String arg1, int start, int count){
+        switch(type){
+            case "matchList":   //arg1 : puuid, start(default : 0), count(default : 20, max : 100) 결과가 없을 경우 빈 배열 반환
+                return String.format("%s%sby-puuid/%s/ids?start=%d&count=%d&api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_MATCH, arg1, start, count, RiotApiConstants.API_KEY);
+            default:
+                return null;
+        }
+    }
 }

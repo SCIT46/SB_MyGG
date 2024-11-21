@@ -31,7 +31,8 @@ public class UserApi {
     private int losses;
     //최근 갱신 날짜
     private LocalDateTime revisionDate;
-
+    // 최근 매치 목록
+    private String[] matchList;
     // 이름과 태그를 통해 소환사 정보를 불러올 때 사용하는 생성자
     public UserApi(String gameName, String tagLine) throws Exception{
         // 이름과 태그를 puuid로 변환
@@ -76,5 +77,7 @@ public class UserApi {
         leaguePoints = ((Long) jsonObject2.get("leaguePoints")).intValue();
         wins = ((Long) jsonObject2.get("wins")).intValue();
         losses = ((Long) jsonObject2.get("losses")).intValue();
+        // 최근 매치 목록
+        matchList = RiotApiClient.getMatchList(puuid);
     }
 }

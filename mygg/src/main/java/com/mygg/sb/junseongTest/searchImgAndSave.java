@@ -116,6 +116,13 @@ public class searchImgAndSave
 							}
 						System.out.println("Downloaded " + imageFilePath);
 					}
+
+				/*
+				 * StandardCopyOption.REPLACE_EXISTING: 같은 파일이 존재하면 덮어쓰기 하지 않음
+				 * try (InputStream inputStream = connection.getInputStream()) 
+				 * { Path imagePath = Path.of(imageFilePath); Files.copy(inputStream, imagePath, StandardCopyOption.REPLACE_EXISTING);
+				 * System.out.println("Downloaded " + imageFilePath); }
+				 */
 			}
 
 		public static void saveItemInfoToJson(JsonObject itemsData)

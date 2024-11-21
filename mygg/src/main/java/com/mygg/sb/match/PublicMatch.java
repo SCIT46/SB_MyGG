@@ -28,8 +28,8 @@ public class PublicMatch
 
 				// /* JSON Parsing 부 */
 
-				// // player의 식별코드(playerId)를 저장할 List
-				// player = new ArrayList<String>();
+				// player의 식별코드(playerId)를 저장할 List
+				player = new ArrayList<String>();
 
 				// // JSON 데이터를 분석해주는 JSONParser 객체 생성
 				// JSONParser parser = new JSONParser();
@@ -119,17 +119,17 @@ public class PublicMatch
 												 (String) _partPlayer.get("riotIdTagline"));
 			_participantsDto.setSummonerLevel   ((Long) _partPlayer.get("summonerLevel"));
 			_participantsDto.setGoldPerMinute	((Double) _partPlayer.get("goldPerMin"));
-			_participantsDto.setChampionId		((int) _partPlayer.get("championId"));
+			_participantsDto.setChampionId		(((Long) _partPlayer.get("championId")).intValue());
 			_participantsDto.setChampionName	((String) _partPlayer.get("championName"));
-			_participantsDto.setChampLevel		((int) _partPlayer.get("champLevel"));
-			_participantsDto.setItem0			((int) _partPlayer.get("item0"));
-			_participantsDto.setItem1			((int) _partPlayer.get("item1"));
-			_participantsDto.setItem2			((int) _partPlayer.get("item2"));
-			_participantsDto.setItem3			((int) _partPlayer.get("item3"));
-			_participantsDto.setItem4			((int) _partPlayer.get("item4"));
-			_participantsDto.setItem5			((int) _partPlayer.get("item5"));
-			_participantsDto.setItem6			((int) _partPlayer.get("item6"));
-			_participantsDto.setKills			((int)_partPlayer.get("kills"));
+			_participantsDto.setChampLevel		(((Long) _partPlayer.get("champLevel")).intValue());
+			_participantsDto.setItem0			(((Long) _partPlayer.get("item0")).intValue());;
+			_participantsDto.setItem1			(((Long) _partPlayer.get("item1")).intValue());;
+			_participantsDto.setItem2			(((Long) _partPlayer.get("item2")).intValue());;
+			_participantsDto.setItem3			(((Long) _partPlayer.get("item3")).intValue());;
+			_participantsDto.setItem4			(((Long) _partPlayer.get("item4")).intValue());;
+			_participantsDto.setItem5			(((Long) _partPlayer.get("item5")).intValue());;
+			_participantsDto.setItem6			(((Long) _partPlayer.get("item6")).intValue());;
+			_participantsDto.setKills			(((Long)_partPlayer.get("kills")).intValue());;
 			
 			playerDto.add(_participantsDto);
 		} 

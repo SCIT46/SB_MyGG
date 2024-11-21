@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mygg.sb.statics.util.UrlToJson;
+
 public class searchAndPrint
 	{
 
@@ -20,10 +22,7 @@ public class searchAndPrint
 				System.out.println("search 실행");
 				JSONObject jsonObject;
 
-				String match_url = String.format("%s%s%s?api_key=%s", statics.RIOT_API_URL, statics.RIOT_API_MATCH,
-						matchId, statics.API_KEY);
-
-				String matchJSON = statics.urlToJson(match_url);
+				String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchInfo", matchId));
 				jsonObject = (JSONObject) parser.parse(matchJSON);
 
 				return jsonObject;

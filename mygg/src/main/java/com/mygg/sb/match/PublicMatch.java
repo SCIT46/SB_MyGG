@@ -4,10 +4,8 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import com.mygg.sb.statics.api.RiotApiConstants;
-import com.mygg.sb.statics.util.UrlToJson;
+import com.mygg.sb.statics.api.RiotApiClient;
 
    
  
@@ -21,37 +19,24 @@ public class PublicMatch
 
 		public PublicMatch(String matchId) throws Exception
 			{
+				// // API 주소값
+				// //String match_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_MATCH,
+				// //		matchId, RiotApiConstants.API_KEY);
 
-				/* JSON 파일 불러오기/변환 */
+				// // url을 json으로 변환
+				// String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchInfo", matchId));
+				// // ======================================================================================================================
 
-				// 테스트 : Local JSONfile 사용
+				// /* JSON Parsing 부 */
 
-				// //FileReader로 내부 파일 testMatch.json을 열어 bf에 저장
-				// FileReader bf = new FileReader("mygg/src/main/resources/testMatch.json");
+				// // player의 식별코드(playerId)를 저장할 List
+				// player = new ArrayList<String>();
 
-				// RIOT API JSON 수신부
+				// // JSON 데이터를 분석해주는 JSONParser 객체 생성
+				// JSONParser parser = new JSONParser();
 
-				// API Matches, User 정보
-				// Json에서 받아와서
-
-				// API 주소값
-				String match_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_MATCH,
-						matchId, RiotApiConstants.API_KEY);
-
-				// url을 json으로 변환
-				String matchJSON = UrlToJson.urlToJson(match_url);
-				// ======================================================================================================================
-
-				/* JSON Parsing 부 */
-
-				// player의 식별코드(playerId)를 저장할 List
-				player = new ArrayList<String>();
-
-				// JSON 데이터를 분석해주는 JSONParser 객체 생성
-				JSONParser parser = new JSONParser();
-
-				// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
-				JSONObject jsonObject = (JSONObject) parser.parse(matchJSON);
+				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
+				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
 
 				// jsonObject의 JSON Key값으로 모든 데이터 조회
 				for (Object key : jsonObject.keySet())

@@ -3,12 +3,9 @@ package com.mygg.sb.user;
 import java.time.LocalDateTime;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import com.mygg.sb.statics.api.RiotApiClient;
-import com.mygg.sb.statics.api.RiotApiConstants;
 import com.mygg.sb.statics.util.DateTimeUtils;
-import com.mygg.sb.statics.util.UrlToJson;
 import lombok.Getter;
 
 @Getter
@@ -55,17 +52,17 @@ public class UserApi {
 
     // 인스턴스 초기화 구문
     private void init() throws Exception{
-        // API 주소값
-        String request_url = String.format("%s%s%s?api_key=%s",RiotApiConstants.RIOT_API_URL_KR,RiotApiConstants.RIOT_API_SUMMONER_INFO,this.puuid,RiotApiConstants.API_KEY);
+        // // API 주소값
+        // //String request_url = String.format("%s%s%s?api_key=%s",RiotApiConstants.RIOT_API_URL_KR,RiotApiConstants.RIOT_API_SUMMONER_INFO,this.puuid,RiotApiConstants.API_KEY);
         
-        //url을 json으로 변환
-        String summoJSON = UrlToJson.urlToJson(request_url);
+        // //url을 json으로 변환
+        // String summoJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("summonerInfo", this.puuid));
 
-		// JSON 데이터를 분석해주는 JSONParser 객체 생성
-		JSONParser parser = new JSONParser();
+		// // JSON 데이터를 분석해주는 JSONParser 객체 생성
+		// JSONParser parser = new JSONParser();
 
 		// 소환사 정보 JSON
-		JSONObject jsonObject = (JSONObject) parser.parse(summoJSON);
+		JSONObject jsonObject = RiotApiClient.getSummonerInfo(puuid);   //(JSONObject) parser.parse(summoJSON);           
         summonerId = (String) jsonObject.get("id");
         profileIconId = ((Long) jsonObject.get("profileIconId")).intValue();
         revisionDate = DateTimeUtils.epochToLocalDateTime((long)jsonObject.get("revisionDate"));

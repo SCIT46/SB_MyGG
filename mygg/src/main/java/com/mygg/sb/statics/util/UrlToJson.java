@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import com.mygg.sb.statics.api.RiotApiConstants;
+
 public class UrlToJson {
     // JSON : url을 json으로 변환
     public static String urlToJson(String url) throws Exception {
@@ -23,5 +25,36 @@ public class UrlToJson {
         bf.close();
 
         return userJSON;
+    }
+
+    // url : 타입에 따라 url 생성
+    // summonerInfo - puuid로 소환사 정보 (RIOT_API_URL_KR/account/v1/summoners/by-puuid/{puuid})
+    // matchInfo - matchId로 매치 정보 (RIOT_API_URL/match/v5/matches/{matchId})
+    // leagueInfo - summonerId로 리그 정보 (RIOT_API_URL_KR/league/v4/entries/by-summoner/{summonerId})
+    // accountByPid - puuid로 소환사 정보 (RIOT_API_URL/account/v1/accounts/by-puuid/{puuid})
+    public static String urlConvertor(String type, String arg1){
+        switch(type){
+            case "summonerInfo":  //arg1 : puuid
+                return String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL_KR, RiotApiConstants.RIOT_API_SUMMONER_INFO, arg1, RiotApiConstants.API_KEY);
+            case "matchInfo":   //arg1 : matchId
+                return String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_MATCH, arg1, RiotApiConstants.API_KEY);
+            case "leagueInfo":  //arg1 : summonerId
+                return String.format("%s%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL_KR, RiotApiConstants.RIOT_API_LEAGUE, "entries/by-summoner/", arg1, RiotApiConstants.API_KEY);
+            case "accountByPid":      //arg1 : puuid
+                return String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_ACCOUNT_PID, arg1, RiotApiConstants.API_KEY);                
+            default:
+                return null;
+        }
+    }
+
+    // url : 타입에 따라 url 생성
+    // nameTag - 소환사 닉네임으로 소환사 정보 (/account/v1/accounts/by-riot-id/{gameName}/{tagLine})
+    public static String urlConvertor(String type, String arg1, String arg2){
+        switch(type){
+            case "nameTag":  //arg1 : gameName, arg2 : tagLine
+                return String.format("%s%s%s/%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_ACCOUNT_RID, arg1, arg2, RiotApiConstants.API_KEY);
+            default:
+                return null;
+        }
     }
 }

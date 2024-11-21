@@ -25,14 +25,9 @@ public class RiotApiClient {
         // 이름을 URL인코딩하여 처리(영어 외에 처리 안되는 문제 해결)
         gameName = URLEncoder.encode(gameName, "UTF-8");
         tagLine = URLEncoder.encode(tagLine, "UTF-8");
-        // API 주소값
-        String user_url = String.format("%s%s%s/%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_ACCOUNT_RID, gameName, tagLine,
-                RiotApiConstants.API_KEY);
 
         // url을 json으로 변환
-        String userJSON = UrlToJson.urlToJson(user_url);
-
-        /* JSON Parsing 부 */
+        String userJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("nameTag", gameName, tagLine));
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
@@ -48,14 +43,9 @@ public class RiotApiClient {
 
     // API : puuid(String)를 주면 gameName, tagLine(String[])으로 변환
     public static String[] pidToNametag(String pid) throws Exception {
-        // API 주소값
-        String user_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_ACCOUNT_PID, pid,
-                RiotApiConstants.API_KEY);
 
         // url을 json으로 변환
-        String userJSON = UrlToJson.urlToJson(user_url);
-
-        /* JSON Parsing 부 */
+        String userJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("accountByPid", pid));
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
@@ -73,13 +63,11 @@ public class RiotApiClient {
     // API : puuid(String)로 summonerId(String) 변환
     public static String pidToSummonerId(String pid) throws Exception {
         
-        String user_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_SUMMONER_INFO, pid,
-                RiotApiConstants.API_KEY);
+        //String user_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_SUMMONER_INFO, pid,
+        //        RiotApiConstants.API_KEY);
 
         // url을 json으로 변환
-        String userJSON = UrlToJson.urlToJson(user_url);
-
-        /* JSON Parsing 부 */
+        String userJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("summonerInfo", pid));
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
@@ -93,15 +81,15 @@ public class RiotApiClient {
         return summonerId; // size : 63(max)
     }
 
-    // API : SummonerId(String), isExp(Boolean)로 소환사 정보(JSONObject) 변환
+    // API : SummonerId(String), isExp(Boolean)로 소환사 리그정보(JSONObject) 변환
     public static JSONObject getLeagueBySummonerId(String summonerId) throws Exception {
         // puuid로 소환사의 정보를 받아오는 API
-        String user_url = String.format("%s%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL_KR, RiotApiConstants.RIOT_API_LEAGUE, "entries/by-summoner/",
-                summonerId, RiotApiConstants.API_KEY);
+        //String user_url = String.format("%s%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL_KR, RiotApiConstants.RIOT_API_LEAGUE, "entries/by-summoner/",
+        //        summonerId, RiotApiConstants.API_KEY);
 
 
         // url을 json으로 변환
-        String userJSON = UrlToJson.urlToJson(user_url);
+        String userJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("leagueInfo", summonerId));
 
         /* JSON Parsing 부 */
 
@@ -123,5 +111,34 @@ public class RiotApiClient {
         }
     
         return (JSONObject) jsonArray.get(0);
+    }
+
+    // API : puuid(String)로 소환사 정보(JSONObject) 변환
+    public static JSONObject getSummonerInfo(String puuid) throws Exception{
+        // API 주소값
+        //String request_url = String.format("%s%s%s?api_key=%s",RiotApiConstants.RIOT_API_URL_KR,RiotApiConstants.RIOT_API_SUMMONER_INFO,this.puuid,RiotApiConstants.API_KEY);
+        
+        //url을 json으로 변환
+        String summoJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("summonerInfo", puuid));
+
+		// JSON 데이터를 분석해주는 JSONParser 객체 생성
+		JSONParser parser = new JSONParser();
+
+		// 소환사 정보 JSON
+        return (JSONObject) parser.parse(summoJSON);
+    }
+
+    // API : matchId(String)로 매치 정보(JSONObject) 변환
+    public static JSONObject getMatchInfo(String matchId) throws Exception{
+        // API 주소값
+        //String request_url = String.format("%s%s%s?api_key=%s",RiotApiConstants.RIOT_API_URL,RiotApiConstants.RIOT_API_MATCH,matchId,RiotApiConstants.API_KEY);
+        
+        //url을 json으로 변환
+        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchInfo", matchId));
+
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
+
+        return (JSONObject) parser.parse(matchJSON);
     }
 }

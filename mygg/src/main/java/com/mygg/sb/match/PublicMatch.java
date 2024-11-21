@@ -130,7 +130,7 @@ public class PublicMatch
 			_participantsDto.setItem5			(((Long) _partPlayer.get("item5")).intValue());;
 			_participantsDto.setItem6			(((Long) _partPlayer.get("item6")).intValue());;
 			_participantsDto.setKills			(((Long)_partPlayer.get("kills")).intValue());;
-			
+			// 깃 테스트중
 			playerDto.add(_participantsDto);
 		} 
 

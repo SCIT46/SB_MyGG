@@ -30,7 +30,8 @@ public class PublicMatch
 
 				// player의 식별코드(playerId)를 저장할 List
 				player = new ArrayList<String>();
-
+				playerDto = new ArrayList<ParticipantsDto>();
+				
 				// // JSON 데이터를 분석해주는 JSONParser 객체 생성
 				// JSONParser parser = new JSONParser();
 
@@ -134,7 +135,15 @@ public class PublicMatch
 			_participantsDto.setAssists			(((Long)_partPlayer.get("assists")).intValue());
 			_participantsDto.setKda				(((float)(_participantsDto.getKills() + _participantsDto.getAssists()) 
 														 / _participantsDto.getDeaths()));
+			_participantsDto.setVisionScore		(((Long)_partPlayer.get("visionScore")).intValue());
+			_participantsDto.setVisionWardsBoughtInGame(((Long)_partPlayer.get("visionWardsBoughtInGame")).intValue());
+			_participantsDto.setWardsPlaced		(((Long)_partPlayer.get("wardsPlaced")).intValue());
+			_participantsDto.setWin				(((boolean)_partPlayer.get("win")));
 			
+			_participantsDto.setTotalDamageDealtToChampions	(((Long)_partPlayer.get("totalDamageDealtToChampions")).intValue());		
+			_participantsDto.setTotalDamageTaken			(((Long)_partPlayer.get("totalDamageTaken")).intValue());
+			_participantsDto.setSummoner1Id					(((Long)_partPlayer.get("summoner1Id")).intValue());
+			_participantsDto.setSummoner2Id					(((Long)_partPlayer.get("summoner2Id")).intValue());
 			// 깃 테스트중
 			playerDto.add(_participantsDto);
 		} 

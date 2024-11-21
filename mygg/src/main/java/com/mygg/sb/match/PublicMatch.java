@@ -5,11 +5,14 @@ import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import com.mygg.sb.statics.api.RiotApiClient;   
+import com.mygg.sb.statics.api.RiotApiClient;
+
+import lombok.Getter;   
  
 // riot api로 부터 받아온 match JSON 파일을 DB에 저장(matchId / match.JSON)
 // /api/user/{userId} -> DB에 userId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
 // /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return
+@Getter
 public class PublicMatch
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
@@ -30,8 +33,8 @@ public class PublicMatch
 
 				// player의 식별코드(playerId)를 저장할 List
 				player = new ArrayList<String>();
+
 				playerDto = new ArrayList<ParticipantsDto>();
-				
 				// // JSON 데이터를 분석해주는 JSONParser 객체 생성
 				// JSONParser parser = new JSONParser();
 
@@ -116,7 +119,7 @@ public class PublicMatch
 			
 			_participantsDto.setLane		 	((String) _partPlayer.get("lane")); // lane
 			_participantsDto.setUserName	    ((String) _partPlayer.get("riotIdGameName"));
-			_participantsDto.setRiotIdGameName  ((String) _partPlayer.get("riotIdGameName") +
+			_participantsDto.setRiotIdGameName  ((String) _partPlayer.get("riotIdGameName") + '#' +
 												 (String) _partPlayer.get("riotIdTagline"));
 			_participantsDto.setSummonerLevel   ((Long) _partPlayer.get("summonerLevel"));
 			_participantsDto.setGoldPerMinute	((Double) _partPlayer.get("goldPerMin"));

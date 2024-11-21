@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0-RC1'
-	id 'io.spring.dependency-management' version '1.1.6'
+	id 'io.spring.dependency-management' version '1.1.4'
 	id 'com.github.node-gradle.node' version '3.5.1'
 	
 }
@@ -57,6 +57,7 @@ dependencies {
 	//dotenv-java
 	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 
+	//Gson	
 	implementation 'com.google.code.gson:gson:+'
 }
 

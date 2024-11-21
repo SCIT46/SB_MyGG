@@ -11,12 +11,12 @@ import com.mygg.sb.user.UserApi;
 @RestController
 public class ApiController {
 	@GetMapping(path="/api/match/private/{matchId}")
-	public PrivateMatch privateMatch(@PathVariable String matchId) {
+	public PrivateMatch privateMatch(@PathVariable("matchId") String matchId) {
 		return new PrivateMatch(matchId);
 	}
 	
 	@GetMapping(path="/api/match/public/{matchId}")
-	public PublicMatch publicMatch(@PathVariable String matchId) throws Exception{
+	public PublicMatch publicMatch(@PathVariable("matchId") String matchId) throws Exception{
 		return new PublicMatch(matchId);
 	}
 

@@ -122,14 +122,19 @@ public class PublicMatch
 			_participantsDto.setChampionId		(((Long) _partPlayer.get("championId")).intValue());
 			_participantsDto.setChampionName	((String) _partPlayer.get("championName"));
 			_participantsDto.setChampLevel		(((Long) _partPlayer.get("champLevel")).intValue());
-			_participantsDto.setItem0			(((Long) _partPlayer.get("item0")).intValue());;
-			_participantsDto.setItem1			(((Long) _partPlayer.get("item1")).intValue());;
-			_participantsDto.setItem2			(((Long) _partPlayer.get("item2")).intValue());;
-			_participantsDto.setItem3			(((Long) _partPlayer.get("item3")).intValue());;
-			_participantsDto.setItem4			(((Long) _partPlayer.get("item4")).intValue());;
-			_participantsDto.setItem5			(((Long) _partPlayer.get("item5")).intValue());;
-			_participantsDto.setItem6			(((Long) _partPlayer.get("item6")).intValue());;
-			_participantsDto.setKills			(((Long)_partPlayer.get("kills")).intValue());;
+			_participantsDto.setItem0			(((Long) _partPlayer.get("item0")).intValue());
+			_participantsDto.setItem1			(((Long) _partPlayer.get("item1")).intValue());
+			_participantsDto.setItem2			(((Long) _partPlayer.get("item2")).intValue());
+			_participantsDto.setItem3			(((Long) _partPlayer.get("item3")).intValue());
+			_participantsDto.setItem4			(((Long) _partPlayer.get("item4")).intValue());
+			_participantsDto.setItem5			(((Long) _partPlayer.get("item5")).intValue());
+			_participantsDto.setItem6			(((Long) _partPlayer.get("item6")).intValue());
+			_participantsDto.setKills			(((Long)_partPlayer.get("kills")).intValue());
+			_participantsDto.setDeaths			(((Long)_partPlayer.get("deaths")).intValue());
+			_participantsDto.setAssists			(((Long)_partPlayer.get("assists")).intValue());
+			_participantsDto.setKda				(((float)(_participantsDto.getKills() + _participantsDto.getAssists()) 
+														 / _participantsDto.getDeaths()));
+			
 			// 깃 테스트중
 			playerDto.add(_participantsDto);
 		} 

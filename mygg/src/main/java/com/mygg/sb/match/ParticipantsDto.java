@@ -48,6 +48,7 @@ class ParticipantsDto
 	int summoner1Id;				// 서머너 스펠1	 12(Teleport), 4(Flaxsh)
 	int summoner2Id;				// 서머너 스펠2
 	
+	PerksDto perkDto;				// 룬
 	// PerksDto perks;
 //	서브룬 ("description": "subStyle",
 //		  "styles"."selections"."perk": 8429,
@@ -68,32 +69,20 @@ class ParticipantsDto
 		{
 			// TODO Auto-generated constructor stub
 		}
+	
+	@Override
+	public String toString()
+		{
+			return "ParticipantsDto [lane=" + lane + ", userName=" + userName + ", summonerLevel=" + summonerLevel
+					+ ", goldPerMinute=" + goldPerMinute + ", riotIdGameName=" + riotIdGameName + ", championId="
+					+ championId + ", championName=" + championName + ", champLevel=" + champLevel + ", item0=" + item0
+					+ ", item1=" + item1 + ", item2=" + item2 + ", item3=" + item3 + ", item4=" + item4 + ", item5="
+					+ item5 + ", item6=" + item6 + ", kills=" + kills + ", deaths=" + deaths + ", assists=" + assists
+					+ ", kda=" + kda + ", visionScore=" + visionScore + ", visionWardsBoughtInGame="
+					+ visionWardsBoughtInGame + ", wardsPlaced=" + wardsPlaced + ", win=" + win
+					+ ", totalDamageDealtToChampions=" + totalDamageDealtToChampions + ", totalDamageTaken="
+					+ totalDamageTaken + ", summoner1Id=" + summoner1Id + ", summoner2Id=" + summoner2Id + ", perkDto="
+					+ perkDto + "]";
+		}
 }
 
-class PerksDto
-{
-	PerkStatsDto statPerks;		// 적응형 공격력 3개 찍는 거, 사용자파편(["perks"]["statPerks"]["defense"] | ["flex"] | ["offense"]) = 5011 5008 5005
-	List<PerkStyleDto> styles;	// 룬 선택 리스트 ex) [0]["selections"]["perk"] : 8345
-								// 				  [1]["selections"]["perk"] : 8347
-}
-class PerkStyleDto
-{
-	String description;	// 설명
-	List<PerkStyleSelectionDto> selections;		
-	int style;	
-}
-
-class PerkStatsDto 
-{
-	// Name	Data Type	Description
-	int defense;		
-	int	flex;	
-	int offense;	
-}
-class PerkStyleSelectionDto 
-{
-	int perk;		
-	int var1;		
-	int var2;		
-	int var3;	
-}

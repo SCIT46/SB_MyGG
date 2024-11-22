@@ -147,8 +147,18 @@ public class PublicMatch
 			_participantsDto.setTotalDamageTaken			(((Long)_partPlayer.get("totalDamageTaken")).intValue());
 			_participantsDto.setSummoner1Id					(((Long)_partPlayer.get("summoner1Id")).intValue());
 			_participantsDto.setSummoner2Id					(((Long)_partPlayer.get("summoner2Id")).intValue());
+			
+			PerksDto perksDto = new PerksDto();
+			perksDto.insertIntoPerksDto((JSONObject)_partPlayer.get("perks"));
+			_participantsDto.setPerkDto(perksDto);
+			
+			//_participantsDto.setPerkDto						((PerksDto)_partPlayer.get("perks"));
+			// 룬 넣는 거 코드 추가 필요
+//			_participantsDto.insert
 			// 깃 테스트중
 			playerDto.add(_participantsDto);
+			
+			System.out.println(_participantsDto);
 		} 
 
 		public static void main(String[] args) throws Exception

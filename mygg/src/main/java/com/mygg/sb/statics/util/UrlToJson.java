@@ -27,6 +27,19 @@ public class UrlToJson {
         return userJSON;
     }
 
+    // dataVersion - 데이터 버전 조회
+    // dataLanguage - 데이터 언어 조회
+    public static String urlConvertor(String type){
+        switch(type){
+            case "dataVersion":
+                return RiotApiConstants.RIOT_DATA_API_URL + RiotApiConstants.RIOT_DATA_API_VERSION;
+            case "dataLanguage":
+                return RiotApiConstants.RIOT_DATA_API_URL + RiotApiConstants.RIOT_DATA_API_LANGUAGE;
+            default:
+                return null;
+        }
+    }
+
     // url : 타입에 따라 url 생성
     // summonerInfo - puuid로 소환사 정보 (RIOT_API_URL_KR/account/v1/summoners/by-puuid/{puuid})
     // matchInfo - matchId로 매치 정보 (RIOT_API_URL/match/v5/matches/{matchId})

@@ -9,6 +9,10 @@ public class RiotApiConstants {
     public static Dotenv dotenv = Dotenv.load();
     public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
     // =============================================================================================
+    public final static String RIOT_DATA_API_URL = "https://ddragon.leagueoflegends.com/";
+    public final static String RIOT_DATA_API_VERSION = "/api/versions.json";
+    public final static String RIOT_DATA_API_LANGUAGE = "/cdn/languages.json";
+    // =============================================================================================
     public final static String RIOT_API_URL = "https://asia.api.riotgames.com";
     public final static String RIOT_API_URL_KR = "https://kr.api.riotgames.com";
     // =============================================================================================

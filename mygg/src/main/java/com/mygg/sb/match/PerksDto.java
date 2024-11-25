@@ -9,6 +9,8 @@ import org.json.simple.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 public class PerksDto
 	{
 		PerkStatsDto statPerks = new PerkStatsDto(); // 적응형 공격력 3개 찍는 거, 사용자파편(["perks"]["statPerks"]["defense"] | ["flex"] | ["offense"]) = 5011 5008 5005

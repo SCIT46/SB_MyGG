@@ -53,15 +53,6 @@ public class UserApi {
 
     // 인스턴스 초기화 구문
     private void init() throws Exception{
-        // // API 주소값
-        // //String request_url = String.format("%s%s%s?api_key=%s",RiotApiConstants.RIOT_API_URL_KR,RiotApiConstants.RIOT_API_SUMMONER_INFO,this.puuid,RiotApiConstants.API_KEY);
-        
-        // //url을 json으로 변환
-        // String summoJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("summonerInfo", this.puuid));
-
-		// // JSON 데이터를 분석해주는 JSONParser 객체 생성
-		// JSONParser parser = new JSONParser();
-
 		// 소환사 정보 JSON
 		JSONObject jsonObject = RiotApiClient.getSummonerInfo(puuid);   //(JSONObject) parser.parse(summoJSON);           
         summonerId = (String) jsonObject.get("id");

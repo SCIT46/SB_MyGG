@@ -1,5 +1,10 @@
 package com.mygg.sb.item;
 
+import lombok.Setter;
+import lombok.Getter;
+
+@Getter
+@Setter
 public class itemDto {
     //field
     //아이템 아이디
@@ -17,11 +22,15 @@ public class itemDto {
     //아이템 골드 정보
     private goldDto gold;
     //아이템 태그
-    private String[] tags;
+    //private ArrayList<String> tags;
     //아이템 사용되는 맵
     //private String[] maps;
     //아이템 특수 레시피
-    private String[] specialRecipe;ㅑ
-    //아이템 통계 정보
+    //private String[] specialRecipe;
+    //아이템 성능(효과) 정보
     private statsDto stats;
+    public itemDto(){
+        stats = new statsDto(null);
+        gold = new goldDto();
+    }
 }

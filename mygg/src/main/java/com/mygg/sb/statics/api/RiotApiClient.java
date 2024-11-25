@@ -117,9 +117,6 @@ public class RiotApiClient {
 
     // API : matchId(String)로 매치 정보(JSONObject) 변환
     public static JSONObject getMatchInfo(String matchId) throws Exception{
-        // API 주소값
-        //String request_url = String.format("%s%s%s?api_key=%s",RiotApiConstants.RIOT_API_URL,RiotApiConstants.RIOT_API_MATCH,matchId,RiotApiConstants.API_KEY);
-        
         //url을 json으로 변환
         String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchInfo", matchId));
 
@@ -132,7 +129,7 @@ public class RiotApiClient {
     // API : puuid(String)로 매치 목록(String[]) 변환
     public static String[] getMatchList(String puuid) throws Exception{
         // url을 json으로 변환
-        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, 0, 40)); 
+        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, 0, 20)); 
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
@@ -148,4 +145,31 @@ public class RiotApiClient {
 
         return matchList;
     }  
+
+    // API : itemId(String)로 아이템 정보(JSONObject) 변환
+    public static JSONObject getItem(String itemId) throws Exception{
+        //if(itemId == null) return null;
+        // url을 json으로 변환
+        String itemJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("item"));
+
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
+        
+        // 아이템 정보 JSON
+        JSONObject jsonObject = (JSONObject) parser.parse(itemJSON);
+
+        // 아이템 정보 JSON에서 아이템 아이디로 해당하는 정보 조회
+        return (JSONObject) ((JSONObject) jsonObject.get("data")).get(itemId);
+    }
+
+    // API : championId(String)로 챔피언 정보(JSONObject) 변환
+    public static JSONObject getChampion(String championId) throws Exception{
+        // url을 json으로 변환
+        String championJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("champion", championId));
+
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
+
+        return (JSONObject) parser.parse(championJSON);
+    }
 }

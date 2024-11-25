@@ -9,9 +9,16 @@ public class RiotApiConstants {
     public static Dotenv dotenv = Dotenv.load();
     public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
     // =============================================================================================
-    public final static String RIOT_DATA_API_URL = "https://ddragon.leagueoflegends.com/";
+    //https://developer.riotgames.com/docs/lol
+    public final static String RIOT_DATA_API_URL = "https://ddragon.leagueoflegends.com";
     public final static String RIOT_DATA_API_VERSION = "/api/versions.json";
     public final static String RIOT_DATA_API_LANGUAGE = "/cdn/languages.json";
+    public final static String RIOT_DATA_API_ITEM = "/cdn/14.23.1/data/ko_KR/item.json";
+    public final static String RIOT_DATA_API_ITEM_IMG = "/cdn/14.23.1/img/item/";
+    public final static String RIOT_DATA_API_CHAMPION = "/cdn/14.23.1/data/ko_KR/champion.json";
+    public final static String RIOT_DATA_API_CHAMPION_IMG = "/cdn/14.23.1/img/champion/";
+    //public final static String RIOT_DATA_API_RUNE = "/cdn/{version}/data/{language}/runes.json";
+    //public final static String RIOT_DATA_API_SPELL = "/cdn/{version}/data/{language}/summoner.json";
     // =============================================================================================
     public final static String RIOT_API_URL = "https://asia.api.riotgames.com";
     public final static String RIOT_API_URL_KR = "https://kr.api.riotgames.com";

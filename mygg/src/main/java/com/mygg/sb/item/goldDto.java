@@ -1,5 +1,10 @@
 package com.mygg.sb.item;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class goldDto {
     //아이템 골드 정보
     //아이템 골드 기본값 

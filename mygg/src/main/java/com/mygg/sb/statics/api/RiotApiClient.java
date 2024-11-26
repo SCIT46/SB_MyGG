@@ -157,19 +157,29 @@ public class RiotApiClient {
         
         // 아이템 정보 JSON
         JSONObject jsonObject = (JSONObject) parser.parse(itemJSON);
+        
+        // id를 지정해주지 않았을 때 전체 정보 반환
+        if(itemId == null) return jsonObject;
 
         // 아이템 정보 JSON에서 아이템 아이디로 해당하는 정보 조회
         return (JSONObject) ((JSONObject) jsonObject.get("data")).get(itemId);
     }
 
     // API : championId(String)로 챔피언 정보(JSONObject) 변환
-    public static JSONObject getChampion(String championId) throws Exception{
+    public static JSONObject getChampion(String champId) throws Exception{
         // url을 json으로 변환
-        String championJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("champion", championId));
+        String championJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("champion"));
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
 
-        return (JSONObject) parser.parse(championJSON);
+        // 챔피언 정보 JSON
+        JSONObject jsonObject = (JSONObject) parser.parse(championJSON);
+
+        // id를 지정해주지 않았을 때 전체 정보 반환
+        if(champId == null) return jsonObject;
+
+        // 챔피언 정보 JSON에서 챔피언 아이디로 해당하는 정보 조회
+        return (JSONObject) ((JSONObject) jsonObject.get("data")).get(champId);
     }
 }

@@ -5,8 +5,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.mygg.sb.statics.api.RiotApiConstants;
 
@@ -124,5 +126,17 @@ public class UrlToJson {
             stringArray[i] = (String) jsonArray.get(i);
         }
         return stringArray;
+    }
+
+    public static HashMap<String, Number> jsonObjectToHashMap(JSONObject jsonObject){
+        if(jsonObject == null) return null;
+        HashMap<String, Number> hashMap = new HashMap<>();
+        for(Object key : jsonObject.keySet()){
+            if(jsonObject.get(key) instanceof Long)
+                hashMap.put((String) key, ((Long) jsonObject.get(key)).intValue());
+            else if(jsonObject.get(key) instanceof Double)
+                hashMap.put((String) key, ((Double) jsonObject.get(key)).floatValue());
+        }
+        return hashMap;
     }
 }

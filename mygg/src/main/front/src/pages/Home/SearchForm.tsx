@@ -1,38 +1,34 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import SearchDetail from "./SearchDetail";
+import { useNavigate } from "react-router-dom";
+import dummy from "./dummy";
 
 const SearchFormContainer = styled.form`
   position: relative;
   margin-top: 10px;
-  width: 100vw;
+  width: 50vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
-const SearchDetailContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.backgroundWhite};
-  margin-top: 3px;
-  width: 30%;
-  height: 80px;
-  border-radius: 10px;
-  border: 1.5px solid ${({ theme }) => theme.colors.primaryGold};
-`;
-
 const RegionSelectContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.backgroundWhite};
+  position: absolute;
+  top: 53px;
+  left: 0px;
   margin-top: 3px;
-  width: 10%;
+  width: 60px;
   height: 80px;
-
   border-radius: 10px;
   border: 1.5px solid ${({ theme }) => theme.colors.primaryGold};
 `;
 
 const SearchInputBox = styled.div`
-  width: 50%;
+  width: 100%;
   height: 50px;
   border-radius: 30px;
   border: 1.5px solid ${({ theme }) => theme.colors.primaryGold};
@@ -47,13 +43,6 @@ const SearchInputBox = styled.div`
     border-bottom: none;
     border-radius: 10px 10px 0px 0px;
   }
-`;
-
-const SearchDetailHearder = styled.div`
-  width: 100%;
-  height: 35px;
-  border-radius: 10px;
-  background-color: ${({ theme }) => theme.colors.backgroundDarkerGray};
 `;
 
 const RegionSelectBtn = styled.div`
@@ -88,47 +77,93 @@ const RegionSelectIcon = styled.div`
 
 const SearchInput = styled.input`
   width: 77%;
-  height: 30px;
+  height: 40px;
   border: none;
   outline: none;
   font-size: 14px;
+  margin-left: 5px;
 `;
 
 const SearchIcon = styled(MagnifyingGlassIcon)`
-  width: 30px;
-  height: 30px;
-  margin-right: 12px;
+  width: 28px;
+  height: 28px;
+  margin-right: 14px;
   color: ${({ theme }) => theme.colors.primaryGold};
   margin-bottom: 2px;
+  cursor: pointer;
 `;
 
+interface IUserSearchInput {
+  userName: string;
+  tagLine: string;
+}
+
 export default function SearchForm() {
+  const navigate = useNavigate();
   const [isSearchInputFocused, setIsSearchInputFocused] =
     useState<boolean>(false);
   const [isRegionSelectClicked, setIsRegionSelectClicked] =
     useState<boolean>(false);
+  const [userSearchInput, setUserSearchInput] = useState<IUserSearchInput>({
+    userName: "",
+    tagLine: "",
+  });
+
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const [userName, tagLine = ""] = event.target.value.split("#");
+
+    setUserSearchInput({
+      userName: userName,
+      tagLine: tagLine,
+    });
+  };
+
+  const handleSearch = () => {
+    const { userName, tagLine } = userSearchInput;
+    if (userName.trim() !== "") {
+      navigate(`/search/${userName}/${tagLine}`);
+    } else {
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSearch();
+    }
+  };
 
   return (
     <SearchFormContainer>
       <SearchInputBox>
         <RegionSelectBtn
-          onClick={() => setIsRegionSelectClicked((prev) => !prev)}
+          onClick={() => {
+            setIsRegionSelectClicked((prev) => !prev);
+            setIsSearchInputFocused(false);
+          }}
         >
           <RegionSelectSpan>KR</RegionSelectSpan>
           <RegionSelectIcon></RegionSelectIcon>
         </RegionSelectBtn>
 
         <SearchInput
-          onFocus={() => setIsSearchInputFocused(true)}
+          onChange={handleSearchInputChange}
+          onFocus={() => {
+            setIsSearchInputFocused(true);
+            setIsRegionSelectClicked(false);
+          }}
           onBlur={() => setIsSearchInputFocused(false)}
+          onKeyDown={handleKeyDown}
           placeholder="소환사 이름을 입력해주세요! 소환사#태그"
         />
-        <SearchIcon />
+        <SearchIcon onClick={handleSearch} />
       </SearchInputBox>
-
-      {isSearchInputFocused ? (
-        <SearchDetailContainer></SearchDetailContainer>
+      {isRegionSelectClicked ? (
+        <RegionSelectContainer></RegionSelectContainer>
       ) : null}
+      {isSearchInputFocused ? <SearchDetail searchedUser={dummy} /> : null}
     </SearchFormContainer>
   );
 }

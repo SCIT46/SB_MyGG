@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 import SearchForm from "./SearchForm";
 const HoemContainer = styled.div`

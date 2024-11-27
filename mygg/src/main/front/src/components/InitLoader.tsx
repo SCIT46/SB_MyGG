@@ -19,7 +19,7 @@ export default function InitLoader() {
     };
 
     fetchData();
-  }, []);
+  }, [setChampions]);
 
   return <></>;
 }

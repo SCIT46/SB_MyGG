@@ -1,7 +1,9 @@
-package com.mygg.sb.match;
+// package com.mygg.sb.match;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.stereotype.Repository;
 
-public interface MatchRepository extends JpaRepository{
+// @Repository
+// public interface MatchRepository extends JpaRepository{
     
-}
+// }

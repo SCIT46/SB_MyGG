@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mygg.sb.match.PrivateMatch;
 import com.mygg.sb.match.PublicMatch;
+import com.mygg.sb.user.UserApi;
 
 @RestController
 public class ApiController {
@@ -19,8 +20,8 @@ public class ApiController {
 		return new PublicMatch(matchId);
 	}
 
-	// @GetMapping(path="/api/user/{name}/{tag}")
-	// public User user(@PathVariable String name, @PathVariable String tag) throws Exception{
-	// 	return new User(name,tag);
-	// }
+	@GetMapping(path="/api/user/{name}/{tag}")
+	public UserApi user(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception{
+		return new UserApi(name,tag);
+	}
 }

@@ -76,12 +76,11 @@ const RegionSelectIcon = styled.div`
 `;
 
 const SearchInput = styled.input`
-  width: 77%;
+  width: 80%;
   height: 40px;
   border: none;
   outline: none;
   font-size: 14px;
-  margin-left: 5px;
 `;
 
 const SearchIcon = styled(MagnifyingGlassIcon)`

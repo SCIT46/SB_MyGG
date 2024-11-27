@@ -99,7 +99,7 @@ export default function SearchDetail({ searchedUser }: ISearchDeailProps) {
         {searchedUser.map((searchedUser, index) => (
           <SearchedUserBox
             key={index}
-            onClick={() =>
+            onMouseDown={() =>
               handleNavigate(searchedUser.gameName, searchedUser.tagLine)
             }
           >

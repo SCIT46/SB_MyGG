@@ -1,22 +1,24 @@
 package com.mygg.sb.match;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import com.mygg.sb.statics.api.RiotApiClient;
 
-   
+import lombok.Getter;   
  
 // riot api로 부터 받아온 match JSON 파일을 DB에 저장(matchId / match.JSON)
 // /api/user/{userId} -> DB에 userId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
 // /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return
+@Getter
 public class PublicMatch
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
 		ArrayList<String> player;
-
+		List<ParticipantsDto> playerDto;
+		
 		public PublicMatch(String matchId) throws Exception
 			{
 				// // API 주소값
@@ -29,9 +31,10 @@ public class PublicMatch
 
 				// /* JSON Parsing 부 */
 
-				// // player의 식별코드(playerId)를 저장할 List
-				// player = new ArrayList<String>();
+				// player의 식별코드(playerId)를 저장할 List
+				player = new ArrayList<String>();
 
+				playerDto = new ArrayList<ParticipantsDto>();
 				// // JSON 데이터를 분석해주는 JSONParser 객체 생성
 				// JSONParser parser = new JSONParser();
 
@@ -66,7 +69,6 @@ public class PublicMatch
 							{
 								searchParticipants(jsonObj);
 							}
-
 					}
 
 				// 테스트 : 플레이어 식별자(participants) 확인
@@ -89,13 +91,14 @@ public class PublicMatch
 					// participants: 게임 참자가들
 					// Player별 데이터를 조회하기 위해 info 내의 participants(플레이어들) List를 따로 빼냄
 					JSONObject partPlayer = (JSONObject) participants.get(i);
-
+					insertParticipantsDto(partPlayer);
+					/*
 					// 챔피언 이름, 라인(포지션), 유저이름#태그, 유저레벨 추출/출력
 					String champion = (String) partPlayer.get("championName"); //
 					String lane = (String) partPlayer.get("lane"); // individualPosition,
 																		// teamPosition
-					String userName = partPlayer.get("riotIdGameName") + "#"
-									+ partPlayer.get("riotIdTagline");
+					//String userName = partPlayer.get("riotIdGameName") + "#"
+					//				+ partPlayer.get("riotIdTagline");
 					Long userLevel = (Long) partPlayer.get("summonerLevel");					
 
 					// info 내의 participants 내의 challenges를 따로 빼냄
@@ -103,17 +106,64 @@ public class PublicMatch
 
 					// 분당 골드 값 추출
 					Double goldPerMin = (Double) playerChall.get("goldPerMinute");
-
-					Participants participants1 = new Participants(champion, lane, userName, userLevel, goldPerMin);
-					System.out.println(participants1);
+					*/
+					
+					//System.out.println(_participantsDto);
 					//System.out.printf("%d : %s(%d) : %s(%s) \n", i, userName, userLevel, champion, lane);
 				}
 		}
+		
+		private void insertParticipantsDto(JSONObject _partPlayer)
+		{
+			ParticipantsDto _participantsDto = new ParticipantsDto();
+			
+			_participantsDto.setLane		 	((String) _partPlayer.get("lane")); // lane
+			_participantsDto.setUserName	    ((String) _partPlayer.get("riotIdGameName"));
+			_participantsDto.setRiotIdGameName  ((String) _partPlayer.get("riotIdGameName") + '#' +
+												 (String) _partPlayer.get("riotIdTagline"));
+			_participantsDto.setSummonerLevel   ((Long) _partPlayer.get("summonerLevel"));
+			_participantsDto.setGoldPerMinute	((Double) _partPlayer.get("goldPerMin"));
+			_participantsDto.setChampionId		(((Long) _partPlayer.get("championId")).intValue());
+			_participantsDto.setChampionName	((String) _partPlayer.get("championName"));
+			_participantsDto.setChampLevel		(((Long) _partPlayer.get("champLevel")).intValue());
+			_participantsDto.setItem0			(((Long) _partPlayer.get("item0")).intValue());
+			_participantsDto.setItem1			(((Long) _partPlayer.get("item1")).intValue());
+			_participantsDto.setItem2			(((Long) _partPlayer.get("item2")).intValue());
+			_participantsDto.setItem3			(((Long) _partPlayer.get("item3")).intValue());
+			_participantsDto.setItem4			(((Long) _partPlayer.get("item4")).intValue());
+			_participantsDto.setItem5			(((Long) _partPlayer.get("item5")).intValue());
+			_participantsDto.setItem6			(((Long) _partPlayer.get("item6")).intValue());
+			_participantsDto.setKills			(((Long)_partPlayer.get("kills")).intValue());
+			_participantsDto.setDeaths			(((Long)_partPlayer.get("deaths")).intValue());
+			_participantsDto.setAssists			(((Long)_partPlayer.get("assists")).intValue());
+			_participantsDto.setKda				(((float)(_participantsDto.getKills() + _participantsDto.getAssists()) 
+														 / _participantsDto.getDeaths()));
+			_participantsDto.setVisionScore		(((Long)_partPlayer.get("visionScore")).intValue());
+			_participantsDto.setVisionWardsBoughtInGame(((Long)_partPlayer.get("visionWardsBoughtInGame")).intValue());
+			_participantsDto.setWardsPlaced		(((Long)_partPlayer.get("wardsPlaced")).intValue());
+			_participantsDto.setWin				(((boolean)_partPlayer.get("win")));
+			
+			_participantsDto.setTotalDamageDealtToChampions	(((Long)_partPlayer.get("totalDamageDealtToChampions")).intValue());		
+			_participantsDto.setTotalDamageTaken			(((Long)_partPlayer.get("totalDamageTaken")).intValue());
+			_participantsDto.setSummoner1Id					(((Long)_partPlayer.get("summoner1Id")).intValue());
+			_participantsDto.setSummoner2Id					(((Long)_partPlayer.get("summoner2Id")).intValue());
+			
+			PerksDto perksDto = new PerksDto();
+			perksDto.insertIntoPerksDto((JSONObject)_partPlayer.get("perks"));
+			_participantsDto.setPerkDto(perksDto);
+			
+			//_participantsDto.setPerkDto						((PerksDto)_partPlayer.get("perks"));
+			// 룬 넣는 거 코드 추가 필요
+//			_participantsDto.insert
+			// 깃 테스트중
+			playerDto.add(_participantsDto);
+			
+			System.out.println(_participantsDto);
+		} 
 
 		public static void main(String[] args) throws Exception
 			{
 				PublicMatch match = new PublicMatch("KR_7334845449");
-
 			}
 
 	}

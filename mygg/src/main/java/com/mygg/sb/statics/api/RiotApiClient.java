@@ -9,16 +9,17 @@ import org.json.simple.parser.JSONParser;
 import com.mygg.sb.statics.util.UrlToJson;
 
 public class RiotApiClient {
-    // public static String getVersion(){
-    // String versionJSON = new BufferedReader(new InputStreamReader(new
-    // URL("https://ddragon.leagueoflegends.com/api/versions.json").openStream(),"UTF-8")).readLine();
-    // }
-    // public static String getLanguage(){
-    // String languageJSON = new BufferedReader(new InputStreamReader(new
-    // URL("https://ddragon.leagueoflegends.com/cdn/languages.json").openStream(),"UTF-8")).readLine();
-    // }
+    // API : 최신 데이터 버전 조회(Array로 이루어진 JSON 데이터에서 첫번째(최신) 값 반환);
+    public static String getLatestVersion() throws Exception{
+        String versionJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("dataVersion"));
+        return (String) ((JSONArray) new JSONParser().parse(versionJSON)).get(0);
+    }
 
-    
+    // API : 데이터 언어 조회(JSON 데이터 반환);
+    public static String getLanguage() throws Exception{
+        String languageJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("dataLanguage"));
+        return languageJSON;
+    }
 
     // API : gameName(String)과 tagLine(String)를 주면 puuid(String)로 변환
     public static String nameTagToPid(String gameName, String tagLine) throws Exception {
@@ -62,10 +63,6 @@ public class RiotApiClient {
 
     // API : puuid(String)로 summonerId(String) 변환
     public static String pidToSummonerId(String pid) throws Exception {
-        
-        //String user_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_SUMMONER_INFO, pid,
-        //        RiotApiConstants.API_KEY);
-
         // url을 json으로 변환
         String userJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("summonerInfo", pid));
 
@@ -83,15 +80,8 @@ public class RiotApiClient {
 
     // API : SummonerId(String), isExp(Boolean)로 소환사 리그정보(JSONObject) 변환
     public static JSONObject getLeagueBySummonerId(String summonerId) throws Exception {
-        // puuid로 소환사의 정보를 받아오는 API
-        //String user_url = String.format("%s%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL_KR, RiotApiConstants.RIOT_API_LEAGUE, "entries/by-summoner/",
-        //        summonerId, RiotApiConstants.API_KEY);
-
-
         // url을 json으로 변환
         String userJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("leagueInfo", summonerId));
-
-        /* JSON Parsing 부 */
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
@@ -115,9 +105,6 @@ public class RiotApiClient {
 
     // API : puuid(String)로 소환사 정보(JSONObject) 변환
     public static JSONObject getSummonerInfo(String puuid) throws Exception{
-        // API 주소값
-        //String request_url = String.format("%s%s%s?api_key=%s",RiotApiConstants.RIOT_API_URL_KR,RiotApiConstants.RIOT_API_SUMMONER_INFO,this.puuid,RiotApiConstants.API_KEY);
-        
         //url을 json으로 변환
         String summoJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("summonerInfo", puuid));
 
@@ -130,9 +117,6 @@ public class RiotApiClient {
 
     // API : matchId(String)로 매치 정보(JSONObject) 변환
     public static JSONObject getMatchInfo(String matchId) throws Exception{
-        // API 주소값
-        //String request_url = String.format("%s%s%s?api_key=%s",RiotApiConstants.RIOT_API_URL,RiotApiConstants.RIOT_API_MATCH,matchId,RiotApiConstants.API_KEY);
-        
         //url을 json으로 변환
         String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchInfo", matchId));
 
@@ -145,7 +129,7 @@ public class RiotApiClient {
     // API : puuid(String)로 매치 목록(String[]) 변환
     public static String[] getMatchList(String puuid) throws Exception{
         // url을 json으로 변환
-        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, 0, 40)); 
+        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, 0, 20)); 
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
@@ -161,4 +145,41 @@ public class RiotApiClient {
 
         return matchList;
     }  
+
+    // API : itemId(String)로 아이템 정보(JSONObject) 변환
+    public static JSONObject getItem(String itemId) throws Exception{
+        //if(itemId == null) return null;
+        // url을 json으로 변환
+        String itemJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("item"));
+
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
+        
+        // 아이템 정보 JSON
+        JSONObject jsonObject = (JSONObject) parser.parse(itemJSON);
+        
+        // id를 지정해주지 않았을 때 전체 정보 반환
+        if(itemId == null) return jsonObject;
+
+        // 아이템 정보 JSON에서 아이템 아이디로 해당하는 정보 조회
+        return (JSONObject) ((JSONObject) jsonObject.get("data")).get(itemId);
+    }
+
+    // API : championId(String)로 챔피언 정보(JSONObject) 변환
+    public static JSONObject getChampion(String champId) throws Exception{
+        // url을 json으로 변환
+        String championJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("champion"));
+
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
+
+        // 챔피언 정보 JSON
+        JSONObject jsonObject = (JSONObject) parser.parse(championJSON);
+
+        // id를 지정해주지 않았을 때 전체 정보 반환
+        if(champId == null) return jsonObject;
+
+        // 챔피언 정보 JSON에서 챔피언 아이디로 해당하는 정보 조회
+        return (JSONObject) ((JSONObject) jsonObject.get("data")).get(champId);
+    }
 }

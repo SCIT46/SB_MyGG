@@ -1,5 +1,7 @@
 package com.mygg.sb.item;
 
+import java.util.ArrayList;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -10,11 +12,41 @@ import lombok.Getter;
 
 @Getter
 public class ItemApi {
-    itemDto item;
+    
+    // 아이템 리스트
+    ArrayList<itemDto> item;
 
+    // 아이템 아이디로 아이템 정보 받아오기
     public ItemApi(String id) throws Exception{
+        // 아이템 리스트 초기화
+        item = new ArrayList<>();
+        // 아이디로 아이템 정보 추출/저장하여 객체화 시켜주는 메서드 호출
+        item.add(createItemDto(id));
+    }
+
+    // 전체 아이템 정보 받아오기
+    public ItemApi() throws Exception{
+        // 아이템 리스트 초기화
+        item = new ArrayList<>();
+        // 전체 아이템 아이디 리스트 초기화
+        ArrayList<String> itemIdList;
+
+        // 아이템의 전체 정보 받아오기
+        JSONObject jsonObject = RiotApiClient.getItem("all");
+
+        // 아이템의 전체 아이디 받아오기/저장
+        itemIdList = new ArrayList<>(jsonObject.keySet());
+
+        // ID 리스트로 전체 정보 받아와 아이템 리스트에 저장
+        for(String id : itemIdList){
+            item.add(createItemDto(id));
+        }
+    }
+
+    // 아이디로 아이템 정보 추출/저장하여 객체화 시켜주는 메서드
+    public itemDto createItemDto(String id) throws Exception{
         // 아이템 정보 초기화
-        item = new itemDto();
+        itemDto item = new itemDto();
 
         // 아이템 정보 조회
         JSONObject jsonObject = RiotApiClient.getItem(id);
@@ -31,6 +63,7 @@ public class ItemApi {
         item.getGold().setPurchasable((boolean) ((JSONObject) jsonObject.get("gold")).get("purchasable"));
         //item.setTags((ArrayList<String>) jsonObject.get("tags"));
         item.setStats(UrlToJson.jsonObjectToHashMap((JSONObject) jsonObject.get("stats")));
-    }
 
+        return item;
+    }
 }

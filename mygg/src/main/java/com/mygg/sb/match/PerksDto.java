@@ -7,13 +7,15 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class PerksDto
 	{
-		PerkStatsDto statPerks = new PerkStatsDto(); // 적응형 공격력 3개 찍는 거, 사용자파편(["perks"]["statPerks"]["defense"] | ["flex"] | ["offense"]) = 5011 5008 5005
+		PerkStatsDto statPerks; // 적응형 공격력 3개 찍는 거, 사용자파편(["perks"]["statPerks"]["defense"] | ["flex"] | ["offense"]) = 5011 5008 5005
 		List<PerkStyleDto> styles;	// 룬 선택 리스트 ex) [0]["selections"]["perk"] : 8345 메인룬 세팅 ex) 정복자, 감전, 비열한 한 방 등등..
 									// 				  [1]["selections"]["perk"] : 8347
 		@Override
@@ -25,6 +27,8 @@ public class PerksDto
 		public void insertIntoPerksDto(JSONObject obj)
 		{
 			// 적응형 능력치 넣기
+			statPerks = new PerkStatsDto();
+			styles = new ArrayList<PerkStyleDto>();
 			
 			JSONObject _statPerks = ((JSONObject)(obj.get("statPerks")));
 			this.statPerks.setDefense(((Long)_statPerks.get("defense")).intValue());
@@ -33,7 +37,7 @@ public class PerksDto
 			
 			// styles(메인룬 서브룬 넣기)
 			JSONArray jarr = (JSONArray) obj.get("styles");
-			styles = new ArrayList<PerkStyleDto>();
+			
 			for(int i = 0; i < jarr.size(); i++)
 				{
 					JSONObject jar = (JSONObject)jarr.get(i);

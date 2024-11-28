@@ -5,20 +5,28 @@ import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import com.mygg.sb.champion.infoDto;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDtoMapper;
 
-import lombok.Getter;   
+import lombok.Getter;
+import lombok.Setter;   
  
 // riot api로 부터 받아온 match JSON 파일을 DB에 저장(matchId / match.JSON)
 // /api/user/{userId} -> DB에 userId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
 // /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return
 @Getter
+@Setter
 public class PublicMatch
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
-		ArrayList<String> player;
-		List<ParticipantsDto> playerDto;
+		//ArrayList<String> player;
+		//List<String> participants; 		//player UID들
+		//List<ParticipantsDto> playerDto;
+		
+		MetadataDto metadata;
+		InfoDto info;
 		
 		public PublicMatch(String matchId) throws Exception
 			{
@@ -33,15 +41,16 @@ public class PublicMatch
 				// /* JSON Parsing 부 */
 
 				// player의 식별코드(playerId)를 저장할 List
-				player = new ArrayList<String>();
-
-				playerDto = new ArrayList<ParticipantsDto>();
+				//player = new ArrayList<String>();
+				//participants = new ArrayList<String>();
+				//playerDto = new ArrayList<ParticipantsDto>();
 				// // JSON 데이터를 분석해주는 JSONParser 객체 생성
 				// JSONParser parser = new JSONParser();
 
 				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
-
+				JsonToDtoMapper mapper = new JsonToDtoMapper();
+				
 				// jsonObject의 JSON Key값으로 모든 데이터 조회
 				for (Object key : jsonObject.keySet())
 					{
@@ -50,34 +59,11 @@ public class PublicMatch
 						JSONObject jsonObj = (JSONObject) value;
 
 						// Extract Player Identity KEY
-						// JSON파일 내부의 metadata의 데이터 불러오기
+						// JSON파일 내부의 metadata, info 데이터 불러오기
 						
-						if (key.equals("metadata"))
-							{
-								// JSONArray(ArrayList)형 partipants(매치참여유저List)
-								JSONArray participants = (JSONArray) jsonObj.get("participants");
-
-								// partipants의 데이터를 player List에 저장
-								for (int i = 0; i < participants.size(); i++)
-									{
-										player.add((String) participants.get(i));
-									}
-							}
-						// =======================================================================
-
-						// JSON파일 내부의 info의 데이터 불러오기
-						if (key.equals("info"))
-							{
-								searchParticipants(jsonObj);
-							}
+						if (key.equals("metadata")) metadata = mapper.mapToDto(jsonObj, MetadataDto.class);
+						if (key.equals("info")) info = mapper.mapToDto(jsonObj, InfoDto.class);
 					}
-
-				// 테스트 : 플레이어 식별자(participants) 확인
-				for (int i = 0; i < player.size(); i++)
-					{
-						System.out.println("Player" + i + " : " + player.get(i));
-					}
-
 			}
 		
 		private void searchParticipants(JSONObject jsonObj)
@@ -162,7 +148,7 @@ public class PublicMatch
 			JsonToDtoMapper mapper = new JsonToDtoMapper();
 			ParticipantsDto _participantsDto = mapper.mapToDto(_partPlayer, ParticipantsDto.class);
 			
-			playerDto.add(_participantsDto);
+			//playerDto.add(_participantsDto);
 			
 			System.out.println(_participantsDto);
 		} 

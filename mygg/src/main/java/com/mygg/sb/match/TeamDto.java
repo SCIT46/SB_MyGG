@@ -4,10 +4,10 @@ import java.util.List;
 
 public class TeamDto
 	{
-		List<BanDto> bans;
-		ObjectDto objectives;
-		int teamId;
-		boolean win;
+		List<BanDto> bans;		// 밴한 것들
+		ObjectDto objectives;	// 먹은 오브젝트들
+		int teamId;				// 팀ID
+		boolean win;			// 승리여부
 	}
 
 // 밴픽

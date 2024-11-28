@@ -19,7 +19,7 @@ class ParticipantsDto
 	String championName;	// 사용한 챔피언	
 	String lane;			// 어느 라인인가				
 	Long summonerLevel;		// 유저 레벨
-	String puuid;				// puuid
+	String puuid;			// puuid
 	
 	int championId;		// 챔피언 이미지에 쓸 id값 ex) 51
 	int champLevel;		// 챔피언 레벨
@@ -47,15 +47,19 @@ class ParticipantsDto
 	int wardsKilled;			// 부셔진 와드수
 	int detectorWardsPlaced;	// 와드 감지
 	
+	int totalMinionsKilled;		// 미니언 잡은 수
+	int neutralMinionsKilled;	// 정글몹 잡은 수, 총 CS=totalMinionsKilled+neutralMinionsKilled
+								// 분당 CS=  게임 시간(분) / 총 CS​
+
 	int totalDamageDealtToChampions;// 챔피언에게 가한 피해량
 	int totalDamageTaken;			// 받은 피해량
 	int summoner1Id;				// 서머너 스펠1	 12(Teleport), 4(Flaxsh)
 	int summoner2Id;				// 서머너 스펠2
 	
-	int dangerPings;			// 핑
-	int getBackPings;			// 핑
-	int holdPings;				// 핑
-	int needVisionPings;		// 핑
+	int dangerPings;			// 위험핑
+	int getBackPings;			// 백핑
+	int holdPings;				// 홀드?핑
+	int needVisionPings;		// 시야필요 핑
 	
 	PerksDto perks;				// 룬
 	ChallengesDto challenges;	// 챌린지스

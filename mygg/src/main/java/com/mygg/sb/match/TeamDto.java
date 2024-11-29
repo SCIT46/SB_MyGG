@@ -2,6 +2,13 @@ package com.mygg.sb.match;
 
 import java.util.List;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class TeamDto
 	{
 		List<BanDto> bans;		// 밴한 것들
@@ -11,12 +18,16 @@ public class TeamDto
 	}
 
 // 밴픽
+@Getter
+@Setter
 class BanDto
 	{
 		int championId;
 		int pickTurn;
 	}
 
+@Getter
+@Setter
 class ObjectDto
 {
 	ObjectiveDto baron;		
@@ -28,6 +39,8 @@ class ObjectDto
 	ObjectiveDto tower;	
 }
 
+@Getter
+@Setter
 class ObjectiveDto
 {
 	boolean first;		

@@ -12,12 +12,11 @@ import lombok.ToString;
 class ParticipantsDto
 {
 	// 플레이어 정보
-	// to do: 2024-11-21
-	//	룬 작업, 서브룬 작업 구조체로 정의하든 한 구조체에 다 넣든 작업 필요함.
 	String riotIdGameName;	// 라이엇 이름
 	String riotIdTagline;	// 라이엇 태그
 	String championName;	// 사용한 챔피언	
-	String lane;			// 어느 라인인가				
+	String lane;			// 어느 라인인가
+	String role;			// 어느 라인인가	
 	Long summonerLevel;		// 유저 레벨
 	String puuid;			// puuid
 	

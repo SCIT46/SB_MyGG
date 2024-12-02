@@ -7,18 +7,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class champDto {
+public class ChampDTO {
     //field
     private String id;
     private String key;
     private String name;
     private String title;
     private String blurb;
-    private infoDto info;
+    private InfoDTO info;
     //private String[] tags;
     private HashMap<String, Number> stats;
 
-    public champDto(){
-        info = new infoDto();
+    public ChampDTO(){
+        info = new InfoDTO();
     }
 }

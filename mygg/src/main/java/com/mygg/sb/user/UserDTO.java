@@ -2,12 +2,15 @@ package com.mygg.sb.user;
 
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Service;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDto {
+@Service
+public class UserDTO {
     private String leagueId;
     private String puuid;
     private String summonerId;

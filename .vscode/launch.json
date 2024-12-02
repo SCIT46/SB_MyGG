@@ -2,20 +2,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "UserApi",
-            "request": "launch",
-            "mainClass": "user.UserApi",
-            "projectName": "mygg"
-        },
-        {
-            "type": "java",
-            "name": "PublicMatch",
-            "request": "launch",
-            "mainClass": "com.mygg.sb.match.PublicMatch",
-            "projectName": "mygg"
-        },
-        {
-            "type": "java",
             "name": "Spring Boot-MyggApplication<mygg>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
@@ -24,16 +10,6 @@
             "args": "",
             "envFile": "${workspaceFolder}/.env",
             "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=55609 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=mygg"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-searchImgAndSave<mygg>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com.mygg.sb.junseongTest.searchImgAndSave",
-            "projectName": "mygg",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
-        }
+      }
     ]
 }

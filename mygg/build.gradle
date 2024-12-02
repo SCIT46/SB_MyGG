@@ -46,14 +46,14 @@ dependencies {
 	//H2
 	//implementation 'com.h2database:h2'
 
-	//Mysql
-	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
-	implementation 'com.mysql:mysql-connector-j:8.3.0'
-	//runtimeOnly("com.mysql:mysql-connector-j")
+	// //Mysql
+	// // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+	// implementation 'com.mysql:mysql-connector-j:8.3.0'
+	// //runtimeOnly("com.mysql:mysql-connector-j")
 	
-	// MySQL
-	runtimeOnly 'com.mysql:mysql-connector-j'
-    implementation 'mysql:mysql-connector-java:8.0.33'
+	// // MySQL
+	// runtimeOnly 'com.mysql:mysql-connector-j'
+  //   implementation 'mysql:mysql-connector-java:8.0.33'
 	//JSON Parser
 	implementation 'com.googlecode.json-simple:json-simple:1.1'
 

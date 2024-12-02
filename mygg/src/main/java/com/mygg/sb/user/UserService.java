@@ -7,12 +7,12 @@ import com.mygg.sb.statics.util.DateTimeUtils;
 import lombok.Getter;
 
 @Getter
-public class UserApi {
-    UserDto user;
+public class UserService {
+    UserDTO user;
     // 이름과 태그를 통해 소환사 정보를 불러올 때 사용하는 생성자
-    public UserApi(String gameName, String tagLine) throws Exception{
+    public UserService(String gameName, String tagLine) throws Exception{
         // 유저 정보 초기화
-        user = new UserDto();
+        user = new UserDTO();
         // 이름과 태그를 puuid로 변환
         user.setGameName(gameName);
         user.setTagLine(tagLine);
@@ -21,9 +21,9 @@ public class UserApi {
 	}
     
     // puuid를 통해 소환사 정보를 불러올 때 사용하는 생성자
-    public UserApi(String puuid) throws Exception{
+    public UserService(String puuid) throws Exception{
         // 유저 정보 초기화
-        user = new UserDto();
+        user = new UserDTO();
         
         user.setPuuid(puuid);
         String[] nametag = RiotApiClient.pidToNametag(puuid);

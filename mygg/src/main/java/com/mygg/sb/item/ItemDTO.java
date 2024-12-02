@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Setter
-public class itemDto {
+public class ItemDTO {
     //field
     //아이템 아이디
     private String id;
@@ -23,7 +23,7 @@ public class itemDto {
     //아이템 제작 아이템 아이디
     private String[] into;
     //아이템 골드 정보
-    private goldDto gold;
+    private GoldDTO gold;
     //아이템 태그
     //private ArrayList<String> tags;
     //아이템 사용되는 맵
@@ -34,8 +34,8 @@ public class itemDto {
     //private statsDto stats;
     private HashMap<String, Number> stats;
 
-    public itemDto(){
-        gold = new goldDto();
+    public ItemDTO(){
+        gold = new GoldDTO();
     }
 }
 

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class infoDto {
+public class InfoDTO {
     //field
     private int attack;
     private int defense;

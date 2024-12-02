@@ -1,8 +1,8 @@
 package com.mygg.sb.champion;
 
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Service;
 
-import com.mygg.sb.item.itemDto;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDtoMapper;
 import com.mygg.sb.statics.util.UrlToJson;
@@ -10,12 +10,13 @@ import com.mygg.sb.statics.util.UrlToJson;
 import lombok.Getter;
 
 @Getter
-public class ChampionApi {
+@Service
+public class ChampionService {
 
-    champDto champion;
-    public ChampionApi(String id) throws Exception{
+    ChampDTO champion;
+    public ChampionService(String id) throws Exception{
         // 챔피언 정보 초기화
-        champion = new champDto();
+        champion = new ChampDTO();
 
         // 챔피언 정보 조회
         JSONObject jsonObject = RiotApiClient.getChampion(id);
@@ -32,7 +33,7 @@ public class ChampionApi {
         champion.getInfo().setDifficulty(((Long) ((JSONObject) jsonObject.get("info")).get("difficulty")).intValue());
         champion.setStats(UrlToJson.jsonObjectToHashMap((JSONObject) jsonObject.get("stats")));
         JsonToDtoMapper mapper = new JsonToDtoMapper();
-        champion = mapper.mapToDto(jsonObject, champDto.class);
+        champion = mapper.mapToDto(jsonObject, ChampDTO.class);
         
     }
 

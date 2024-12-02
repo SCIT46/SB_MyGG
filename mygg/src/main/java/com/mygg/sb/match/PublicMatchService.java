@@ -1,12 +1,9 @@
 package com.mygg.sb.match;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Service;
 
-import com.mygg.sb.champion.infoDto;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDtoMapper;
 
@@ -18,7 +15,8 @@ import lombok.Setter;
 // /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return
 @Getter
 //@Setter
-public class PublicMatch
+@Service
+public class PublicMatchService
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
 		//ArrayList<String> player;
@@ -28,25 +26,8 @@ public class PublicMatch
 		MetadataDto metadata;
 		InfoDto info;
 		
-		public PublicMatch(String matchId) throws Exception
+		public PublicMatchService(String matchId) throws Exception
 			{
-				// // API 주소값
-				// //String match_url = String.format("%s%s%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_MATCH,
-				// //		matchId, RiotApiConstants.API_KEY);
-
-				// // url을 json으로 변환
-				// String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchInfo", matchId));
-				// // ======================================================================================================================
-
-				// /* JSON Parsing 부 */
-
-				// player의 식별코드(playerId)를 저장할 List
-				//player = new ArrayList<String>();
-				//participants = new ArrayList<String>();
-				//playerDto = new ArrayList<ParticipantsDto>();
-				// // JSON 데이터를 분석해주는 JSONParser 객체 생성
-				// JSONParser parser = new JSONParser();
-
 				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
 				JsonToDtoMapper mapper = new JsonToDtoMapper();
@@ -79,24 +60,6 @@ public class PublicMatch
 					// Player별 데이터를 조회하기 위해 info 내의 participants(플레이어들) List를 따로 빼냄
 					JSONObject partPlayer = (JSONObject) participants.get(i);
 					insertParticipantsDto(partPlayer);
-					/*
-					// 챔피언 이름, 라인(포지션), 유저이름#태그, 유저레벨 추출/출력
-					String champion = (String) partPlayer.get("championName"); //
-					String lane = (String) partPlayer.get("lane"); // individualPosition,
-																		// teamPosition
-					//String userName = partPlayer.get("riotIdGameName") + "#"
-					//				+ partPlayer.get("riotIdTagline");
-					Long userLevel = (Long) partPlayer.get("summonerLevel");					
-
-					// info 내의 participants 내의 challenges를 따로 빼냄
-					JSONObject playerChall = (JSONObject) partPlayer.get("challenges");
-
-					// 분당 골드 값 추출
-					Double goldPerMin = (Double) playerChall.get("goldPerMinute");
-					*/
-					
-					//System.out.println(_participantsDto);
-					//System.out.printf("%d : %s(%d) : %s(%s) \n", i, userName, userLevel, champion, lane);
 				}
 		}
 		

@@ -2,23 +2,23 @@ package com.mygg.sb.item;
 
 import java.util.ArrayList;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDtoMapper;
-import com.mygg.sb.statics.util.UrlToJson;
 
 import lombok.Getter;
 
 @Getter
-public class ItemApi {
+@Service
+public class ItemService {
     
     // 아이템 리스트
-    ArrayList<itemDto> item;
+    ArrayList<ItemDTO> item;
 
     // 아이템 아이디로 아이템 정보 받아오기
-    public ItemApi(String id) throws Exception{
+    public ItemService(String id) throws Exception{
         // 아이템 리스트 초기화
         item = new ArrayList<>();
         // 아이디로 아이템 정보 추출/저장하여 객체화 시켜주는 메서드 호출
@@ -26,7 +26,7 @@ public class ItemApi {
     }
 
     // 전체 아이템 정보 받아오기
-    public ItemApi() throws Exception{
+    public ItemService() throws Exception{
         // 아이템 리스트 초기화
         item = new ArrayList<>();
         // 전체 아이템 아이디 리스트 초기화
@@ -45,28 +45,16 @@ public class ItemApi {
     }
 
     // 아이디로 아이템 정보 추출/저장하여 객체화 시켜주는 메서드
-    public itemDto createItemDto(String id) throws Exception{
+    public ItemDTO createItemDto(String id) throws Exception{
         // 아이템 정보 초기화
-        itemDto item = new itemDto();
+        ItemDTO item = new ItemDTO();
 
         // 아이템 정보 조회
         JSONObject jsonObject = RiotApiClient.getItem(id);
 
         // JSON으로 부터 받아온 정보를 itemDto 객체에 설정
-        //item.setId(id);
-        //item.setName((String) jsonObject.get("name"));
-        //item.setDescription((String) jsonObject.get("description"));
-        //item.setFrom(UrlToJson.jsonArrayToStringArray((JSONArray) jsonObject.get("from")));
-        //item.setInto(UrlToJson.jsonArrayToStringArray((JSONArray) jsonObject.get("into")));
-        //item.getGold().setBase(((Long) ((JSONObject) jsonObject.get("gold")).get("base")).intValue());
-        //item.getGold().setSell(((Long) ((JSONObject) jsonObject.get("gold")).get("sell")).intValue());
-        //item.getGold().setTotal(((Long) ((JSONObject) jsonObject.get("gold")).get("total")).intValue());
-        //item.getGold().setPurchasable((boolean) ((JSONObject) jsonObject.get("gold")).get("purchasable"));
-        //item.setTags((ArrayList<String>) jsonObject.get("tags"));
-        //item.setStats(UrlToJson.jsonObjectToHashMap((JSONObject) jsonObject.get("stats")));
-
         JsonToDtoMapper mapper = new JsonToDtoMapper();
-        item = mapper.mapToDto(jsonObject, itemDto.class);
+        item = mapper.mapToDto(jsonObject, ItemDTO.class);
 		
         return item;
     }

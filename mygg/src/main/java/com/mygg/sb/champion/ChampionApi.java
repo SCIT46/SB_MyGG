@@ -31,6 +31,7 @@ public class ChampionApi {
         champion.getInfo().setMagic(((Long) ((JSONObject) jsonObject.get("info")).get("magic")).intValue());
         champion.getInfo().setDifficulty(((Long) ((JSONObject) jsonObject.get("info")).get("difficulty")).intValue());
         champion.setStats(UrlToJson.jsonObjectToHashMap((JSONObject) jsonObject.get("stats")));
+        
         JsonToDtoMapper mapper = new JsonToDtoMapper();
         champion = mapper.mapToDto(jsonObject, champDto.class);
         

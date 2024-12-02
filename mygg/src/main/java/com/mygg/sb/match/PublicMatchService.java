@@ -2,20 +2,18 @@ package com.mygg.sb.match;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDtoMapper;
 
 import lombok.Getter;
-import lombok.Setter;   
  
 // riot api로 부터 받아온 match JSON 파일을 DB에 저장(matchId / match.JSON)
 // /api/user/{userId} -> DB에 userId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
 // /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return
 @Getter
 //@Setter
-@Service
+// @Service
 public class PublicMatchService
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List

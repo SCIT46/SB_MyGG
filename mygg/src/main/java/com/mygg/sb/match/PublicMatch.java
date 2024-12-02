@@ -17,7 +17,7 @@ import lombok.Setter;
 // /api/user/{userId} -> DB에 userId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
 // /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return
 @Getter
-@Setter
+//@Setter
 public class PublicMatch
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
@@ -152,10 +152,5 @@ public class PublicMatch
 			
 			System.out.println(_participantsDto);
 		} 
-
-		public static void main(String[] args) throws Exception
-			{
-				PublicMatch match = new PublicMatch("KR_7334845449");
-			}
 
 	}

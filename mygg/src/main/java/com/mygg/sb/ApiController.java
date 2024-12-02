@@ -49,7 +49,7 @@ public class ApiController {
 	public ChampionApi champion(@PathVariable("id") String id) throws Exception{
 		return new ChampionApi(id);
 	}
-
+	
 	//Search(검색 정보제공) API
 	@GetMapping(path="/search/{keyword}")
 	public SearchApi search(@PathVariable("keyword") String keyword) throws Exception{

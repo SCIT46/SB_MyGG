@@ -27,40 +27,41 @@ import com.mysql.cj.xdevapi.JsonArray;
 
 public class searchImgAndSave
 	{
-		public static void main(String[] args)
-			{
-				try
-					{
-						// 1. Riot API에서 최신 버전 가져오기
-						HttpClient client = HttpClient.newHttpClient();
-						HttpRequest request = HttpRequest.newBuilder()
-								.uri(URI.create("https://ddragon.leagueoflegends.com/api/versions.json")).GET().build();
-						HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		public void Run()
+		{
+			try
+				{
+					// 1. Riot API에서 최신 버전 가져오기
+					HttpClient client = HttpClient.newHttpClient();
+					HttpRequest request = HttpRequest.newBuilder()
+							.uri(URI.create("https://ddragon.leagueoflegends.com/api/versions.json")).GET().build();
+					HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-						// 2. JSON 파싱하여 최신 버전 추출
-						com.google.gson.JsonArray versions = JsonParser.parseString(response.body()).getAsJsonArray();
-						String latestVersion = ((JsonElement) versions.get(0)).getAsString(); // 최신 버전
-						System.out.println("Latest Version: " + latestVersion);
+					// 2. JSON 파싱하여 최신 버전 추출
+					com.google.gson.JsonArray versions = JsonParser.parseString(response.body()).getAsJsonArray();
+					String latestVersion = ((JsonElement) versions.get(0)).getAsString(); // 최신 버전
+					System.out.println("Latest Version: " + latestVersion);
 
-						// 3. 최신 버전의 아이템 데이터 URL 생성
-						String itemsUrl = "https://ddragon.leagueoflegends.com/cdn/" + latestVersion
-								+ "/data/en_US/item.json";
-						HttpRequest itemRequest = HttpRequest.newBuilder().uri(URI.create(itemsUrl)).GET().build();
-						HttpResponse<String> itemResponse = client.send(itemRequest,
-								HttpResponse.BodyHandlers.ofString());
+					// 3. 최신 버전의 아이템 데이터 URL 생성
+					String itemsUrl = "https://ddragon.leagueoflegends.com/cdn/" + latestVersion
+							+ "/data/en_US/item.json";
+					HttpRequest itemRequest = HttpRequest.newBuilder().uri(URI.create(itemsUrl)).GET().build();
+					HttpResponse<String> itemResponse = client.send(itemRequest,
+							HttpResponse.BodyHandlers.ofString());
 
-						// 4. 아이템 데이터 JSON 객체로 파싱
-						JsonObject itemsJson = JsonParser.parseString(itemResponse.body()).getAsJsonObject();
-						JsonObject data = itemsJson.getAsJsonObject("data");
+					// 4. 아이템 데이터 JSON 객체로 파싱
+					JsonObject itemsJson = JsonParser.parseString(itemResponse.body()).getAsJsonObject();
+					JsonObject data = itemsJson.getAsJsonObject("data");
 
-						// 5. 아이템 이미지 다운로드 및 저장
-						// downloadItemImages(data, latestVersion);
-						saveItemInfoToJson(data);
-					} catch (IOException | InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-			}
+					// 5. 아이템 이미지 다운로드 및 저장
+					// downloadItemImages(data, latestVersion);
+					saveItemInfoToJson(data);
+				} catch (IOException | InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+		}
+
 
 		// 아이템 이미지를 다운로드하고 지정된 폴더에 저장
 		public static void downloadItemImages(JsonObject itemsData, String version)

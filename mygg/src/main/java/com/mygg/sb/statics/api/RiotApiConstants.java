@@ -7,7 +7,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 @Configuration
 public class RiotApiConstants {
     public static Dotenv dotenv = Dotenv.load();
-    public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
+    public static final String API_KEY = "RGAPI-fa64b3d6-f8d7-4918-a821-28109b3ecccd";
     // =============================================================================================
     //https://developer.riotgames.com/docs/lol
     public final static String RIOT_DATA_API_URL = "https://ddragon.leagueoflegends.com";

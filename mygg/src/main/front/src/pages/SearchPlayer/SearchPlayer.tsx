@@ -3,6 +3,8 @@ import Profile from "./Profile";
 import Rank from "./Rank";
 import ChampInfo from "./ChampInfo";
 import Match from "./Match";
+import { useEffect, useState } from "react";
+import { getUser } from "../../services/Api";
 
 const SearchPlayerContainer = styled.div`
   width: 100vw;
@@ -24,6 +26,21 @@ const LeftConationer = styled.div`
 
 // '/search/:id 라우트 이동시 랜더링 되는 컴포넌트
 export default function SearchPlayer() {
+  const [user, setUser] = useState();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data: any = await getUser();
+        setUser(data);
+        console.log(data);
+      } catch (error) {
+        console.error("champions fetch error!", error);
+      }
+    };
+
+    fetchData();
+  }, [getUser]);
+
   return (
     <SearchPlayerContainer>
       <Profile />

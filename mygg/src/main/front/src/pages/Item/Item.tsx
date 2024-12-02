@@ -88,6 +88,7 @@ export default function Item({ item, itemId }: IItemProps) {
           {!loaded && <LoadingBox />}
           <ItemImg
             src={`https://ddragon.leagueoflegends.com/cdn/14.21.1/img/item/${item.image.full}`}
+            //src={`https://deeplol-ddragon-cdn.deeplol.gg/cdn/14.23.1/img/item/${item.image.full}?w=96&h=96&f=webp`}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
             onLoad={() => setLoaded(true)}

@@ -41,3 +41,15 @@ export const getChamps = async () => {
     console.log("champion fetch error! ", error);
   }
 };
+
+export const getUser = async () => {
+  try {
+    const userResponse = await axios({
+      method: "get",
+      url: `/api/user/이시형/페미니스트`,
+    });
+    return userResponse.data;
+  } catch (error: any) {
+    console.log("champion fetch error! ", error);
+  }
+};

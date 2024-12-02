@@ -27,7 +27,7 @@ const CustomGameBtn = styled.div`
 `;
 
 export default function Match() {
-  const dummy = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const dummy = [1];
   return (
     <MacthContainer>
       <CustomGameBtn>커스텀 게임 보러가기 -</CustomGameBtn>

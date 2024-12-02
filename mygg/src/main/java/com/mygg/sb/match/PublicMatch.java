@@ -5,19 +5,28 @@ import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import com.mygg.sb.statics.api.RiotApiClient;
 
-import lombok.Getter;   
+import com.mygg.sb.champion.infoDto;
+import com.mygg.sb.statics.api.RiotApiClient;
+import com.mygg.sb.statics.util.JsonToDtoMapper;
+
+import lombok.Getter;
+import lombok.Setter;   
  
 // riot api로 부터 받아온 match JSON 파일을 DB에 저장(matchId / match.JSON)
 // /api/user/{userId} -> DB에 userId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
 // /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return
 @Getter
+@Setter
 public class PublicMatch
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
-		ArrayList<String> player;
-		List<ParticipantsDto> playerDto;
+		//ArrayList<String> player;
+		//List<String> participants; 		//player UID들
+		//List<ParticipantsDto> playerDto;
+		
+		MetadataDto metadata;
+		InfoDto info;
 		
 		public PublicMatch(String matchId) throws Exception
 			{
@@ -32,15 +41,16 @@ public class PublicMatch
 				// /* JSON Parsing 부 */
 
 				// player의 식별코드(playerId)를 저장할 List
-				player = new ArrayList<String>();
-
-				playerDto = new ArrayList<ParticipantsDto>();
+				//player = new ArrayList<String>();
+				//participants = new ArrayList<String>();
+				//playerDto = new ArrayList<ParticipantsDto>();
 				// // JSON 데이터를 분석해주는 JSONParser 객체 생성
 				// JSONParser parser = new JSONParser();
 
 				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
-
+				JsonToDtoMapper mapper = new JsonToDtoMapper();
+				
 				// jsonObject의 JSON Key값으로 모든 데이터 조회
 				for (Object key : jsonObject.keySet())
 					{
@@ -49,34 +59,11 @@ public class PublicMatch
 						JSONObject jsonObj = (JSONObject) value;
 
 						// Extract Player Identity KEY
-						// JSON파일 내부의 metadata의 데이터 불러오기
+						// JSON파일 내부의 metadata, info 데이터 불러오기
 						
-						if (key.equals("metadata"))
-							{
-								// JSONArray(ArrayList)형 partipants(매치참여유저List)
-								JSONArray participants = (JSONArray) jsonObj.get("participants");
-
-								// partipants의 데이터를 player List에 저장
-								for (int i = 0; i < participants.size(); i++)
-									{
-										player.add((String) participants.get(i));
-									}
-							}
-						// =======================================================================
-
-						// JSON파일 내부의 info의 데이터 불러오기
-						if (key.equals("info"))
-							{
-								searchParticipants(jsonObj);
-							}
+						if (key.equals("metadata")) metadata = mapper.mapToDto(jsonObj, MetadataDto.class);
+						if (key.equals("info")) info = mapper.mapToDto(jsonObj, InfoDto.class);
 					}
-
-				// 테스트 : 플레이어 식별자(participants) 확인
-				for (int i = 0; i < player.size(); i++)
-					{
-						System.out.println("Player" + i + " : " + player.get(i));
-					}
-
 			}
 		
 		private void searchParticipants(JSONObject jsonObj)
@@ -115,48 +102,53 @@ public class PublicMatch
 		
 		private void insertParticipantsDto(JSONObject _partPlayer)
 		{
-			ParticipantsDto _participantsDto = new ParticipantsDto();
+//			ParticipantsDto _participantsDto = new ParticipantsDto();
 			
-			_participantsDto.setLane		 	((String) _partPlayer.get("lane")); // lane
-			_participantsDto.setUserName	    ((String) _partPlayer.get("riotIdGameName"));
-			_participantsDto.setRiotIdGameName  ((String) _partPlayer.get("riotIdGameName") + '#' +
-												 (String) _partPlayer.get("riotIdTagline"));
-			_participantsDto.setSummonerLevel   ((Long) _partPlayer.get("summonerLevel"));
-			_participantsDto.setGoldPerMinute	((Double) _partPlayer.get("goldPerMin"));
-			_participantsDto.setChampionId		(((Long) _partPlayer.get("championId")).intValue());
-			_participantsDto.setChampionName	((String) _partPlayer.get("championName"));
-			_participantsDto.setChampLevel		(((Long) _partPlayer.get("champLevel")).intValue());
-			_participantsDto.setItem0			(((Long) _partPlayer.get("item0")).intValue());
-			_participantsDto.setItem1			(((Long) _partPlayer.get("item1")).intValue());
-			_participantsDto.setItem2			(((Long) _partPlayer.get("item2")).intValue());
-			_participantsDto.setItem3			(((Long) _partPlayer.get("item3")).intValue());
-			_participantsDto.setItem4			(((Long) _partPlayer.get("item4")).intValue());
-			_participantsDto.setItem5			(((Long) _partPlayer.get("item5")).intValue());
-			_participantsDto.setItem6			(((Long) _partPlayer.get("item6")).intValue());
-			_participantsDto.setKills			(((Long)_partPlayer.get("kills")).intValue());
-			_participantsDto.setDeaths			(((Long)_partPlayer.get("deaths")).intValue());
-			_participantsDto.setAssists			(((Long)_partPlayer.get("assists")).intValue());
-			_participantsDto.setKda				(((float)(_participantsDto.getKills() + _participantsDto.getAssists()) 
-														 / _participantsDto.getDeaths()));
-			_participantsDto.setVisionScore		(((Long)_partPlayer.get("visionScore")).intValue());
-			_participantsDto.setVisionWardsBoughtInGame(((Long)_partPlayer.get("visionWardsBoughtInGame")).intValue());
-			_participantsDto.setWardsPlaced		(((Long)_partPlayer.get("wardsPlaced")).intValue());
-			_participantsDto.setWin				(((boolean)_partPlayer.get("win")));
-			
-			_participantsDto.setTotalDamageDealtToChampions	(((Long)_partPlayer.get("totalDamageDealtToChampions")).intValue());		
-			_participantsDto.setTotalDamageTaken			(((Long)_partPlayer.get("totalDamageTaken")).intValue());
-			_participantsDto.setSummoner1Id					(((Long)_partPlayer.get("summoner1Id")).intValue());
-			_participantsDto.setSummoner2Id					(((Long)_partPlayer.get("summoner2Id")).intValue());
-			
-			PerksDto perksDto = new PerksDto();
-			perksDto.insertIntoPerksDto((JSONObject)_partPlayer.get("perks"));
-			_participantsDto.setPerkDto(perksDto);
+//			_participantsDto.setLane		 	((String) _partPlayer.get("lane")); // lane
+//			_participantsDto.setUserName	    ((String) _partPlayer.get("riotIdGameName"));
+//			_participantsDto.setRiotIdGameName  ((String) _partPlayer.get("riotIdGameName") + '#' +
+//												 (String) _partPlayer.get("riotIdTagline"));
+//			_participantsDto.setSummonerLevel   ((Long) _partPlayer.get("summonerLevel"));
+//			_participantsDto.setGoldPerMinute	((Double) _partPlayer.get("goldPerMin"));
+//			_participantsDto.setChampionId		(((Long) _partPlayer.get("championId")).intValue());
+//			_participantsDto.setChampionName	((String) _partPlayer.get("championName"));
+//			_participantsDto.setChampLevel		(((Long) _partPlayer.get("champLevel")).intValue());
+//			_participantsDto.setItem0			(((Long) _partPlayer.get("item0")).intValue());
+//			_participantsDto.setItem1			(((Long) _partPlayer.get("item1")).intValue());
+//			_participantsDto.setItem2			(((Long) _partPlayer.get("item2")).intValue());
+//			_participantsDto.setItem3			(((Long) _partPlayer.get("item3")).intValue());
+//			_participantsDto.setItem4			(((Long) _partPlayer.get("item4")).intValue());
+//			_participantsDto.setItem5			(((Long) _partPlayer.get("item5")).intValue());
+//			_participantsDto.setItem6			(((Long) _partPlayer.get("item6")).intValue());
+//			_participantsDto.setKills			(((Long)_partPlayer.get("kills")).intValue());
+//			_participantsDto.setDeaths			(((Long)_partPlayer.get("deaths")).intValue());
+//			_participantsDto.setAssists			(((Long)_partPlayer.get("assists")).intValue());
+//			_participantsDto.setKda				(((float)(_participantsDto.getKills() + _participantsDto.getAssists()) 
+//														 / _participantsDto.getDeaths()));
+//			_participantsDto.setVisionScore		(((Long)_partPlayer.get("visionScore")).intValue());
+//			_participantsDto.setVisionWardsBoughtInGame(((Long)_partPlayer.get("visionWardsBoughtInGame")).intValue());
+//			_participantsDto.setWardsPlaced		(((Long)_partPlayer.get("wardsPlaced")).intValue());
+//			_participantsDto.setWin				(((boolean)_partPlayer.get("win")));
+//			
+//			_participantsDto.setTotalDamageDealtToChampions	(((Long)_partPlayer.get("totalDamageDealtToChampions")).intValue());		
+//			_participantsDto.setTotalDamageTaken			(((Long)_partPlayer.get("totalDamageTaken")).intValue());
+//			_participantsDto.setSummoner1Id					(((Long)_partPlayer.get("summoner1Id")).intValue());
+//			_participantsDto.setSummoner2Id					(((Long)_partPlayer.get("summoner2Id")).intValue());
+//			
+//			PerksDto perksDto = new PerksDto();
+//			perksDto.insertIntoPerksDto((JSONObject)_partPlayer.get("perks"));
+//			_participantsDto.setPerkDto(perksDto);
 			
 			//_participantsDto.setPerkDto						((PerksDto)_partPlayer.get("perks"));
 			// 룬 넣는 거 코드 추가 필요
 //			_participantsDto.insert
 			// 깃 테스트중
-			playerDto.add(_participantsDto);
+			
+			// -------------- 테스트 코드 2, gson을 이용한 DTO 자동바인딩
+			JsonToDtoMapper mapper = new JsonToDtoMapper();
+			ParticipantsDto _participantsDto = mapper.mapToDto(_partPlayer, ParticipantsDto.class);
+			
+			//playerDto.add(_participantsDto);
 			
 			System.out.println(_participantsDto);
 		} 

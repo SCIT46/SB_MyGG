@@ -78,6 +78,8 @@ public class UrlToJson {
     // matchInfo - matchId로 매치 정보 (RIOT_API_URL/match/v5/matches/{matchId})
     // leagueInfo - summonerId로 리그 정보 (RIOT_API_URL_KR/league/v4/entries/by-summoner/{summonerId})
     // accountByPid - puuid로 소환사 정보 (RIOT_API_URL/account/v1/accounts/by-puuid/{puuid})
+    // itemImg - 아이템 이미지 조회 (RIOT_DATA_API_URL/img/item/{itemId}.png)
+    // championImg - 챔피언 이미지 조회 (RIOT_DATA_API_URL/img/champion/{championId}.png)
     public static String urlConvertor(String type, String arg1){
         switch(type){
             case "summonerInfo":  //arg1 : puuid
@@ -102,7 +104,7 @@ public class UrlToJson {
     public static String urlConvertor(String type, String arg1, String arg2){
         switch(type){
             case "nameTag":  //arg1 : gameName, arg2 : tagLine
-                return String.format("%s%s%s/%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_ACCOUNT_RID, arg1, arg2, RiotApiConstants.API_KEY);
+                return String.format("%s%s%s/%s?api_key=%s", RiotApiConstants.RIOT_API_URL, RiotApiConstants.RIOT_API_ACCOUNT_RID, arg1, arg2, RiotApiConstants.API_KEY).replaceAll("\\+", "%20");
             default:
                 return null;
         }

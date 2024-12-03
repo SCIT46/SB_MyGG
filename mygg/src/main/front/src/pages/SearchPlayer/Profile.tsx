@@ -11,7 +11,7 @@ const ProfileContainer = styled.div`
   align-items: center;
 `;
 
-const ProfileImg = styled.div`
+const ProfileImg = styled.img`
   margin-left: 25px;
   margin-right: 25px;
   height: 100px;
@@ -39,13 +39,29 @@ const LevelSpan = styled.div`
   font-size: 16px;
 `;
 
-export default function Profile() {
+interface IProfileProps {
+  profileIconId?: number;
+  gameName?: string;
+  tagLine?: string;
+  summonerLevel?: number;
+}
+
+export default function Profile({
+  profileIconId,
+  gameName,
+  tagLine,
+  summonerLevel,
+}: IProfileProps) {
   return (
     <ProfileContainer>
-      <ProfileImg />
+      <ProfileImg
+        src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/profileicon/${profileIconId}.png`}
+      />
       <DetailContainer>
-        <NameSpan>소환사 이름#태그</NameSpan>
-        <LevelSpan>레벨</LevelSpan>
+        <NameSpan>
+          {gameName} #{tagLine}
+        </NameSpan>
+        <LevelSpan>{summonerLevel}</LevelSpan>
         <div>전적갱신 버튼</div>
       </DetailContainer>
     </ProfileContainer>

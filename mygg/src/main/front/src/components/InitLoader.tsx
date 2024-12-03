@@ -3,6 +3,7 @@ import useChampionStore from "../stores/useChampionStore";
 import { Ichamps } from "../pages/Champion/typs";
 import { getChamps } from "../services/Api";
 
+//todo 아이템, 스펠, 룬 패치 추가
 export default function InitLoader() {
   const setChampions = useChampionStore((state) => state.setChampions);
 

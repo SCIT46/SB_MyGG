@@ -122,7 +122,7 @@ export default function SearchForm() {
   const handleSearch = () => {
     const { userName, tagLine } = userSearchInput;
     if (userName.trim() !== "") {
-      navigate(`/search/${userName}/${tagLine}`);
+      navigate(`/search/${userName}-${tagLine}`);
     } else {
     }
   };

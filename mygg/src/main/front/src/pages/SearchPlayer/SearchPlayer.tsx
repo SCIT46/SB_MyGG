@@ -5,6 +5,9 @@ import ChampInfo from "./ChampInfo";
 import Match from "./Match";
 import { useEffect, useState } from "react";
 import { getUser } from "../../services/Api";
+import { IUser } from "./type";
+import LoadingSpinner from "../../components/Loading";
+import { useParams } from "react-router-dom";
 
 const SearchPlayerContainer = styled.div`
   width: 100vw;
@@ -20,36 +23,57 @@ const BottomContainer = styled.div`
   gap: 15px;
 `;
 
-const LeftConationer = styled.div`
+const LeftContainer = styled.div`
   width: 350px;
 `;
 
 // '/search/:id 라우트 이동시 랜더링 되는 컴포넌트
 export default function SearchPlayer() {
-  const [user, setUser] = useState();
+  const { id } = useParams();
+  const [user, setUser] = useState<IUser>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data: any = await getUser();
-        setUser(data);
-        console.log(data);
+        if (!id) throw new Error("id parameter is missing");
+        const [param1, param2] = id.split("-");
+        if (!param1 || !param2) throw new Error("Invalid id format");
+
+        const data = (await getUser(param1, param2)) as { user: IUser };
+        setUser(data.user);
       } catch (error) {
-        console.error("champions fetch error!", error);
+        console.error("user fetch error!", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [getUser]);
+  }, [id]);
+
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <SearchPlayerContainer>
-      <Profile />
+      <Profile
+        gameName={user?.gameName}
+        profileIconId={user?.profileIconId}
+        summonerLevel={user?.summonerLevel}
+        tagLine={user?.tagLine}
+      />
       <BottomContainer>
-        <LeftConationer>
-          <Rank />
+        <LeftContainer>
+          <Rank
+            leaguePoints={user?.leaguePoints}
+            losses={user?.losses}
+            rank={user?.rank}
+            tier={user?.tier}
+            wins={user?.wins}
+          />
           <ChampInfo />
-        </LeftConationer>
-        <Match />
+        </LeftContainer>
+        <Match matchList={user?.matchList} puuid={user?.puuid} />
       </BottomContainer>
     </SearchPlayerContainer>
   );

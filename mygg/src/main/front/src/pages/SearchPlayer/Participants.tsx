@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { IMatchDetail } from "./type";
 
 const ParticipantsContainer = styled.div`
   display: flex;
@@ -19,67 +20,48 @@ const ParticipantsBox = styled.div`
   align-items: center;
 `;
 
-const ParticipantImg = styled.div`
+const ParticipantImg = styled.img`
   background-color: gray;
   border-radius: 3px;
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
 `;
 
 const ParticipantImgSpan = styled.div`
   font-size: 14px;
-  overflow: hidden;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  overflow: hidden; /* 초과 내용 숨기기 */
+  text-overflow: ellipsis; /* 초과 부분 "..."으로 표시 */
   width: 90px;
+  font-size: 13px;
 `;
 
-export default function Participants() {
+interface IParticipants {
+  matchDetail: IMatchDetail;
+}
+
+export default function Participants({ matchDetail }: IParticipants) {
   return (
     <ParticipantsContainer>
       <TeamContainer>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>parti</ParticipantImgSpan>
-        </ParticipantsBox>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>parti</ParticipantImgSpan>
-        </ParticipantsBox>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>
-            fdsafdjskfadsjklfdjsalkfjdsklhafds
-          </ParticipantImgSpan>
-        </ParticipantsBox>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>parti</ParticipantImgSpan>
-        </ParticipantsBox>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>parti</ParticipantImgSpan>
-        </ParticipantsBox>
+        {matchDetail.info.participants.slice(0, 5).map((part, index) => (
+          <ParticipantsBox key={index}>
+            <ParticipantImg
+              src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/champion/${part.championName}.png`}
+            ></ParticipantImg>
+            <ParticipantImgSpan>{part.riotIdGameName}</ParticipantImgSpan>
+          </ParticipantsBox>
+        ))}
       </TeamContainer>
       <TeamContainer>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>parti</ParticipantImgSpan>
-        </ParticipantsBox>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>parti</ParticipantImgSpan>
-        </ParticipantsBox>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>parti</ParticipantImgSpan>
-        </ParticipantsBox>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>parti</ParticipantImgSpan>
-        </ParticipantsBox>
-        <ParticipantsBox>
-          <ParticipantImg></ParticipantImg>
-          <ParticipantImgSpan>parti</ParticipantImgSpan>
-        </ParticipantsBox>
+        {matchDetail.info.participants.slice(5, 10).map((part, index) => (
+          <ParticipantsBox key={index}>
+            <ParticipantImg
+              src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/champion/${part.championName}.png`}
+            ></ParticipantImg>
+            <ParticipantImgSpan>{part.riotIdGameName}</ParticipantImgSpan>
+          </ParticipantsBox>
+        ))}
       </TeamContainer>
     </ParticipantsContainer>
   );

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import MatchDetail from "./MatchDetail";
+import { useFetchMatchDetails } from "./useFetchMatchDetails";
 
 const MacthContainer = styled.div`
   border: 1px ${({ theme }) => theme.colors.primaryGold} solid;
@@ -26,13 +27,26 @@ const CustomGameBtn = styled.div`
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.3);
 `;
 
-export default function Match() {
-  const dummy = [1];
+interface IMatchProps {
+  matchList?: string[];
+  puuid?: string;
+}
+
+export default function Match({ matchList, puuid }: IMatchProps) {
+  const { matchDetails, isLoading } = useFetchMatchDetails(matchList);
+
+  if (isLoading) {
+    return (
+      <MacthContainer>
+        <CustomGameBtn>커스텀 게임 보러가기 -</CustomGameBtn>
+      </MacthContainer>
+    );
+  }
   return (
     <MacthContainer>
       <CustomGameBtn>커스텀 게임 보러가기 -</CustomGameBtn>
-      {dummy.map((match, index) => (
-        <MatchDetail />
+      {matchDetails.map((matchDetail, index) => (
+        <MatchDetail matchDetail={matchDetail} userPuuid={puuid} key={index} />
       ))}
     </MacthContainer>
   );

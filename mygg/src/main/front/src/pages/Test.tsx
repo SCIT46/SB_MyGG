@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getHello } from "../services/Api";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import styled, { keyframes } from "styled-components";
+import ChampionImage from "../components/ChampionImage";
 
 const SearchIcon = styled(MagnifyingGlassIcon)`
   width: 20px;
@@ -52,6 +53,7 @@ export default function Test() {
       <div>test : {message}</div>
       <SearchIcon />
       <Spinner />
+      <ChampionImage championId="Ahri" />
     </>
   );
 }

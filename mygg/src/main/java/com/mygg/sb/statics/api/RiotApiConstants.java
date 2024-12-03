@@ -27,6 +27,7 @@ public class RiotApiConstants {
     public static final String RIOT_DATA_API_ITEM_IMG = "/cdn/"+LATEST_VERSION+"/img/item/";
     public static final String RIOT_DATA_API_CHAMPION = "/cdn/"+LATEST_VERSION+"/data/"+LANGUAGE+"/champion.json";
     public static final String RIOT_DATA_API_CHAMPION_IMG = "/cdn/"+LATEST_VERSION+"/img/champion/";
+    public static final String RIOT_DATA_API_RUNE = "/cdn/"+LATEST_VERSION+"/data/"+LANGUAGE+"/runesReforged.json";
     //public final static String RIOT_DATA_API_RUNE = "/cdn/{version}/data/{language}/runes.json";
     //public final static String RIOT_DATA_API_SPELL = "/cdn/{version}/data/{language}/summoner.json";
     // =============================================================================================

@@ -1,7 +1,9 @@
 package com.mygg.sb;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,8 @@ import com.mygg.sb.champion.ChampDTO;
 import com.mygg.sb.champion.ChampionService;
 import com.mygg.sb.item.ItemDTO;
 import com.mygg.sb.item.ItemService;
+import com.mygg.sb.rune.RuneDTO;
+import com.mygg.sb.rune.RuneService;
 import com.mygg.sb.user.UserDTO;
 import com.mygg.sb.user.UserService;
 
@@ -29,6 +33,8 @@ public class ApiController {
     private ItemService itemService;
     @Autowired
     private ChampionService championService;
+    @Autowired
+    private RuneService runeService;
     //@Autowired
     //private SearchService searchService;
 
@@ -79,6 +85,11 @@ public class ApiController {
         return championService.getChampion(id);
     }
     
+    @GetMapping(path="/runesReforged")
+    public JSONObject runes() throws Exception
+    {
+    	return runeService.getRuneDto();
+    }
     //Search(검색 정보제공) API
     /*
     @GetMapping(path="/search/{keyword}")

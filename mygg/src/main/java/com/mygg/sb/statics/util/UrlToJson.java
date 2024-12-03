@@ -68,6 +68,8 @@ public class UrlToJson {
                 return RiotApiConstants.RIOT_DATA_API_URL + RiotApiConstants.RIOT_DATA_API_ITEM;
             case "champion":  //arg1 : championId
                 return RiotApiConstants.RIOT_DATA_API_URL + RiotApiConstants.RIOT_DATA_API_CHAMPION;
+            case "runesReforged":  //arg1 : rune
+                return RiotApiConstants.RIOT_DATA_API_URL + RiotApiConstants.RIOT_DATA_API_RUNE;
             default:
                 return null;
         }

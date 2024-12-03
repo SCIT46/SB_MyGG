@@ -1,6 +1,7 @@
 package com.mygg.sb;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -16,6 +17,7 @@ import com.mygg.sb.item.ItemDTO;
 import com.mygg.sb.item.ItemService;
 import com.mygg.sb.rune.RuneDTO;
 import com.mygg.sb.rune.RuneService;
+import com.mygg.sb.match.PublicMatchService;
 import com.mygg.sb.user.UserDTO;
 import com.mygg.sb.user.UserService;
 
@@ -25,8 +27,8 @@ public class ApiController {
 
     // @Autowired
     // private PrivateMatchService privateMatchService;
-    // @Autowired
-    // private PublicMatchService publicMatchService;
+    @Autowired
+    private PublicMatchService publicMatchService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -45,12 +47,12 @@ public class ApiController {
     //     return privateMatchService;
     // }
     
-    // // Public Match(API로부터 받아온 결과) API
-    // @GetMapping(path="/match/public/{matchId}")
-    // public PublicMatchService publicMatch(@PathVariable("matchId") String matchId) throws Exception {
-    //     //publicMatchService = new PublicMatchService(matchId);
-    //     return publicMatchService.getMatchInfo(matchId);
-    // }
+    // Public Match(API로부터 받아온 결과) API
+    @GetMapping(path="/match/public/{matchId}")
+    public JSONObject publicMatch(@PathVariable("matchId") String matchId) throws Exception {
+        //publicMatchService = new PublicMatchService(matchId);
+        return publicMatchService.getMatchInfo(matchId);
+    }
 
     // User(유저 정보제공) API 
     @GetMapping(path="/user/{name}/{tag}")
@@ -59,28 +61,30 @@ public class ApiController {
         return userService.getUserInfo(name, tag);
     }
 
-    //Item(아이템 정보제공) API
+    //Item(아이템 전체 정보제공) API
     @GetMapping(path="/item")
-    public ArrayList<ItemDTO> items() throws Exception {
+    public Map<String, ItemDTO> items() throws Exception {
         // itemsService = new ItemsService();
         return itemService.getItems();
     }
     
+    //Item(아이템 정보제공) API
     @GetMapping(path="/item/{id}")
-    public ArrayList<ItemDTO> item(@PathVariable("id") String id) throws Exception {
+    public Map<String, ItemDTO> item(@PathVariable("id") String id) throws Exception {
         // itemService = new ItemService(id);
         return itemService.getItem(id);
     }
 
-    //Champion(챔피언 정보제공) API
-	  @GetMapping(path="/champion")
-    public ArrayList<ChampDTO> champions() throws Exception {
+    //Champion(챔피언 전체 정보제공) API
+	@GetMapping(path="/champion")
+    public Map<String, ChampDTO> champions() throws Exception {
         // championsService = new ChampionsService();
         return championService.getChampions();
     }
 
+    //Champion(챔피언 정보제공) API
     @GetMapping(path="/champion/{id}")
-    public ArrayList<ChampDTO> champion(@PathVariable("id") String id) throws Exception {
+    public Map<String, ChampDTO> champion(@PathVariable("id") String id) throws Exception {
         // championService = new ChampionService(id);
         return championService.getChampion(id);
     }

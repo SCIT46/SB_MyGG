@@ -2,18 +2,19 @@ package com.mygg.sb.match;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDtoMapper;
 
 import lombok.Getter;
- 
+import lombok.NoArgsConstructor;
 // riot api로 부터 받아온 match JSON 파일을 DB에 저장(matchId / match.JSON)
 // /api/user/{userId} -> DB에 userId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
 // /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return
 @Getter
-//@Setter
-// @Service
+@NoArgsConstructor
+@Service
 public class PublicMatchService
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
@@ -23,8 +24,8 @@ public class PublicMatchService
 		
 		MetadataDto metadata;
 		InfoDto info;
-		
-		public PublicMatchService(String matchId) throws Exception
+
+		public JSONObject getMatchInfo(String matchId) throws Exception
 			{
 				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
@@ -43,6 +44,11 @@ public class PublicMatchService
 						if (key.equals("metadata")) metadata = mapper.mapToDto(jsonObj, MetadataDto.class);
 						if (key.equals("info")) info = mapper.mapToDto(jsonObj, InfoDto.class);
 					}
+
+				JSONObject result = new JSONObject();
+				result.put("metadata", metadata);
+				result.put("info", info);
+				return result;
 			}
 		
 		private void searchParticipants(JSONObject jsonObj)

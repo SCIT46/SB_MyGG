@@ -1,4 +1,4 @@
-package com.mygg.sb;
+package com.mygg.sb.search;
 
 public class SearchApi {
 

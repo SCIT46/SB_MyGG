@@ -43,6 +43,18 @@ public class ItemDTO {
 // stats
 //아이템 통계 정보
 
+/*
+ * Stat Naming Conventions
+ *
+ * A list of possible stats that you gain from items, runes, or masteries can also be found in Data Dragon. You can find a list of stats gained by the item, rune, or mastery by searching for the stats field. Below are some tips when it comes to understanding what a stat means and how they are calculated:
+ *
+    Mod stands for modifier.
+    An "r" at the beginning of the stat means those stats can be found on runes.
+    Displaying flat vs. percentage vs. per 5 etc. is case-by-case. it will always be the same for a given stat. For example, PercentAttackSpeedMod will always be multiplied by 100 and displayed it as a percentage.
+    Stats are called flat if you add them together, and percent if you multiply them together.
+    Tenacity from an item does NOT stack but tenacity from a rune DOES stack.
+ */
+
     // //아이템 체력 총합
     // private int flatHPPoolMod;
     // //아이템 체력 증가량

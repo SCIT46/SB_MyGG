@@ -1,7 +1,9 @@
 package com.mygg.sb.champion;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +16,43 @@ import lombok.Getter;
 @Service
 public class ChampionService {
 
-    //ChampDTO champion;
-    ArrayList<ChampDTO> champion;
+    // 챔피언 맵
+    Map<String, ChampDTO> champion;
     
+    // 챔피언 맵 초기화/생성(lombok 자동 생성 불가)
     public ChampionService() throws Exception{
-        // 챔피언 정보 초기화
-        champion = new ArrayList<>();
+      champion = new HashMap<>();
     }
 
-    public ArrayList<ChampDTO> getChampion(String id) throws Exception {
+    public Map<String, ChampDTO> getChampion(String id) throws Exception {
+      // 챔피언 맵 초기화
+      champion.clear();
+      
+      // 챔피언 정보 조회
+      ChampDTO championObj = createChampionDto(id);
+
+      champion.put(id, championObj);
+
+      return this.champion;
+    }
+
+    public Map<String, ChampDTO> getChampions() throws Exception {
+      // 챔피언 맵 초기화
+      champion.clear();
+      
+      // 챔피언 아이디 리스트 조회
+      List<String> championIds = getChampionIds();
+
+      for(String id : championIds){
+        // 챔피언 정보 조회
+        ChampDTO championObj = createChampionDto(id);
+        champion.put(id, championObj);
+      }
+
+      return this.champion;
+    }
+
+    public ChampDTO createChampionDto(String id) throws Exception{
       // 챔피언 정보 조회
       JSONObject jsonObject = RiotApiClient.getChampion(id);
 
@@ -42,27 +72,16 @@ public class ChampionService {
       JsonToDtoMapper mapper = new JsonToDtoMapper();
       championObj = mapper.mapToDto(jsonObject, ChampDTO.class);
 
-      champion.add(championObj);
-
-      return this.champion;
+      return championObj;
     }
 
-    public ArrayList<ChampDTO> getChampions() throws Exception {
-      // 챔피언 정보 조회
-      JSONObject jsonObject = RiotApiClient.getChampion("all");
+    public List<String> getChampionIds() throws Exception{
+       // 챔피언 정보 조회
+       JSONObject jsonObject = RiotApiClient.getChampion("all");
+       
+       // 챔피언 아이디 리스트 조회
+       List<String> championIds = new ArrayList<>(jsonObject.keySet());
 
-      JSONObject data = (JSONObject) jsonObject.get("data");
-      ArrayList<String> championIds = new ArrayList<>(data.keySet());
-
-      for(String id : championIds){
-        JSONObject championData = (JSONObject) data.get(id);
-        ChampDTO championObj = new ChampDTO();
-        JsonToDtoMapper mapper = new JsonToDtoMapper();
-        championObj = mapper.mapToDto(championData, ChampDTO.class);  
-
-        champion.add(championObj);
-      }
-
-      return this.champion;
+       return championIds;
     }
 }

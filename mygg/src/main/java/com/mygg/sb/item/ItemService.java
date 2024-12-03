@@ -1,7 +1,9 @@
 package com.mygg.sb.item;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
@@ -14,37 +16,37 @@ import lombok.Getter;
 @Getter
 @Service
 public class ItemService {
-    
-    // 아이템 리스트
-    ArrayList<ItemDTO> item;
+    // 아이템 맵
+    Map<String, ItemDTO> item;
 
-    public ItemService(){
-      // 아이템 리스트 초기화
-      item = new ArrayList<>();
+    // 아이템 맵 초기화/생성(lombok 자동 생성 불가)
+    public ItemService() throws Exception{
+        //item = new ArrayList<>();
+        item = new HashMap<>();
     }
 
     // 아이템 아이디로 아이템 정보 받아오기
-    public ArrayList<ItemDTO> getItem(String id) throws Exception{
+    public Map<String, ItemDTO> getItem(String id) throws Exception{
+        // 아이템 맵 초기화
+        item.clear();
+
         // 아이디로 아이템 정보 추출/저장하여 객체화 시켜주는 메서드 호출
-        item.add(createItemDto(id));
+        item.put(id, createItemDto(id));
 
         return this.item;
     }
 
     // 전체 아이템 정보 받아오기
-    public ArrayList<ItemDTO> getItems() throws Exception{
-        // 아이템의 전체 정보 받아오기
-        JSONObject jsonObject = RiotApiClient.getItem("all");
+    public Map<String, ItemDTO> getItems() throws Exception{
+        // 아이템 맵 초기화
+        item.clear();
 
-        // 아이템의 전체 아이디 받아오기/저장
-        JSONObject data = (JSONObject) jsonObject.get("data");
-
-        // 전체 아이템 아이디 리스트 초기화
-        List<String> itemIdList = new ArrayList<>(data.keySet());
-
-        // ID 리스트로 전체 정보 받아와 아이템 리스트에 저장
+        // 아이템 아이디 리스트 조회
+        List<String> itemIdList = getItemIds();
+        
+        // ID 리스트로 전체 정보 받아와 아이템 맵에 저장
         for(String id : itemIdList){
-            item.add(createItemDto(id));
+            item.put(id, createItemDto(id));
         }
 
         return this.item;
@@ -61,7 +63,18 @@ public class ItemService {
         // JSON으로 부터 받아온 정보를 itemDto 객체에 설정
         JsonToDtoMapper mapper = new JsonToDtoMapper();
         item = mapper.mapToDto(jsonObject, ItemDTO.class);
+        item.setId(id);
 		
         return item;
+    }
+
+    public List<String> getItemIds() throws Exception{
+       // 아이템의 전체 정보 받아오기
+       JSONObject jsonObject = RiotApiClient.getItem("all");
+
+       // 아이템의 전체 아이디 받아오기/저장
+       List<String> itemIdList = new ArrayList<>(jsonObject.keySet());
+
+       return itemIdList;
     }
 }

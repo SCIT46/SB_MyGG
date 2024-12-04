@@ -1,9 +1,10 @@
 import styled, { keyframes } from "styled-components";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import useChampionStore from "../stores/useChampionStore";
+import useSummonerStore from "../stores/useSummonerStore"; // Assuming a similar store for summoners
+import { SummonerSpellDictionary } from "../utils/SummonerObj";
 
-interface ChampionImgProps {
+interface SummonerImgProps {
   loaded: string;
 }
 
@@ -16,9 +17,9 @@ const fadeIn = keyframes`
   }
 `;
 
-const ChampionImg = styled.img<ChampionImgProps>`
-  height: 60px;
-  width: 60px;
+const SummonerImg = styled.img<SummonerImgProps>`
+  width: 28px;
+  height: 28px;
   border-radius: 5px;
   position: absolute;
   top: 0;
@@ -30,9 +31,8 @@ const ChampionImg = styled.img<ChampionImgProps>`
 
 const LoadingBox = styled.div`
   border-radius: 5px;
-  width: 60px;
-  height: 60px;
-  border-radius: 5px;
+  width: 28px;
+  height: 28px;
   position: absolute;
   top: 0;
   left: 0;
@@ -40,10 +40,10 @@ const LoadingBox = styled.div`
   background-size: 200% 100%;
 `;
 
-const ChampionBox = styled.div`
+const SummonerBox = styled.div`
   position: relative;
-  height: 60px;
-  width: 60px;
+  width: 28px;
+  height: 28px;
 `;
 
 const Container = styled.div`
@@ -56,23 +56,23 @@ const Container = styled.div`
 const DetailBox = styled.div<{ positionAbove: boolean }>`
   width: 100px;
   height: 70px;
-  padding: 10px 5px 10px 5px;
+  padding: 10px 5px;
   border-radius: 7px;
   background-color: #000000c2;
-  position: absolute;
   color: ${({ theme }) => theme.colors.textWhite};
-  top: ${({ positionAbove }) => (positionAbove ? "63px" : "-93px")};
+  position: absolute;
+  top: ${({ positionAbove }) => (positionAbove ? "32px" : "-94px")};
   z-index: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: top 0.2s ease-in-out;
 `;
 
-interface IChampionProps {
-  championId: string;
+interface ISummonerProps {
+  summonerId: string;
 }
 
-export default function ChampionImage({ championId }: IChampionProps) {
-  const champions = useChampionStore((state) => state.champions);
+export default function SummonerImage({ summonerId }: ISummonerProps) {
+  const summoner = useSummonerStore((state) => state.summoner);
   const [isHover, setIsHover] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [positionAbove, setPositionAbove] = useState<boolean>(false);
@@ -89,21 +89,26 @@ export default function ChampionImage({ championId }: IChampionProps) {
 
   return (
     <Container>
-      <Link to={`/champion/${championId}`}>
-        <ChampionBox>
+      <Link to={`/summoner/${summonerId}`}>
+        <SummonerBox>
           {!loaded && <LoadingBox />}
-          <ChampionImg
-            src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/champion/${championId}.png`}
+          <SummonerImg
+            src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/spell/${
+              SummonerSpellDictionary[summonerId as string]
+            }.png`}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
             onLoad={() => setLoaded(true)}
             loaded={loaded.toString() as any}
           />
-        </ChampionBox>
+        </SummonerBox>
       </Link>
       {isHover && (
         <DetailBox positionAbove={positionAbove}>
-          {String(champions?.[championId as any]?.name || "Unknown Champion")}
+          {String(
+            summoner?.[SummonerSpellDictionary[summonerId as string] as any]
+              ?.name || "Unknown Summoner"
+          )}
         </DetailBox>
       )}
     </Container>

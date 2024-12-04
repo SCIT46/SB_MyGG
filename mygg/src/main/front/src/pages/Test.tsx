@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { getHello } from "../services/Api";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import styled, { keyframes } from "styled-components";
 import ChampionImage from "../components/ChampionImage";
+import SummonerImage from "../components/SummonerImage";
 
 const SearchIcon = styled(MagnifyingGlassIcon)`
   width: 20px;
@@ -23,7 +23,7 @@ const rotation = keyframes`
 const Spinner = styled.div`
   height: 30px;
   width: 30px;
-  border: 1px solid ${({ theme }) => theme.colors.backgroundGray};
+  border: 1px solid ${({ theme }) => theme.colors.primarySky};
   border-radius: 50%;
   border-top: none;
   border-right: none;
@@ -35,25 +35,25 @@ const Spinner = styled.div`
 export default function Test() {
   const [message, setMessage] = useState("");
 
-  //api fetching
-  useEffect(() => {
-    const ApiData = async () => {
-      try {
-        const data = await getHello();
-        setMessage(data as any);
-      } catch (error: any) {
-        console.log(error);
-      }
-    };
-    ApiData();
-  }, []);
+  // //api fetching
+  // useEffect(() => {
+  //   const ApiData = async () => {
+  //     try {
+  //       const data = await getHello();
+  //       setMessage(data as any);
+  //     } catch (error: any) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   ApiData();
+  // }, []);
 
   return (
     <>
-      <div>test : {message}</div>
       <SearchIcon />
       <Spinner />
       <ChampionImage championId="Ahri" />
+      <SummonerImage summonerId="21" />
     </>
   );
 }

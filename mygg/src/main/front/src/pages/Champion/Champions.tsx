@@ -7,7 +7,7 @@ export default function Champions() {
   return (
     <div>
       {champions?.map((item, index) => (
-        <div key={index}>{item.name}</div>
+        <div key={index}>{}</div>
       ))}
     </div>
   );

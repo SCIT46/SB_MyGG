@@ -57,7 +57,7 @@ export default function Header() {
       </Link>
       <LinkBtn to={"item"}>아이템</LinkBtn>
       <LinkBtn to={"champion"}>챔피언</LinkBtn>
-      <LinkBtn to={"search/123"}>플레이어</LinkBtn>
+      <LinkBtn to={"search/이시형-페미니스트"}>플레이어</LinkBtn>
       <LinkBtn to={"test"}>테스트</LinkBtn>
       {/* 패치노트 컴포넌트 */}
       <PatchNote />

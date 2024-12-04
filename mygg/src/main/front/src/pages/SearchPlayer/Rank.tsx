@@ -48,9 +48,9 @@ export default function Rank({
       <RankSpan>{tier}</RankSpan>
       <ScoreSpan>{leaguePoints}</ScoreSpan>
       <WinSpan>
-        {wins}승 {losses}패
+        {}승 {losses}패
       </WinSpan>
-      <WinRateSpan>{wins && losses && wins / wins + losses}</WinRateSpan>
+      <WinRateSpan></WinRateSpan>
     </RankContianer>
   );
 }

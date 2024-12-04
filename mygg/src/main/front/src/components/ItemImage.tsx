@@ -1,9 +1,9 @@
 import styled, { keyframes } from "styled-components";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import useChampionStore from "../stores/useChampionStore";
+import useItemStore from "../stores/useItemStore"; // Assuming a similar store for items
 
-interface ChampionImgProps {
+interface ItemImgProps {
   loaded: string;
 }
 
@@ -16,9 +16,9 @@ const fadeIn = keyframes`
   }
 `;
 
-const ChampionImg = styled.img<ChampionImgProps>`
-  height: 60px;
-  width: 60px;
+const ItemImg = styled.img<ItemImgProps>`
+  width: 28px;
+  height: 28px;
   border-radius: 5px;
   position: absolute;
   top: 0;
@@ -30,9 +30,8 @@ const ChampionImg = styled.img<ChampionImgProps>`
 
 const LoadingBox = styled.div`
   border-radius: 5px;
-  width: 60px;
-  height: 60px;
-  border-radius: 5px;
+  width: 28px;
+  height: 28px;
   position: absolute;
   top: 0;
   left: 0;
@@ -40,10 +39,10 @@ const LoadingBox = styled.div`
   background-size: 200% 100%;
 `;
 
-const ChampionBox = styled.div`
+const ItemBox = styled.div`
   position: relative;
-  height: 60px;
-  width: 60px;
+  width: 28px;
+  height: 28px;
 `;
 
 const Container = styled.div`
@@ -61,18 +60,23 @@ const DetailBox = styled.div<{ positionAbove: boolean }>`
   background-color: #000000c2;
   position: absolute;
   color: ${({ theme }) => theme.colors.textWhite};
-  top: ${({ positionAbove }) => (positionAbove ? "63px" : "-93px")};
+  top: ${({ positionAbove }) => (positionAbove ? "-94px" : "32px")};
   z-index: 1;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: top 0.2s ease-in-out;
 `;
 
-interface IChampionProps {
-  championId: string;
+const NullItemBox = styled.div`
+  width: 28px;
+  height: 28px;
+  background-color: #85858570;
+  border-radius: 5px;
+`;
+
+interface IItemProps {
+  itemId: number;
 }
 
-export default function ChampionImage({ championId }: IChampionProps) {
-  const champions = useChampionStore((state) => state.champions);
+export default function ItemImage({ itemId }: IItemProps) {
+  const items = useItemStore((state) => state.items);
   const [isHover, setIsHover] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [positionAbove, setPositionAbove] = useState<boolean>(false);
@@ -80,30 +84,33 @@ export default function ChampionImage({ championId }: IChampionProps) {
   const onMouseOver = (event: React.MouseEvent) => {
     setIsHover(true);
     const rect = event.currentTarget.getBoundingClientRect();
-    setPositionAbove(rect.top < 120);
+    setPositionAbove(window.innerHeight - rect.bottom < 120); // 커서가 아래쪽에 있을 때 위로 위치
   };
 
   const onMouseOut = () => {
     setIsHover(false);
   };
 
+  if (itemId === 0) {
+    return <NullItemBox />;
+  }
   return (
     <Container>
-      <Link to={`/champion/${championId}`}>
-        <ChampionBox>
+      <Link to={`/item/${itemId}`}>
+        <ItemBox>
           {!loaded && <LoadingBox />}
-          <ChampionImg
-            src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/champion/${championId}.png`}
+          <ItemImg
+            src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/item/${itemId}.png`}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
             onLoad={() => setLoaded(true)}
             loaded={loaded.toString() as any}
           />
-        </ChampionBox>
+        </ItemBox>
       </Link>
       {isHover && (
         <DetailBox positionAbove={positionAbove}>
-          {String(champions?.[championId as any]?.name || "Unknown Champion")}
+          {String(items?.[itemId as any]?.name || "Unknown Item")}
         </DetailBox>
       )}
     </Container>

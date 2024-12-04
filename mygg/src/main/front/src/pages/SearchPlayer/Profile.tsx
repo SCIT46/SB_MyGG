@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
 
 const ProfileContainer = styled.div`
   margin-top: 70px;
@@ -52,10 +53,11 @@ export default function Profile({
   tagLine,
   summonerLevel,
 }: IProfileProps) {
+  const version = useCurrentVersionStore((state) => state.version);
   return (
     <ProfileContainer>
       <ProfileImg
-        src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/profileicon/${profileIconId}.png`}
+        src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${profileIconId}.png`}
       />
       <DetailContainer>
         <NameSpan>

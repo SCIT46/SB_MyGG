@@ -4,9 +4,12 @@ import { IMatchDetail } from "./type";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../components/Loading";
 import ChampionImage from "../../components/ChampionImage";
+import ItemImage from "../../components/ItemImage";
+import SummonerImage from "../../components/SummonerImage";
 
-const MatchDetailContainer = styled.div`
-  background-color: #c7c7c7;
+const MatchDetailContainer = styled.div<{ isWinning: boolean }>`
+  background-color: ${(props) => (props.isWinning ? "#e2edff" : "#ffe8e8")};
+  border: 1px solid ${(props) => (props.isWinning ? "#a8c1ff" : "#ffa4a4")};
   width: 90%;
   height: 120px;
   border-radius: 10px;
@@ -62,14 +65,6 @@ const PlayerItemsInfoContainer = styled.div`
   display: flex;
 `;
 
-//todo img로 바꾸기
-const ChampionImg = styled.img`
-  border-radius: 5px;
-  width: 60px;
-  height: 60px;
-`;
-
-//todo img로 바꾸기
 const SpellImg = styled.img`
   background-color: gray;
   border-radius: 5px;
@@ -85,13 +80,6 @@ const RuneImg = styled.div`
   height: 28px;
 `;
 
-//todo img로 바꾸기
-const ItemImg = styled.img`
-  border-radius: 5px;
-  width: 28px;
-  height: 28px;
-`;
-
 const KdaSpan = styled.div``;
 
 const KdaSocreSpan = styled.div`
@@ -103,9 +91,20 @@ const CsSpan = styled.div`
 `;
 
 const DetailBtn = styled.div`
-  height: 100%;
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid black; /* 화살표의 왼쪽 선 */
+  border-bottom: 2px solid black; /* 화살표의 아래쪽 선 */
+  transform: rotate(315deg); /* 기울여서 화살표 모양으로 */
+  cursor: pointer;
+`;
+
+const DetailBtnContainer = styled.div`
   display: flex;
+  height: 80%;
   align-items: flex-end;
+  margin-left: 30px;
+  margin-right: 10px;
 `;
 
 interface IMatchDetailProp {
@@ -117,115 +116,108 @@ export default function MatchDetail({
   matchDetail,
   userPuuid,
 }: IMatchDetailProp) {
-  const nullUrl =
-    "https://mblogthumb-phinf.pstatic.net/MjAxODAzMDNfMjU4/MDAxNTIwMDQxODA4Mjc0.gR3L5xx3IbpACbvRRF9j9xjJmO-EPAY35oF1AdBnDcog.WZyeqFi6cMmH-v-R-ec44Ny6ZgVyAJIYMT78p4Rxbkwg.PNG.osy2201/2_%2850%ED%8D%BC%EC%84%BC%ED%8A%B8_%ED%9A%8C%EC%83%89%29_%ED%9A%8C%EC%83%89_%EB%8B%A8%EC%83%89_%EB%B0%B0%EA%B2%BD%ED%99%94%EB%A9%B4_180303.png?type=w800";
   const [userIndex, setUserIndex] = useState<number>();
+  const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
+  console.log(isDetailOpen);
+
+  // const currentTime = Date.now();
+  // const timeDifference = currentTime - matchDetail.info.;
+
+  // const minutesAgo = Math.floor(timeDifference / (1000 * 60));
+  // const hoursAgo = Math.floor(timeDifference / (1000 * 60 * 60));
+  // const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
   useEffect(() => {
-    if (userPuuid) {
+    if (userPuuid && matchDetail.metadata) {
       setUserIndex(matchDetail.metadata.participants.indexOf(userPuuid));
     }
-  }, []);
+  }, [matchDetail.metadata, userPuuid]);
 
-  if (userIndex === undefined) {
+  if (
+    userIndex === undefined ||
+    !matchDetail.info ||
+    !matchDetail.info.participants[userIndex]
+  ) {
     return <LoadingSpinner></LoadingSpinner>;
   }
 
   return (
-    <MatchDetailContainer>
-      <GameInfoContainer>
-        <div></div>
-        <div>x일전</div>
-        <div></div>
-        <div>
-          {matchDetail.info.participants[userIndex].win ? "승리" : "패배"}
-        </div>
-      </GameInfoContainer>
-      <PlayerInfoContainer>
-        <PlayerChampionInfoContainer>
-          {/* todo - img들 전부 컴포넌트와 해야지 호버 기능 구현가능 */}
-          <ChampionImage
-            championId={matchDetail.info.participants[userIndex].championName}
-          />
-          <PlayerSpellContianer>
-            <SpellImg></SpellImg>
-            <SpellImg></SpellImg>
-          </PlayerSpellContianer>
-          <PlayerRuneContianer>
-            <RuneImg></RuneImg>
-            <RuneImg></RuneImg>
-          </PlayerRuneContianer>
-          <PlayerKdaContianer>
-            <KdaSpan>
-              {matchDetail.info.participants[userIndex].kills} /{" "}
-              {matchDetail.info.participants[userIndex].deaths} /{" "}
-              {matchDetail.info.participants[userIndex].assists}
-            </KdaSpan>
-            <KdaSocreSpan>
-              {(
-                (matchDetail.info.participants[userIndex].kills +
-                  matchDetail.info.participants[userIndex].assists) /
-                matchDetail.info.participants[userIndex].deaths
-              ).toFixed(2)}
-            </KdaSocreSpan>
-            <CsSpan>
-              {matchDetail.info.participants[userIndex].totalMinionsKilled} cs
-            </CsSpan>
-          </PlayerKdaContianer>
-        </PlayerChampionInfoContainer>
-        <PlayerItemsInfoContainer>
-          <ItemImg
-            src={
-              matchDetail.info.participants[userIndex].item0
-                ? `https://ddragon.leagueoflegends.com/cdn/14.21.1/img/item/${matchDetail.info.participants[userIndex].item0}.png`
-                : nullUrl
-            }
-          ></ItemImg>
-          <ItemImg
-            src={
-              matchDetail.info.participants[userIndex].item1
-                ? `https://ddragon.leagueoflegends.com/cdn/14.21.1/img/item/${matchDetail.info.participants[userIndex].item1}.png`
-                : nullUrl
-            }
-          ></ItemImg>
-          <ItemImg
-            src={
-              matchDetail.info.participants[userIndex].item2
-                ? `https://ddragon.leagueoflegends.com/cdn/14.21.1/img/item/${matchDetail.info.participants[userIndex].item2}.png`
-                : nullUrl
-            }
-          ></ItemImg>
-          <ItemImg
-            src={
-              matchDetail.info.participants[userIndex].item3
-                ? `https://ddragon.leagueoflegends.com/cdn/14.21.1/img/item/${matchDetail.info.participants[userIndex].item3}.png`
-                : nullUrl
-            }
-          ></ItemImg>
-          <ItemImg
-            src={
-              matchDetail.info.participants[userIndex].item4
-                ? `https://ddragon.leagueoflegends.com/cdn/14.21.1/img/item/${matchDetail.info.participants[userIndex].item4}.png`
-                : nullUrl
-            }
-          ></ItemImg>
-          <ItemImg
-            src={
-              matchDetail.info.participants[userIndex].item5
-                ? `https://ddragon.leagueoflegends.com/cdn/14.21.1/img/item/${matchDetail.info.participants[userIndex].item5}.png`
-                : nullUrl
-            }
-          ></ItemImg>
-          <ItemImg
-            src={
-              matchDetail.info.participants[userIndex].item6
-                ? `https://ddragon.leagueoflegends.com/cdn/14.21.1/img/item/${matchDetail.info.participants[userIndex].item6}.png`
-                : nullUrl
-            }
-          ></ItemImg>
-        </PlayerItemsInfoContainer>
-      </PlayerInfoContainer>
-      <Participants matchDetail={matchDetail} />
-      <DetailBtn>btn</DetailBtn>
-    </MatchDetailContainer>
+    <>
+      <MatchDetailContainer
+        onClick={() => {
+          setIsDetailOpen((prev) => !prev);
+        }}
+        isWinning={matchDetail.info.participants[userIndex].win}
+      >
+        <GameInfoContainer>
+          <div></div>
+          <div>x일전</div>
+          <div>
+            {Math.floor(matchDetail.info.gameDuration / 60)}:
+            {matchDetail.info.gameDuration % 60}
+          </div>
+          <div>
+            {matchDetail.info.participants[userIndex].win ? "승리" : "패배"}
+          </div>
+        </GameInfoContainer>
+        <PlayerInfoContainer>
+          <PlayerChampionInfoContainer>
+            {/* todo - img들 전부 컴포넌트와 해야지 호버 기능 구현가능 */}
+            <ChampionImage
+              championId={matchDetail.info.participants[userIndex].championName}
+            />
+            <PlayerSpellContianer>
+              <SummonerImage
+                summonerId={
+                  matchDetail.info.participants[userIndex].summoner1Id
+                }
+              />
+              <SummonerImage
+                summonerId={
+                  matchDetail.info.participants[userIndex].summoner2Id
+                }
+              />
+            </PlayerSpellContianer>
+            <PlayerRuneContianer>
+              <RuneImg></RuneImg>
+              <RuneImg></RuneImg>
+            </PlayerRuneContianer>
+            <PlayerKdaContianer>
+              <KdaSpan>
+                {matchDetail.info.participants[userIndex].kills} /{" "}
+                {matchDetail.info.participants[userIndex].deaths} /{" "}
+                {matchDetail.info.participants[userIndex].assists}
+              </KdaSpan>
+              <KdaSocreSpan>
+                {(
+                  (matchDetail.info.participants[userIndex].kills +
+                    matchDetail.info.participants[userIndex].assists) /
+                  matchDetail.info.participants[userIndex].deaths
+                ).toFixed(2)}
+              </KdaSocreSpan>
+              <CsSpan>
+                {matchDetail.info.participants[userIndex].totalMinionsKilled} cs
+              </CsSpan>
+            </PlayerKdaContianer>
+          </PlayerChampionInfoContainer>
+          <PlayerItemsInfoContainer>
+            {[0, 1, 2, 3, 4, 5, 6].map((n, index) => (
+              <ItemImage
+                itemId={
+                  (matchDetail.info.participants[userIndex] as any)[`item${n}`]
+                }
+                key={index}
+              />
+            ))}
+          </PlayerItemsInfoContainer>
+        </PlayerInfoContainer>
+        <Participants matchDetail={matchDetail} />
+        <DetailBtnContainer>
+          <DetailBtn></DetailBtn>
+        </DetailBtnContainer>
+      </MatchDetailContainer>
+      {/* todo - detail 컴포넌트 만들기 */}
+      <div>{isDetailOpen ? "detail" : ""}</div>
+    </>
   );
 }

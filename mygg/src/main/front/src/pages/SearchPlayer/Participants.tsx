@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { IMatchDetail } from "./type";
+import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
 
 const ParticipantsContainer = styled.div`
   display: flex;
@@ -34,6 +35,11 @@ const ParticipantImgSpan = styled.div`
   text-overflow: ellipsis; /* 초과 부분 "..."으로 표시 */
   width: 90px;
   font-size: 13px;
+  margin-left: -1px;
+
+  &:hover {
+    text-decoration: underline; /* 호버시 밑줄 추가 */
+  }
 `;
 
 interface IParticipants {
@@ -41,15 +47,27 @@ interface IParticipants {
 }
 
 export default function Participants({ matchDetail }: IParticipants) {
+  const version = useCurrentVersionStore((state) => state.version);
   return (
     <ParticipantsContainer>
       <TeamContainer>
         {matchDetail.info.participants.slice(0, 5).map((part, index) => (
           <ParticipantsBox key={index}>
             <ParticipantImg
-              src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/champion/${part.championName}.png`}
+              src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${part.championName}.png`}
             ></ParticipantImg>
-            <ParticipantImgSpan>{part.riotIdGameName}</ParticipantImgSpan>
+            <ParticipantImgSpan
+              onClick={() => {
+                window.open(
+                  `/search/${part.riotIdGameName}-${part.riotIdTagline}`,
+                  "_blank",
+                  "noopener,noreferrer"
+                );
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              {part.riotIdGameName}
+            </ParticipantImgSpan>
           </ParticipantsBox>
         ))}
       </TeamContainer>
@@ -57,9 +75,20 @@ export default function Participants({ matchDetail }: IParticipants) {
         {matchDetail.info.participants.slice(5, 10).map((part, index) => (
           <ParticipantsBox key={index}>
             <ParticipantImg
-              src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/champion/${part.championName}.png`}
+              src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${part.championName}.png`}
             ></ParticipantImg>
-            <ParticipantImgSpan>{part.riotIdGameName}</ParticipantImgSpan>
+            <ParticipantImgSpan
+              onClick={() => {
+                window.open(
+                  `/search/${part.riotIdGameName}-${part.riotIdTagline}`,
+                  "_blank",
+                  "noopener,noreferrer"
+                );
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              {part.riotIdGameName}
+            </ParticipantImgSpan>{" "}
           </ParticipantsBox>
         ))}
       </TeamContainer>

@@ -1,14 +1,14 @@
 import { create } from "zustand";
-import { Ichamps } from "../pages/Champion/typs";
+import { IItem } from "../pages/Item/type";
 
 interface IItemStore {
-  item: Ichamps[] | null;
-  setitem: (newData: Ichamps[]) => void;
+  items: IItem[] | null;
+  setItems: (newData: IItem[]) => void;
 }
 
 const useItemStore = create<IItemStore>((set) => ({
-  item: null,
-  setitem: (newData) => set({ item: newData }),
+  items: null,
+  setItems: (newData) => set({ items: newData }),
 }));
 
 export default useItemStore;

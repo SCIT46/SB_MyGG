@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { getUser } from "../../services/Api";
 import { IUser } from "./type";
 import LoadingSpinner from "../../components/Loading";
-import { useParams } from "react-router-dom";
+import { redirect, useParams } from "react-router-dom";
 
 const SearchPlayerContainer = styled.div`
   width: 100vw;
@@ -43,6 +43,7 @@ export default function SearchPlayer() {
         const data = (await getUser(param1, param2)) as { user: IUser };
         setUser(data.user);
       } catch (error) {
+        redirect("/");
         console.error("user fetch error!", error);
       } finally {
         setIsLoading(false);
@@ -52,7 +53,17 @@ export default function SearchPlayer() {
     fetchData();
   }, [id]);
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading)
+    return (
+      <SearchPlayerContainer>
+        <LoadingSpinner />
+      </SearchPlayerContainer>
+    );
+
+  //todo: 유저 정보가 없을 경우 처리
+  if (!user) {
+    return <SearchPlayerContainer>유저 정보가 없습니다.</SearchPlayerContainer>;
+  }
 
   return (
     <SearchPlayerContainer>

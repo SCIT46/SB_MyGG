@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { Ichamps } from "../pages/Champion/typs";
+import { IChampion } from "../assets/type";
 
 interface IChampionStore {
-  champions: Ichamps[] | null;
-  setChampions: (newData: Ichamps[]) => void;
+  champions: IChampion[] | null;
+  setChampions: (newData: IChampion[]) => void;
 }
 
 const useChampionStore = create<IChampionStore>((set) => ({

@@ -17,8 +17,10 @@ public class ChampDTO {
     private InfoDTO info;
     //private String[] tags;
     private HashMap<String, Number> stats;
+    private SpellDTO[] spells;
 
     public ChampDTO(){
         info = new InfoDTO();
+        spells = new SpellDTO[4];
     }
 }

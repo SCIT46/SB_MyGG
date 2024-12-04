@@ -2,8 +2,8 @@ package com.mygg.sb.item;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class ItemService {
     // 아이템 맵 초기화/생성(lombok 자동 생성 불가)
     public ItemService() throws Exception{
         //item = new ArrayList<>();
-        item = new HashMap<>();
+        item = new TreeMap<>();
     }
 
     // 아이템 아이디로 아이템 정보 받아오기
@@ -49,7 +49,12 @@ public class ItemService {
             item.put(id, createItemDto(id));
         }
 
-        return this.item;
+        JSONObject resultItem = new JSONObject();
+
+        resultItem.put("version", RiotApiClient.getLatestVersion());
+        resultItem.put("data", item);
+        
+        return resultItem;
     }
 
     // 아이디로 아이템 정보 추출/저장하여 객체화 시켜주는 메서드
@@ -68,10 +73,11 @@ public class ItemService {
         return item;
     }
 
+
     public List<String> getItemIds() throws Exception{
        // 아이템의 전체 정보 받아오기
        JSONObject jsonObject = RiotApiClient.getItem("all");
-
+ 
        // 아이템의 전체 아이디 받아오기/저장
        List<String> itemIdList = new ArrayList<>(jsonObject.keySet());
 

@@ -12,17 +12,22 @@ import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDtoMapper;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 
 @Getter
 @Service
+//@RequiredArgsConstructor
 public class ChampionService {
+
+    //private final ChampionRepository championRepository;
 
     // 챔피언 맵
     Map<String, ChampDTO> champion;
     
     // 챔피언 맵 초기화/생성(lombok 자동 생성 불가)
-    public ChampionService() throws Exception{
-      champion = new TreeMap<>();
+    public ChampionService(){
+      champion = new TreeMap();
     }
 
     // 개별 챔피언 정보 조회

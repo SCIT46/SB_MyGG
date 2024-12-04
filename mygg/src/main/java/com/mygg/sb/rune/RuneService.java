@@ -21,10 +21,10 @@ public class RuneService
 		    JSONObject jsonObject = RiotApiClient.getRune("all");
 		    JsonToDtoMapper mapper = new JsonToDtoMapper();
 
-		    for(Object key : jsonObject.keySet())
-		    	{
-		    		//JSONObject temp = mapper.mapToDto(jsonObject.get(key), RuneDTO.class);  
-		    	}
+//		    for(Object key : jsonObject.keySet())
+//		    	{
+//		    		//JSONObject temp = mapper.mapToDto(jsonObject.get(key), RuneDTO.class);  
+//		    	}
 			
 			return jsonObject;
 		}

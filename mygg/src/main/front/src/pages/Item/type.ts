@@ -20,4 +20,9 @@ export interface IItem {
   maps: {
     [mapId: string]: boolean;
   };
+  gold: {
+    base: number;
+    total: number;
+    sell: number;
+  };
 }

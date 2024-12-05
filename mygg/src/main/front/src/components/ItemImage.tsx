@@ -2,9 +2,12 @@ import styled, { keyframes } from "styled-components";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useItemStore from "../stores/useItemStore"; // Assuming a similar store for items
+import useCurrentVersionStore from "../stores/useCurrentVersionStore";
 
 interface ItemImgProps {
   loaded: string;
+  width: number;
+  height: number;
 }
 
 const fadeIn = keyframes`
@@ -17,8 +20,8 @@ const fadeIn = keyframes`
 `;
 
 const ItemImg = styled.img<ItemImgProps>`
-  width: 28px;
-  height: 28px;
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
   border-radius: 5px;
   position: absolute;
   top: 0;
@@ -28,10 +31,10 @@ const ItemImg = styled.img<ItemImgProps>`
     ease-in-out;
 `;
 
-const LoadingBox = styled.div`
+const LoadingBox = styled.div<{ width: number; height: number }>`
   border-radius: 5px;
-  width: 28px;
-  height: 28px;
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
   position: absolute;
   top: 0;
   left: 0;
@@ -39,10 +42,10 @@ const LoadingBox = styled.div`
   background-size: 200% 100%;
 `;
 
-const ItemBox = styled.div`
+const ItemBox = styled.div<{ width: number; height: number }>`
   position: relative;
-  width: 28px;
-  height: 28px;
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
 `;
 
 const Container = styled.div`
@@ -52,31 +55,56 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const DetailBox = styled.div<{ positionAbove: boolean }>`
-  width: 100px;
-  height: 70px;
-  padding: 10px 5px 10px 5px;
+const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
+  width: 200px;
+  height: 90px;
+  padding: 15px 10px;
   border-radius: 7px;
   background-color: #000000c2;
   position: absolute;
   color: ${({ theme }) => theme.colors.textWhite};
-  top: ${({ positionAbove }) => (positionAbove ? "-94px" : "32px")};
+  top: ${({ positionAbove, height }) =>
+    positionAbove ? `-123px` : `${height + 3}px`};
+
   z-index: 1;
 `;
 
-const NullItemBox = styled.div`
-  width: 28px;
-  height: 28px;
+const NullItemBox = styled.div<{ width: number; height: number }>`
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
   background-color: #85858570;
   border-radius: 5px;
 `;
 
+const ItemName = styled.div`
+  color: ${({ theme }) => theme.colors.primarySky};
+  margin-bottom: 10px;
+  font-weight: 600;
+`;
+
+const ItemDescription = styled.div`
+  font-size: 12px;
+  margin-bottom: 10px;
+`;
+
+const ItemGold = styled.div`
+  font-size: 12px;
+  font-weight: 600;
+`;
+
 interface IItemProps {
   itemId: number;
+  width?: number;
+  height?: number;
 }
 
-export default function ItemImage({ itemId }: IItemProps) {
+export default function ItemImage({
+  itemId,
+  width = 28,
+  height = 28,
+}: IItemProps) {
   const items = useItemStore((state) => state.items);
+  const version = useCurrentVersionStore((state) => state.version);
   const [isHover, setIsHover] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [positionAbove, setPositionAbove] = useState<boolean>(false);
@@ -84,7 +112,7 @@ export default function ItemImage({ itemId }: IItemProps) {
   const onMouseOver = (event: React.MouseEvent) => {
     setIsHover(true);
     const rect = event.currentTarget.getBoundingClientRect();
-    setPositionAbove(window.innerHeight - rect.bottom < 120); // 커서가 아래쪽에 있을 때 위로 위치
+    setPositionAbove(window.innerHeight - rect.bottom < 120);
   };
 
   const onMouseOut = () => {
@@ -92,15 +120,17 @@ export default function ItemImage({ itemId }: IItemProps) {
   };
 
   if (itemId === 0) {
-    return <NullItemBox />;
+    return <NullItemBox width={width} height={height} />;
   }
   return (
     <Container>
       <Link to={`/item/${itemId}`}>
-        <ItemBox>
-          {!loaded && <LoadingBox />}
+        <ItemBox width={width} height={height}>
+          {!loaded && <LoadingBox width={width} height={height} />}
           <ItemImg
-            src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/item/${itemId}.png`}
+            width={width}
+            height={height}
+            src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/item/${itemId}.png`}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
             onLoad={() => setLoaded(true)}
@@ -109,8 +139,16 @@ export default function ItemImage({ itemId }: IItemProps) {
         </ItemBox>
       </Link>
       {isHover && (
-        <DetailBox positionAbove={positionAbove}>
-          {String(items?.[itemId as any]?.name || "Unknown Item")}
+        <DetailBox positionAbove={positionAbove} height={height}>
+          <ItemName>
+            {String(items?.[itemId as any]?.name || "Unknown Item")}
+          </ItemName>
+          <ItemDescription>
+            {String(items?.[itemId as any]?.plaintext || "")}
+          </ItemDescription>
+          <ItemGold>
+            {String(items?.[itemId as any]?.gold.total || "")}
+          </ItemGold>
         </DetailBox>
       )}
     </Container>

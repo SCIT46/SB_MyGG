@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import Profile from "./Profile";
+import Profile from "./Profile/Profile";
 import Rank from "./Rank";
-import ChampInfo from "./ChampInfo";
-import Match from "./Match";
 import { useEffect, useState } from "react";
 import { getUser } from "../../services/Api";
 import { IUser } from "./type";
 import LoadingSpinner from "../../components/Loading";
 import { redirect, useParams } from "react-router-dom";
+import Match from "./Match/Match";
+import ChampInfo from "./Champion/ChampInfo";
 
 const SearchPlayerContainer = styled.div`
   width: 100vw;

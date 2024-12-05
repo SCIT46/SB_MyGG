@@ -4,11 +4,5 @@ import useChampionStore from "../../stores/useChampionStore";
 export default function Champions() {
   const champions = useChampionStore((state) => state.champions);
 
-  return (
-    <div>
-      {champions?.map((item, index) => (
-        <div key={index}>{}</div>
-      ))}
-    </div>
-  );
+  return <div>champs</div>;
 }

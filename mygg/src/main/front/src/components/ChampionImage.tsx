@@ -2,9 +2,12 @@ import styled, { keyframes } from "styled-components";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useChampionStore from "../stores/useChampionStore";
+import useCurrentVersionStore from "../stores/useCurrentVersionStore";
 
 interface ChampionImgProps {
   loaded: string;
+  width: number;
+  height: number;
 }
 
 const fadeIn = keyframes`
@@ -17,8 +20,8 @@ const fadeIn = keyframes`
 `;
 
 const ChampionImg = styled.img<ChampionImgProps>`
-  height: 60px;
-  width: 60px;
+  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
   border-radius: 5px;
   position: absolute;
   top: 0;
@@ -28,10 +31,10 @@ const ChampionImg = styled.img<ChampionImgProps>`
     ease-in-out;
 `;
 
-const LoadingBox = styled.div`
+const LoadingBox = styled.div<{ width: number; height: number }>`
   border-radius: 5px;
-  width: 60px;
-  height: 60px;
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
   border-radius: 5px;
   position: absolute;
   top: 0;
@@ -40,10 +43,10 @@ const LoadingBox = styled.div`
   background-size: 200% 100%;
 `;
 
-const ChampionBox = styled.div`
+const ChampionBox = styled.div<{ width: number; height: number }>`
   position: relative;
-  height: 60px;
-  width: 60px;
+  height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
 `;
 
 const Container = styled.div`
@@ -53,15 +56,20 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const DetailBox = styled.div<{ positionAbove: boolean }>`
-  width: 100px;
-  height: 70px;
-  padding: 10px 5px 10px 5px;
+const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  height: 20px;
+  width: fit-content;
+  white-space: nowrap;
   border-radius: 7px;
   background-color: #000000c2;
   position: absolute;
-  color: ${({ theme }) => theme.colors.textWhite};
-  top: ${({ positionAbove }) => (positionAbove ? "63px" : "-93px")};
+  color: ${({ theme }) => theme.colors.primarySky};
+  top: ${({ positionAbove, height }) =>
+    positionAbove ? `${height + 3}px` : "-46px"};
   z-index: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: top 0.2s ease-in-out;
@@ -69,10 +77,17 @@ const DetailBox = styled.div<{ positionAbove: boolean }>`
 
 interface IChampionProps {
   championId: string;
+  width?: number;
+  height?: number;
 }
 
-export default function ChampionImage({ championId }: IChampionProps) {
+export default function ChampionImage({
+  championId,
+  width = 60,
+  height = 60,
+}: IChampionProps) {
   const champions = useChampionStore((state) => state.champions);
+  const version = useCurrentVersionStore((state) => state.version);
   const [isHover, setIsHover] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [positionAbove, setPositionAbove] = useState<boolean>(false);
@@ -90,19 +105,21 @@ export default function ChampionImage({ championId }: IChampionProps) {
   return (
     <Container>
       <Link to={`/champion/${championId}`}>
-        <ChampionBox>
-          {!loaded && <LoadingBox />}
+        <ChampionBox width={width} height={height}>
+          {!loaded && <LoadingBox width={width} height={height} />}
           <ChampionImg
-            src={`https://ddragon.leagueoflegends.com/cdn/14.23.1/img/champion/${championId}.png`}
+            src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championId}.png`}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
             onLoad={() => setLoaded(true)}
             loaded={loaded.toString() as any}
+            width={width}
+            height={height}
           />
         </ChampionBox>
       </Link>
       {isHover && (
-        <DetailBox positionAbove={positionAbove}>
+        <DetailBox positionAbove={positionAbove} height={height}>
           {String(champions?.[championId as any]?.name || "Unknown Champion")}
         </DetailBox>
       )}

@@ -14,12 +14,25 @@ const RankContianer = styled.div`
   font-size: 14px;
 `;
 
-const RankImg = styled.div`
-  margin-top: 15px;
+const UnRankContianer = styled.div`
+  border: 1px ${({ theme }) => theme.colors.primaryGold} solid;
+  width: 100%;
+  height: 50px;
+  background-color: ${({ theme }) => theme.colors.backgroundWhite};
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 14px;
+`;
+
+const RankImg = styled.img`
+  margin-top: 5px;
   border-radius: 10px;
   width: 100px;
   height: 100px;
-  background-color: gray;
 `;
 
 const RankSpan = styled.div``;
@@ -42,15 +55,31 @@ export default function Rank({
   wins,
   losses,
 }: IRankProps) {
+  if (tier === "UNRANKED") {
+    return (
+      <UnRankContianer>
+        <div>unranked</div>
+      </UnRankContianer>
+    );
+  }
   return (
     <RankContianer>
-      <RankImg />
-      <RankSpan>{tier}</RankSpan>
-      <ScoreSpan>{leaguePoints}</ScoreSpan>
+      <RankImg src={`/images/Rank=${tier}.png`} />
+      <RankSpan>
+        {tier} {rank}
+      </RankSpan>
+      <ScoreSpan>{leaguePoints} p</ScoreSpan>
       <WinSpan>
-        {}승 {losses}패
+        {wins}승 {losses}패
       </WinSpan>
-      <WinRateSpan></WinRateSpan>
+      <WinRateSpan>
+        승률 :{" "}
+        {(
+          ((wins as number) / ((wins as number) + (losses as number))) *
+          100
+        ).toFixed(0)}
+        %
+      </WinRateSpan>
     </RankContianer>
   );
 }

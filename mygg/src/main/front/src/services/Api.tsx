@@ -71,7 +71,7 @@ export const getUser = async (
   try {
     const userResponse = await apiClient.get(`/user/${gameName}/${tagLine}`, {
       headers: {
-        "Cache-Control": "max-age=3600", // 1시간 동안 캐시
+        "Cache-Control": "max-age=300",
       },
     });
     return userResponse.data;
@@ -85,7 +85,7 @@ export const getMatch = async (matchId: string): Promise<any> => {
   try {
     const matchResponse = await apiClient.get(`/match/public/${matchId}`, {
       headers: {
-        "Cache-Control": "max-age=3600", // 1시간 동안 캐시
+        "Cache-Control": "max-age=300",
       },
     });
     return matchResponse.data;

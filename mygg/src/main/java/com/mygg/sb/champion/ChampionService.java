@@ -17,18 +17,19 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @Service
-//@RequiredArgsConstructor
+
+@RequiredArgsConstructor
 public class ChampionService {
 
-    //private final ChampionRepository championRepository;
+    private final ChampionRepository championRepository;
 
     // 챔피언 맵
     Map<String, ChampDTO> champion;
     
-    // 챔피언 맵 초기화/생성(lombok 자동 생성 불가)
-    public ChampionService(){
-      champion = new TreeMap();
-    }
+    // // 챔피언 맵 초기화/생성(lombok 자동 생성 불가)
+    // public ChampionService(){
+    //   champion = new TreeMap();
+    // }
 
     // 개별 챔피언 정보 조회
     public Map<String, ChampDTO> getChampion(String id) throws Exception {

@@ -159,7 +159,7 @@ public class RiotApiClient {
         JSONObject jsonObject = (JSONObject) parser.parse(itemJSON);
         
         // id를 지정해주지 않았을 때 전체 정보 반환
-        if(itemId == "all") return (JSONObject) jsonObject.get("data");
+        if(itemId.equals("all")) return (JSONObject) jsonObject.get("data");
 
         // 아이템 정보 JSON에서 아이템 아이디로 해당하는 정보 조회
         return (JSONObject) ((JSONObject) jsonObject.get("data")).get(itemId);
@@ -177,7 +177,7 @@ public class RiotApiClient {
         JSONObject jsonObject = (JSONObject) parser.parse(championJSON);
 
         // id를 지정해주지 않았을 때 전체 정보 반환
-        if(champId == "all") return (JSONObject) jsonObject.get("data");
+        if(champId.equals("all")) return (JSONObject) jsonObject.get("data");
 
         // 챔피언 정보 JSON에서 챔피언 아이디로 해당하는 정보 조회
         return (JSONObject) ((JSONObject) jsonObject.get("data")).get(champId);

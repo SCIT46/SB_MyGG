@@ -1,27 +1,26 @@
 package com.mygg.sb.match.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@ToString
-@Builder
+import jakarta.persistence.*;
+import com.mygg.sb.user.UserEntity;
 
 @Entity
 @Table(name = "UserMatch")
-public class UserMatchEntity
-	{
-		// 중간다리 역할의 Entity이다
-		// userId로 matchID(index)를 조회하는 등의 중간다리.
-		@Column(nullable = false, unique = true)
-		private int user_id;
-		
-		@Column(nullable = false, unique = true)
-		private int match_id;
-	}
+public class UserMatchEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // 중간 테이블의 Primary Key
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user; // UserEntity와 연결
+
+    @ManyToOne
+    @JoinColumn(name = "match_id", nullable = false)
+    private MatchEntity match; // MatchEntity와 연결
+
+    // Getters, Setters, 기본 생성자 생략
+    // name: DB에서 저장될 컬럼의 이름
+    // 외래키는 기본적으로 지정해주면 그것의 기본키를 참조한다
+
+}

@@ -1,13 +1,21 @@
 package com.mygg.sb.item;
 
-import lombok.Setter;
 
-import java.util.HashMap;
+
+import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ItemDTO {
     //field
     //아이템 아이디
@@ -19,9 +27,9 @@ public class ItemDTO {
     //아이템 설명(평문)
     //private String plaintext;
     //아이템 제작소비 아이템 아이디
-    private String[] from;
+    private List<String> from;
     //아이템 제작 아이템 아이디
-    private String[] into;
+    private List<String> into;
     //아이템 골드 정보
     private GoldDTO gold;
     //아이템 태그
@@ -32,10 +40,18 @@ public class ItemDTO {
     //private String[] specialRecipe;
     //아이템 성능(효과) 정보
     //private statsDto stats;
-    private HashMap<String, Number> stats;
+    private Map<String, Number> stats;
 
-    public ItemDTO(){
-        gold = new GoldDTO();
+    public static ItemDTO toDTO(ItemEntity entity) {
+        return ItemDTO.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .from(entity.getFrom())
+                .into(entity.getInto())
+                .gold(entity.getGold())  // GoldDTO도 적절히 변환
+                .stats(entity.getStats())
+                .build();
     }
 }
 

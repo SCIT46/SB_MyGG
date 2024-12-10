@@ -1,10 +1,12 @@
 package com.mygg.sb.champion;
 
+import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Embeddable
 public class SpellDTO {
     // 챔피언 스킬 아이디(챔피언이름+Q/W/E/R)
     private String id;

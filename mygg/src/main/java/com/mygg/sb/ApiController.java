@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mygg.sb.champion.ChampDTO;
+import com.mygg.sb.champion.ChampionDTO;
 import com.mygg.sb.champion.ChampionService;
 import com.mygg.sb.item.ItemDTO;
 import com.mygg.sb.item.ItemService;
@@ -77,14 +77,14 @@ public class ApiController {
 
     //Champion(챔피언 전체 정보제공) API
 	@GetMapping(path="/champion")
-    public Map<String, ChampDTO> champions() throws Exception {
+    public Map<String, ChampionDTO> champions() throws Exception {
         // championsService = new ChampionsService();
         return championService.getChampions();
     }
 
     //Champion(챔피언 정보제공) API
     @GetMapping(path="/champion/{id}")
-    public Map<String, ChampDTO> champion(@PathVariable("id") String id) throws Exception {
+    public Map<String, ChampionDTO> champion(@PathVariable("id") String id) throws Exception {
         // championService = new ChampionService(id);
         return championService.getChampion(id);
     }

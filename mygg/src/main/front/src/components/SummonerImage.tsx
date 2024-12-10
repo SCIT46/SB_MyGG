@@ -43,10 +43,10 @@ const LoadingBox = styled.div<{ width: number; height: number }>`
   background-size: 200% 100%;
 `;
 
-const SummonerBox = styled.div`
+const SummonerBox = styled.div<{ width: number; height: number }>`
   position: relative;
-  width: 28px;
-  height: 28px;
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
 `;
 
 const Container = styled.div`
@@ -117,7 +117,7 @@ export default function SummonerImage({
   return (
     <Container>
       <Link to={`/summoner/${summonerId}`}>
-        <SummonerBox>
+        <SummonerBox width={width} height={height}>
           {!loaded && <LoadingBox width={width} height={height} />}
           <SummonerImg
             width={width}

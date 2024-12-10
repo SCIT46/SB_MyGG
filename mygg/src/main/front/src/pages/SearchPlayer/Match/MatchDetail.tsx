@@ -8,6 +8,7 @@ import SummonerImage from "../../../components/SummonerImage";
 import ItemImage from "../../../components/ItemImage";
 import Participants from "./Participants";
 import MatchDetailContent from "./MatchDetailContent";
+import StyledRuneImage from "../../../components/StyledRuneImage";
 
 const MatchDetailContainer = styled.div<{ isWinning: boolean }>`
   background-color: ${(props) => (props.isWinning ? "#e2edff" : "#ffe8e8")};
@@ -70,13 +71,6 @@ const PlayerItemsInfoContainer = styled.div`
 const SpellImg = styled.img`
   background-color: gray;
   border-radius: 5px;
-  width: 28px;
-  height: 28px;
-`;
-
-//todo img로 바꾸기
-const RuneImg = styled.img`
-  border-radius: 100%;
   width: 28px;
   height: 28px;
 `;
@@ -179,8 +173,16 @@ export default function MatchDetail({
               />
             </PlayerSpellContianer>
             <PlayerRuneContianer>
-              <RuneImg></RuneImg>
-              <RuneImg></RuneImg>
+              <StyledRuneImage
+                runeId={
+                  matchDetail.info.participants[userIndex].perks.styles[0].style
+                }
+              />
+              <StyledRuneImage
+                runeId={
+                  matchDetail.info.participants[userIndex].perks.styles[1].style
+                }
+              />
             </PlayerRuneContianer>
             <PlayerKdaContianer>
               <KdaSpan>
@@ -216,7 +218,6 @@ export default function MatchDetail({
           <DetailBtn></DetailBtn>
         </DetailBtnContainer>
       </MatchDetailContainer>
-      {/* todo - detail 컴포넌트 만들기 */}
       {isDetailOpen && (
         <MatchDetailContent matchDetail={matchDetail} userPuuid={userPuuid} />
       )}

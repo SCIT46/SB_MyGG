@@ -21,7 +21,7 @@ interface SummonerDetails {
 }
 
 export interface IRune {
-  id: string;
+  id: number;
   key: string;
   icon: string;
 }

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getUser } from "../../services/Api";
 import { IUser } from "./type";
 import LoadingSpinner from "../../components/Loading";
-import { redirect, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Match from "./Match/Match";
 import ChampInfo from "./Champion/ChampInfo";
 
@@ -32,6 +32,7 @@ export default function SearchPlayer() {
   const { id } = useParams();
   const [user, setUser] = useState<IUser>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,12 +40,11 @@ export default function SearchPlayer() {
         if (!id) throw new Error("id parameter is missing");
         const [param1, param2] = id.split("-");
         if (!param1 || !param2) throw new Error("Invalid id format");
-
         const data = (await getUser(param1, param2)) as { user: IUser };
         setUser(data.user);
       } catch (error) {
-        redirect("/");
         console.error("user fetch error!", error);
+        navigate("/not-found");
       } finally {
         setIsLoading(false);
       }

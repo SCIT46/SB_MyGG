@@ -20,7 +20,7 @@ const fadeIn = keyframes`
 const RuneImg = styled.img<RuneImgProps>`
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
-  border-radius: 5px;
+  border-radius: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -30,7 +30,7 @@ const RuneImg = styled.img<RuneImgProps>`
 `;
 
 const LoadingBox = styled.div<{ width: number; height: number }>`
-  border-radius: 5px;
+  border-radius: 100%;
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
   position: absolute;
@@ -40,10 +40,10 @@ const LoadingBox = styled.div<{ width: number; height: number }>`
   background-size: 200% 100%;
 `;
 
-const RuneBox = styled.div`
+const RuneBox = styled.div<{ width: number; height: number }>`
   position: relative;
-  width: 28px;
-  height: 28px;
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
 `;
 
 const Container = styled.div`
@@ -90,7 +90,7 @@ interface IRuneProps {
   height?: number;
 }
 
-export default function RuneImage({
+export default function StyledRuneImage({
   runeId,
   width = 28,
   height = 28,
@@ -99,10 +99,11 @@ export default function RuneImage({
   const [isHover, setIsHover] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [positionAbove, setPositionAbove] = useState<boolean>(false);
-  const [isStyleRune, setIsStyleRune] = useState<boolean>(false);
-
+  const [styleRuneIndex, setStyleRuneIndex] = useState<number>(0);
   useEffect(() => {
-    setIsStyleRune(runeId % 100 === 0);
+    if (rune) {
+      setStyleRuneIndex(rune.findIndex((item) => item.id === runeId));
+    }
   }, [runeId]);
 
   const onMouseOver = (event: React.MouseEvent) => {
@@ -117,12 +118,16 @@ export default function RuneImage({
 
   return (
     <Container>
-      <RuneBox>
+      <RuneBox width={width} height={height}>
         {!loaded && <LoadingBox width={width} height={height} />}
         <RuneImg
           width={width}
           height={height}
-          src={`https://ddragon.leagueoflegends.com/cdn/img/`}
+          src={
+            rune
+              ? `https://ddragon.leagueoflegends.com/cdn/img/${rune[styleRuneIndex].icon}`
+              : ""
+          }
           onMouseOver={onMouseOver}
           onMouseOut={onMouseOut}
           onLoad={() => setLoaded(true)}

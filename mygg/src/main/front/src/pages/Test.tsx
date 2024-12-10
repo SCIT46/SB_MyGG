@@ -3,6 +3,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import styled, { keyframes } from "styled-components";
 import ChampionImage from "../components/ChampionImage";
 import SummonerImage from "../components/SummonerImage";
+import StyledRuneImage from "../components/StyledRuneImage";
 
 const SearchIcon = styled(MagnifyingGlassIcon)`
   width: 20px;
@@ -52,8 +53,9 @@ export default function Test() {
     <>
       <SearchIcon />
       <Spinner />
-      <ChampionImage championId="Ahri" />
-      <SummonerImage summonerId="21" />
+      {/* <ChampionImage championId="Ahri" />
+      <SummonerImage summonerId="21" /> */}
+      <StyledRuneImage runeId={8000} />
     </>
   );
 }

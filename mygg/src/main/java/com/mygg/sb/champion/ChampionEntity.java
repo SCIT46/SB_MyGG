@@ -30,7 +30,7 @@ public class ChampionEntity {
     @Column(name = "id")
     private String id;
 
-    @Column(name = "key")
+    @Column(name = "c_key")
     private String key;
 
     @Column(name = "name")

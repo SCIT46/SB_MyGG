@@ -15,7 +15,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")    //인덱스
-    private Integer id; //약 21.4억명의 유저(양의 정수 기준) 저장가능
+    private Long id; //약 21.4억명의 유저(양의 정수 기준) 저장가능
 
     @Column(name = "leagueId")
     private Integer leagueId;

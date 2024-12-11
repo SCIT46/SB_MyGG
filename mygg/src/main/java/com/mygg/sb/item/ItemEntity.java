@@ -49,13 +49,13 @@ public class ItemEntity {
     //아이템 제작소비 아이템 아이디
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "item_from", joinColumns = @JoinColumn(name = "item_id"))
-    @Column(name = "from")
+    @Column(name = "from_v")
     private List<String> from;
 
     //아이템 제작 아이템 아이디
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "item_into", joinColumns = @JoinColumn(name = "item_id"))
-    @Column(name = "into")
+    @Column(name = "into_v")
     private List<String> into;
 
     //아이템 골드 정보    

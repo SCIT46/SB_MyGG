@@ -4,6 +4,7 @@ import ChampionImage from "../../../components/ChampionImage";
 import SummonerImage from "../../../components/SummonerImage";
 import ItemImage from "../../../components/ItemImage";
 import StyledRuneImage from "../../../components/StyledRuneImage";
+import RuneImage from "../../../components/RuneImage";
 
 const MatchDetailContentContainer = styled.div`
   border: 2px solid black;
@@ -135,8 +136,9 @@ export default function MatchDetailContent({
                   />
                 </SpellBox>
                 <RuneBox>
-                  <StyledRuneImage
-                    runeId={part.perks.styles[0].style}
+                  <RuneImage
+                    runeId={part.perks.styles[0].selections[0].perk}
+                    styleRuneId={part.perks.styles[0].style}
                     width={18}
                     height={18}
                   />
@@ -204,8 +206,9 @@ export default function MatchDetailContent({
                   />
                 </SpellBox>
                 <RuneBox>
-                  <StyledRuneImage
-                    runeId={part.perks.styles[0].style}
+                  <RuneImage
+                    runeId={part.perks.styles[0].selections[0].perk}
+                    styleRuneId={part.perks.styles[0].style}
                     width={18}
                     height={18}
                   />

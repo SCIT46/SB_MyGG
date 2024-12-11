@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import styled, { keyframes } from "styled-components";
-import ChampionImage from "../components/ChampionImage";
-import SummonerImage from "../components/SummonerImage";
-import StyledRuneImage from "../components/StyledRuneImage";
+
+import RuneImage from "../components/RuneImage";
 
 const SearchIcon = styled(MagnifyingGlassIcon)`
   width: 20px;
@@ -34,8 +32,6 @@ const Spinner = styled.div`
 
 //테스트 페이지
 export default function Test() {
-  const [message, setMessage] = useState("");
-
   // //api fetching
   // useEffect(() => {
   //   const ApiData = async () => {
@@ -55,7 +51,7 @@ export default function Test() {
       <Spinner />
       {/* <ChampionImage championId="Ahri" />
       <SummonerImage summonerId="21" /> */}
-      <StyledRuneImage runeId={8000} />
+      <RuneImage styleRuneId={8300} runeId={8351} />
     </>
   );
 }

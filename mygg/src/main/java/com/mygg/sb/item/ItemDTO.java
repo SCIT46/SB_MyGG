@@ -1,14 +1,22 @@
 package com.mygg.sb.item;
 
-import lombok.Setter;
 
-import java.util.HashMap;
+
+import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Getter
 @Setter
-public class itemDto {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ItemDTO {
     //field
     //아이템 아이디
     private String id;
@@ -19,11 +27,11 @@ public class itemDto {
     //아이템 설명(평문)
     //private String plaintext;
     //아이템 제작소비 아이템 아이디
-    private String[] from;
+    private List<String> from;
     //아이템 제작 아이템 아이디
-    private String[] into;
+    private List<String> into;
     //아이템 골드 정보
-    private goldDto gold;
+    private GoldDTO gold;
     //아이템 태그
     //private ArrayList<String> tags;
     //아이템 사용되는 맵
@@ -32,16 +40,36 @@ public class itemDto {
     //private String[] specialRecipe;
     //아이템 성능(효과) 정보
     //private statsDto stats;
-    private HashMap<String, Number> stats;
+    private Map<String, Number> stats;
 
-    public itemDto(){
-        gold = new goldDto();
+    public static ItemDTO toDTO(ItemEntity entity) {
+        return ItemDTO.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .from(entity.getFrom())
+                .into(entity.getInto())
+                .gold(entity.getGold())  // GoldDTO도 적절히 변환
+                .stats(entity.getStats())
+                .build();
     }
 }
 
 
 // stats
 //아이템 통계 정보
+
+/*
+ * Stat Naming Conventions
+ *
+ * A list of possible stats that you gain from items, runes, or masteries can also be found in Data Dragon. You can find a list of stats gained by the item, rune, or mastery by searching for the stats field. Below are some tips when it comes to understanding what a stat means and how they are calculated:
+ *
+    Mod stands for modifier.
+    An "r" at the beginning of the stat means those stats can be found on runes.
+    Displaying flat vs. percentage vs. per 5 etc. is case-by-case. it will always be the same for a given stat. For example, PercentAttackSpeedMod will always be multiplied by 100 and displayed it as a percentage.
+    Stats are called flat if you add them together, and percent if you multiply them together.
+    Tenacity from an item does NOT stack but tenacity from a rune DOES stack.
+ */
 
     // //아이템 체력 총합
     // private int flatHPPoolMod;

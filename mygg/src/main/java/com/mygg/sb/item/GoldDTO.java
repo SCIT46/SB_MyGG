@@ -1,11 +1,13 @@
 package com.mygg.sb.item;
 
+import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class goldDto {
+@Embeddable
+public class GoldDTO {
     //아이템 골드 정보
     //아이템 골드 기본값 
     private int base;

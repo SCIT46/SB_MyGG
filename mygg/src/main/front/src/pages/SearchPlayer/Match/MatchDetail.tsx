@@ -9,6 +9,7 @@ import ItemImage from "../../../components/ItemImage";
 import Participants from "./Participants";
 import MatchDetailContent from "./MatchDetailContent";
 import StyledRuneImage from "../../../components/StyledRuneImage";
+import RuneImage from "../../../components/RuneImage";
 
 const MatchDetailContainer = styled.div<{ isWinning: boolean }>`
   background-color: ${(props) => (props.isWinning ? "#e2edff" : "#ffe8e8")};
@@ -68,13 +69,6 @@ const PlayerItemsInfoContainer = styled.div`
   display: flex;
 `;
 
-const SpellImg = styled.img`
-  background-color: gray;
-  border-radius: 5px;
-  width: 28px;
-  height: 28px;
-`;
-
 const KdaSpan = styled.div``;
 
 const KdaSocreSpan = styled.div`
@@ -113,7 +107,6 @@ export default function MatchDetail({
 }: IMatchDetailProp) {
   const [userIndex, setUserIndex] = useState<number>();
   const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
-  console.log(isDetailOpen);
 
   // const currentTime = Date.now();
   // const timeDifference = currentTime - matchDetail.info.;
@@ -173,9 +166,13 @@ export default function MatchDetail({
               />
             </PlayerSpellContianer>
             <PlayerRuneContianer>
-              <StyledRuneImage
-                runeId={
+              <RuneImage
+                styleRuneId={
                   matchDetail.info.participants[userIndex].perks.styles[0].style
+                }
+                runeId={
+                  matchDetail.info.participants[userIndex].perks.styles[0]
+                    .selections[0].perk
                 }
               />
               <StyledRuneImage

@@ -159,7 +159,7 @@ public class RiotApiClient {
         JSONObject jsonObject = (JSONObject) parser.parse(itemJSON);
         
         // id를 지정해주지 않았을 때 전체 정보 반환
-        if(itemId == "all") return (JSONObject) jsonObject.get("data");
+        if(itemId.equals("all")) return (JSONObject) jsonObject.get("data");
 
         // 아이템 정보 JSON에서 아이템 아이디로 해당하는 정보 조회
         return (JSONObject) ((JSONObject) jsonObject.get("data")).get(itemId);
@@ -177,9 +177,42 @@ public class RiotApiClient {
         JSONObject jsonObject = (JSONObject) parser.parse(championJSON);
 
         // id를 지정해주지 않았을 때 전체 정보 반환
-        if(champId == "all") return (JSONObject) jsonObject.get("data");
+        if(champId.equals("all")) return (JSONObject) jsonObject.get("data");
 
         // 챔피언 정보 JSON에서 챔피언 아이디로 해당하는 정보 조회
         return (JSONObject) ((JSONObject) jsonObject.get("data")).get(champId);
+    }
+    
+    // API : championId(String)로 챔피언 정보(JSONObject) 변환
+    public static JSONObject getRune(String runeId) throws Exception{
+        // url을 json으로 변환
+        String runeJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("runesReforged"));
+
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
+
+        // 룬 정보 JSON
+        JSONArray jsonArray = (JSONArray) parser.parse(runeJSON);
+        
+        // 전체 정보를 반환 (runeId가 "all"일 경우)
+        if ("all".equals(runeId)) {
+            JSONObject allRunes = new JSONObject();
+            for (Object obj : jsonArray) {
+                JSONObject rune = (JSONObject) obj;
+                allRunes.put(rune.get("name"), rune);
+            }
+            return allRunes;
+        }
+
+        // 특정 id에 해당하는 룬 반환
+        for (Object obj : jsonArray) {
+            JSONObject rune = (JSONObject) obj;
+            if (rune.get("id").toString().equals(runeId)) {
+                return rune;
+            }
+        }
+
+        // 존재하지 않는 id일 경우 null 반환
+        return null;
     }
 }

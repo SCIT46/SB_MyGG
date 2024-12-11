@@ -16,6 +16,7 @@ public class InfoDto
 		String gameMode;		// 게임 모드 ex) "CLASSIC"
 		String gameVersion;		// 게임버전 ex) 14.23.636.9832
 		String gameType;		// 게임타입 ex) "MATCHED_GAME"
+		int queueId;
 		int mapId;				// 맵 ID,  11
 		String platformId;		// 게임 플랫폼, ex) "JP1"
 		List<ParticipantsDto> participants;

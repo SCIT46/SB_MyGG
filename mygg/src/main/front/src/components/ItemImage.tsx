@@ -67,6 +67,7 @@ const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
     positionAbove ? `-123px` : `${height + 3}px`};
 
   z-index: 1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
 const NullItemBox = styled.div<{ width: number; height: number }>`

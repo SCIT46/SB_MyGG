@@ -40,8 +40,8 @@ export default function SearchPlayer() {
         if (!id) throw new Error("id parameter is missing");
         const [param1, param2] = id.split("-");
         if (!param1 || !param2) throw new Error("Invalid id format");
-        const data = (await getUser(param1, param2)) as { user: IUser };
-        setUser(data.user);
+        const data = (await getUser(param1, param2)) as IUser;
+        setUser(data);
       } catch (error) {
         console.error("user fetch error!", error);
         navigate("/not-found");

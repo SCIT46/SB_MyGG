@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.0-RC1'
+	id 'org.springframework.boot' version '3.4.0'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id 'com.github.node-gradle.node' version '3.5.1'
 	
@@ -46,14 +46,10 @@ dependencies {
 	//H2
 	//implementation 'com.h2database:h2'
 
-	//Mysql
+	// //Mysql
 	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
-	implementation 'com.mysql:mysql-connector-j:8.3.0'
-	//runtimeOnly("com.mysql:mysql-connector-j")
-	
-	// MySQL
-	runtimeOnly 'com.mysql:mysql-connector-j'
-    implementation 'mysql:mysql-connector-java:8.0.33'
+	runtimeOnly 'com.mysql:mysql-connector-j:8.3.0'
+
 	//JSON Parser
 	implementation 'com.googlecode.json-simple:json-simple:1.1'
 

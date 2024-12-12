@@ -56,7 +56,7 @@ public class ChampionEntity {
     @Column(name = "spells")
     private List<SpellDTO> spells;
 
-    public ChampionEntity toEntity(ChampionDTO dto){
+    public static ChampionEntity toEntity(ChampionDTO dto){
         return ChampionEntity.builder()
                 .id(dto.getId())
                 .key(dto.getKey())

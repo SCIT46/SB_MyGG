@@ -2,14 +2,19 @@ package com.mygg.sb.user;
 
 import java.time.LocalDateTime;
 
-import org.springframework.stereotype.Service;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-@Service
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 public class UserDTO {
     private String leagueId;
     private String puuid;
@@ -33,5 +38,23 @@ public class UserDTO {
     //최근 갱신 날짜
     private LocalDateTime revisionDate;
     // 최근 매치 목록
-    private String[] matchList;
+    // private String[] matchList;
+
+    public static UserDTO toDTO(UserEntity entity){
+        return UserDTO.builder()
+                .leagueId(entity.getLeagueId())
+                .puuid(entity.getPuuid())
+                .summonerId(entity.getSummonerId())
+                .profileIconId(entity.getProfileIconId())
+                .gameName(entity.getGameName())
+                .tagLine(entity.getTagLine())
+                .summonerLevel(entity.getSummonerLevel())
+                .tier(entity.getTier())
+                .rank(entity.getRank())
+                .leaguePoints(entity.getLeaguePoints())
+                .wins(entity.getWins())
+                .losses(entity.getLosses())
+                .revisionDate(entity.getRevisionDate())
+                .build();
+    }
 }

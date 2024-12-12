@@ -3,31 +3,40 @@ package com.mygg.sb.champion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDtoMapper;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+
 
 
 @Getter
 @Service
-@RequiredArgsConstructor
 public class ChampionService {
-
+    // JPA Repository
     private final ChampionRepository championRepository;
-
     // 챔피언 맵
     Map<String, ChampionDTO> champion;
     
     // // 챔피언 맵 초기화/생성(lombok 자동 생성 불가)
-    // public ChampionService(){
-    //   champion = new TreeMap();
-    // }
+    @Autowired 
+    public ChampionService(ChampionRepository championRepository){
+      this.championRepository = championRepository;
+      this.champion = new TreeMap();
+    }
+
+    public ChampionService(){
+      this.championRepository = null;
+      this.champion = new TreeMap();
+    }
+
+    // =============================================================
 
     // 개별 챔피언 정보 조회
     public Map<String, ChampionDTO> getChampion(String id) throws Exception {

@@ -32,7 +32,7 @@ public class ChampionDTO {
     //     info = new InfoDTO();
     //     spells = new SpellDTO[4];
     // }
-    public ChampionDTO toDTO(ChampionEntity entity){
+    public static ChampionDTO toDTO(ChampionEntity entity){
         return ChampionDTO.builder()
                 .id(entity.getId())
                 .key(entity.getKey())

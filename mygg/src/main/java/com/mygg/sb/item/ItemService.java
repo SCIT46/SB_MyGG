@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
@@ -16,14 +17,45 @@ import lombok.Getter;
 @Getter
 @Service
 public class ItemService {
+    // JPA Repository
+    private final ItemRepository itemRepository;
     // 아이템 맵
     Map<String, ItemDTO> item;
 
-    // 아이템 맵 초기화/생성(lombok 자동 생성 불가)
+    //아이템 맵 초기화/생성(lombok 자동 생성 불가)
+    @Autowired
+    public ItemService(ItemRepository itemRepository){
+        this.itemRepository = itemRepository;
+        this.item = new TreeMap<>();
+    }
+
     public ItemService() throws Exception{
         //item = new ArrayList<>();
-        item = new TreeMap<>();
+        this.itemRepository = null;
+        this.item = new TreeMap<>();
     }
+
+    // =============================================================
+    public void create(ItemDTO dto){
+
+    }
+
+    public void update(ItemDTO dto){
+        
+    }
+
+    public void delete(ItemDTO dto){
+        
+    }
+
+    public ItemDTO readOne(Long id){
+        return null;
+    }
+
+    public List<ItemDTO> readAll(){
+        return null;
+    }
+    // =============================================================
 
     // 아이템 아이디로 아이템 정보 받아오기
     public Map<String, ItemDTO> getItem(String id) throws Exception{

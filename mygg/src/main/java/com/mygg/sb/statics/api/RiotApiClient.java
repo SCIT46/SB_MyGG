@@ -22,7 +22,7 @@ public class RiotApiClient {
     }
 
     // API : gameName(String)과 tagLine(String)를 주면 puuid(String)로 변환
-    public static String nameTagToPid(String gameName, String tagLine) throws Exception {
+    public static String getPuuidNameAndTag(String gameName, String tagLine) throws Exception {
         // 이름을 URL인코딩하여 처리(영어 외에 처리 안되는 문제 해결)
         gameName = URLEncoder.encode(gameName, "UTF-8");
         tagLine = URLEncoder.encode(tagLine, "UTF-8");
@@ -43,7 +43,7 @@ public class RiotApiClient {
     }
 
     // API : puuid(String)를 주면 gameName, tagLine(String[])으로 변환
-    public static String[] pidToNametag(String pid) throws Exception {
+    public static String[] getNametag(String pid) throws Exception {
 
         // url을 json으로 변환
         String userJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("accountByPid", pid));
@@ -127,6 +127,24 @@ public class RiotApiClient {
     }
 
     // API : puuid(String)로 매치 목록(String[]) 변환
+    public static String[] getMatchList(String puuid, int start, int cnt) throws Exception{
+        // url을 json으로 변환
+        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, start, cnt)); 
+
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
+
+        // JSON 데이터가 Array로 오기 때문에 JSONArray로 변환
+        JSONArray jsonArray = (JSONArray) parser.parse(matchJSON);
+
+        // JSONArray를 String[]로 변환
+        String[] matchList = new String[jsonArray.size()];
+        for (int i = 0; i < jsonArray.size(); i++) {
+            matchList[i] = (String) jsonArray.get(i);
+        }
+
+        return matchList;
+    }
     public static String[] getMatchList(String puuid) throws Exception{
         // url을 json으로 변환
         String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, 0, 20)); 
@@ -144,7 +162,7 @@ public class RiotApiClient {
         }
 
         return matchList;
-    }  
+    }
 
     // API : itemId(String)로 아이템 정보(JSONObject) 변환
     public static JSONObject getItem(String itemId) throws Exception{

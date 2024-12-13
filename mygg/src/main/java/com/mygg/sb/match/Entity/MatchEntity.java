@@ -3,6 +3,9 @@ package com.mygg.sb.match.Entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.mygg.sb.champion.ChampionDTO;
+import com.mygg.sb.champion.ChampionEntity;
+
 @Entity
 @Table(name = "Matches")
 public class MatchEntity {
@@ -21,5 +24,4 @@ public class MatchEntity {
     private List<UserMatchEntity> userMatches;
 
     // Getters, Setters, 기본 생성자 생략
-
 }

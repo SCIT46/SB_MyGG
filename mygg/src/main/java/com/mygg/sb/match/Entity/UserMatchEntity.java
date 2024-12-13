@@ -1,10 +1,13 @@
 package com.mygg.sb.match.Entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+
 import com.mygg.sb.user.UserEntity;
 
 @Entity
 @Table(name = "UserMatch")
+@Getter
 public class UserMatchEntity {
 
     @Id
@@ -22,5 +25,4 @@ public class UserMatchEntity {
     // Getters, Setters, 기본 생성자 생략
     // name: DB에서 저장될 컬럼의 이름
     // 외래키는 기본적으로 지정해주면 그것의 기본키를 참조한다
-
 }

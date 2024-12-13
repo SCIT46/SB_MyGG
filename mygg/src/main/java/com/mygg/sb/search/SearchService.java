@@ -23,7 +23,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class SearchService {
-    
+	// 0.5초마다 검색창 업데이트 되는 기능의 일부
+    // 3개(item, chap, user) 조회해서 like 연산해서 JSON 프론트에 반환
     private final ItemRepository itemRepo;
     private final ChampionRepository champRepo;
     private final UserRepository userRepo;

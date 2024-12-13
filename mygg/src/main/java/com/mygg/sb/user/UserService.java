@@ -26,7 +26,7 @@ public class UserService {
         // 이름과 태그를 puuid로 변환
         user.setGameName(gameName);
         user.setTagLine(tagLine);
-        user.setPuuid(RiotApiClient.nameTagToPid(gameName,tagLine));
+        user.setPuuid(RiotApiClient.getPuuidNameAndTag(gameName,tagLine));
         init();
         return this.user;
 	  }
@@ -34,7 +34,7 @@ public class UserService {
     // puuid를 통해 소환사 정보를 불러올 때 사용하는 생성자 (미사용)
     public UserDTO getUserInfo(String puuid) throws Exception{
         user.setPuuid(puuid);
-        String[] nametag = RiotApiClient.pidToNametag(puuid);
+        String[] nametag = RiotApiClient.getNametag(puuid);
         user.setGameName(nametag[0]);
         user.setTagLine(nametag[1]);
         init();

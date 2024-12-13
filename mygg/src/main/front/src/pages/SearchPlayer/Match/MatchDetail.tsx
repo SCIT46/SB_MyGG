@@ -10,6 +10,7 @@ import Participants from "./Participants";
 import MatchDetailContent from "./MatchDetailContent";
 import StyledRuneImage from "../../../components/StyledRuneImage";
 import RuneImage from "../../../components/RuneImage";
+import { queueIdObj } from "../../../utils/QueueIdObj";
 
 const MatchDetailContainer = styled.div<{ isWinning: boolean }>`
   background-color: ${(props) => (props.isWinning ? "#e2edff" : "#ffe8e8")};
@@ -27,24 +28,24 @@ const GameInfoContainer = styled.div`
   margin-left: 7px;
   flex-direction: column;
   justify-content: center;
-  width: 50px;
+  width: 70px;
 `;
 
 const PlayerInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: -50px;
-  gap: 10px;
+  gap: 8px;
 `;
 
 const PlayerChampionInfoContainer = styled.div`
   display: flex;
-  gap: 5px;
+  gap: 4px;
 `;
 
 const PlayerSpellContianer = styled.div`
   display: flex;
-  gap: 5px;
+  gap: 4px;
 
   flex-direction: column;
 `;
@@ -64,7 +65,7 @@ const PlayerKdaContianer = styled.div`
 `;
 
 const PlayerItemsInfoContainer = styled.div`
-  gap: 5px;
+  gap: 4px;
 
   display: flex;
 `;
@@ -94,6 +95,10 @@ const DetailBtnContainer = styled.div`
   align-items: flex-end;
   margin-left: 30px;
   margin-right: 10px;
+`;
+
+const GameModeSpan = styled.div`
+  font-size: 12px;
 `;
 
 export interface IMatchDetailProp {
@@ -138,7 +143,9 @@ export default function MatchDetail({
         isWinning={matchDetail.info.participants[userIndex].win}
       >
         <GameInfoContainer>
-          <div></div>
+          <GameModeSpan>
+            {queueIdObj[matchDetail.info.queueId].description}
+          </GameModeSpan>
           <div>x일전</div>
           <div>
             {Math.floor(matchDetail.info.gameDuration / 60)}:
@@ -200,7 +207,7 @@ export default function MatchDetail({
             </PlayerKdaContianer>
           </PlayerChampionInfoContainer>
           <PlayerItemsInfoContainer>
-            {[0, 1, 2, 3, 4, 5, 6].map((n, index) => (
+            {[0, 1, 2, 3, 4, 5].map((n, index) => (
               <ItemImage
                 itemId={
                   (matchDetail.info.participants[userIndex] as any)[`item${n}`]
@@ -208,6 +215,12 @@ export default function MatchDetail({
                 key={index}
               />
             ))}
+            <ItemImage
+              itemId={
+                (matchDetail.info.participants[userIndex] as any)[`item6`]
+              }
+              isTrinket={true}
+            />
           </PlayerItemsInfoContainer>
         </PlayerInfoContainer>
         <Participants matchDetail={matchDetail} />

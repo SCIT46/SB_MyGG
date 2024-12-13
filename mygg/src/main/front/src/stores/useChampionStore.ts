@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IChampion } from "../assets/type";
+import { IChampion } from "../interfaces/type";
 
 interface IChampionStore {
   champions: IChampion[] | null;

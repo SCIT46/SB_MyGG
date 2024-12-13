@@ -36,6 +36,7 @@ const ParticipantImgSpan = styled.div`
   width: 90px;
   font-size: 13px;
   margin-left: -1px;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline; /* 호버시 밑줄 추가 */
@@ -64,7 +65,6 @@ export default function Participants({ matchDetail }: IParticipants) {
                   "noopener,noreferrer"
                 );
               }}
-              style={{ cursor: "pointer" }}
             >
               {part.riotIdGameName}
             </ParticipantImgSpan>

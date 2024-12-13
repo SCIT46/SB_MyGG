@@ -26,13 +26,15 @@ const TableHeader = styled.thead`
     font-weight: 600;
     height: 40px;
     vertical-align: middle;
+    background-color: #f0f0f0;
   }
 `;
 
-const TableRow = styled.tr`
+const TableRow = styled.tr<{ isWin: boolean }>`
   td {
     padding: 6px;
   }
+  background-color: ${({ isWin }) => (isWin ? "#d1d5ff" : "#ffd7d7")};
 `;
 
 const ProfileTd = styled.td`
@@ -58,6 +60,10 @@ const NameBox = styled.div`
   margin-left: 8px;
   font-weight: 500;
   font-size: 12px;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const ItemTd = styled.td`
@@ -106,7 +112,9 @@ export default function MatchDetailContent({
       <Table>
         <TableHeader>
           <tr>
-            <th>팀</th>
+            <th>
+              블루 팀 ({matchDetail.info.participants[0].win ? "승리" : "패배"})
+            </th>
             <th>KDA</th>
             <th>피해량</th>
             <th>와드</th>
@@ -116,7 +124,7 @@ export default function MatchDetailContent({
         </TableHeader>
         <tbody>
           {matchDetail.info.participants.slice(0, 5).map((part, index) => (
-            <TableRow key={index}>
+            <TableRow key={index} isWin={part.win}>
               <ProfileTd>
                 <ChampionImage
                   championId={part.championName}
@@ -148,7 +156,18 @@ export default function MatchDetailContent({
                     height={18}
                   />
                 </RuneBox>
-                <NameBox>{part.riotIdGameName}</NameBox>
+
+                <NameBox
+                  onClick={() => {
+                    window.open(
+                      `/search/${part.riotIdGameName}-${part.riotIdTagline}`,
+                      "_blank",
+                      "noopener,noreferrer"
+                    );
+                  }}
+                >
+                  {part.riotIdGameName}
+                </NameBox>
               </ProfileTd>
               <KdaTd>
                 <div>
@@ -166,7 +185,12 @@ export default function MatchDetailContent({
                   <ItemImage itemId={part.item3} width={20} height={20} />
                   <ItemImage itemId={part.item4} width={20} height={20} />
                   <ItemImage itemId={part.item5} width={20} height={20} />
-                  <ItemImage itemId={part.item6} width={20} height={20} />
+                  <ItemImage
+                    itemId={part.item6}
+                    width={20}
+                    height={20}
+                    isTrinket={true}
+                  />
                 </ItemBox>
               </ItemTd>
             </TableRow>
@@ -176,7 +200,9 @@ export default function MatchDetailContent({
       <Table>
         <TableHeader>
           <tr>
-            <th>팀</th>
+            <th>
+              레드 팀 ({matchDetail.info.participants[5].win ? "승리" : "패배"})
+            </th>
             <th>KDA</th>
             <th>피해량</th>
             <th>와드</th>
@@ -186,7 +212,7 @@ export default function MatchDetailContent({
         </TableHeader>
         <tbody>
           {matchDetail.info.participants.slice(5, 10).map((part, index) => (
-            <TableRow key={index}>
+            <TableRow key={index} isWin={part.win}>
               <ProfileTd>
                 <ChampionImage
                   championId={part.championName}
@@ -236,7 +262,12 @@ export default function MatchDetailContent({
                   <ItemImage itemId={part.item3} width={20} height={20} />
                   <ItemImage itemId={part.item4} width={20} height={20} />
                   <ItemImage itemId={part.item5} width={20} height={20} />
-                  <ItemImage itemId={part.item6} width={20} height={20} />
+                  <ItemImage
+                    itemId={part.item6}
+                    width={20}
+                    height={20}
+                    isTrinket={true}
+                  />
                 </ItemBox>
               </ItemTd>
             </TableRow>

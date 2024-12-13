@@ -38,7 +38,7 @@ public class UserDTO {
     //최근 갱신 날짜
     private LocalDateTime revisionDate;
     // 최근 매치 목록
-    // private String[] matchList;
+    private String[] matchList;
 
     public static UserDTO toDTO(UserEntity entity){
         return UserDTO.builder()

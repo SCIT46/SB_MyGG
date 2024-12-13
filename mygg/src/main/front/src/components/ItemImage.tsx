@@ -8,6 +8,7 @@ interface ItemImgProps {
   loaded: string;
   width: number;
   height: number;
+  isTrinket: boolean;
 }
 
 const fadeIn = keyframes`
@@ -22,7 +23,7 @@ const fadeIn = keyframes`
 const ItemImg = styled.img<ItemImgProps>`
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
-  border-radius: 5px;
+  border-radius: ${({ isTrinket }) => (isTrinket ? "100%" : "5px")};
   position: absolute;
   top: 0;
   left: 0;
@@ -31,8 +32,12 @@ const ItemImg = styled.img<ItemImgProps>`
     ease-in-out;
 `;
 
-const LoadingBox = styled.div<{ width: number; height: number }>`
-  border-radius: 5px;
+const LoadingBox = styled.div<{
+  width: number;
+  height: number;
+  isTrinket: boolean;
+}>`
+  border-radius: ${({ isTrinket }) => (isTrinket ? "100%" : "5px")};
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
   position: absolute;
@@ -91,16 +96,19 @@ const ItemDescription = styled.div`
 const ItemGold = styled.div`
   font-size: 12px;
   font-weight: 600;
+  color: ${({ theme }) => theme.colors.primaryGold};
 `;
 
 interface IItemProps {
   itemId: number;
   width?: number;
   height?: number;
+  isTrinket?: boolean;
 }
 
 export default function ItemImage({
   itemId,
+  isTrinket = false,
   width = 28,
   height = 28,
 }: IItemProps) {
@@ -127,10 +135,13 @@ export default function ItemImage({
     <Container>
       <Link to={`/item/${itemId}`}>
         <ItemBox width={width} height={height}>
-          {!loaded && <LoadingBox width={width} height={height} />}
+          {!loaded && (
+            <LoadingBox width={width} height={height} isTrinket={isTrinket} />
+          )}
           <ItemImg
             width={width}
             height={height}
+            isTrinket={isTrinket}
             src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/item/${itemId}.png`}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}

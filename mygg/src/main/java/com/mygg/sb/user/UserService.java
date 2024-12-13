@@ -28,7 +28,6 @@ public class UserService {
         user.setTagLine(tagLine);
         user.setPuuid(RiotApiClient.nameTagToPid(gameName,tagLine));
         init();
-
         return this.user;
 	  }
     
@@ -61,6 +60,6 @@ public class UserService {
         user.setWins(((Long) jsonObject2.get("wins")).intValue());
         user.setLosses(((Long) jsonObject2.get("losses")).intValue());
         // 최근 매치 목록
-        //user.setMatchList(RiotApiClient.getMatchList(user.getPuuid()));
+        user.setMatchList(RiotApiClient.getMatchList(user.getPuuid()));
     }
 }

@@ -27,6 +27,7 @@ export interface IMatchDetail {
     gameMode: string;
     gameVersion: string;
     gameType: string;
+    queueId: number;
     mapId: number;
     platformId: string;
     participants: IParticipants[];

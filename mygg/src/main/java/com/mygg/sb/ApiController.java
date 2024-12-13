@@ -21,8 +21,11 @@ import com.mygg.sb.match.PublicMatchService;
 import com.mygg.sb.user.UserDTO;
 import com.mygg.sb.user.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api")
+@Tag(name = "유저 전적검색 관련 API", description = "유저 전적검색에 사용되는 API")
 public class ApiController {
 
     // @Autowired

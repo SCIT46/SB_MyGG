@@ -48,6 +48,7 @@ public class PublicMatchService
 				JSONObject result = new JSONObject();
 				result.put("metadata", metadata);
 				result.put("info", info);
+
 				return result;
 			}
 		

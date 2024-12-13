@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import { useEffect, useState } from "react";
 import useRunesStore from "../stores/useRunesStore";
-import { IRuneSlot } from "../assets/type";
+import { IRuneSlot } from "../interfaces/type";
 
 interface RuneImgProps {
   loaded: string;

@@ -25,7 +25,7 @@ public class PublicMatchService
 		MetadataDto metadata;
 		InfoDto info;
 
-		public JSONObject getMatchInfo(String matchId) throws Exception
+		public MatchDTO getMatchInfo(String matchId) throws Exception
 			{
 				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
@@ -45,9 +45,9 @@ public class PublicMatchService
 						if (key.equals("info")) info = mapper.mapToDto(jsonObj, InfoDto.class);
 					}
 
-				JSONObject result = new JSONObject();
-				result.put("metadata", metadata);
-				result.put("info", info);
+				MatchDTO result = new MatchDTO();
+				result.setMetadata(metadata);
+				result.setInfo(info);
 
 				return result;
 			}

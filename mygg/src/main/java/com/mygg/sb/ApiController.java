@@ -17,6 +17,7 @@ import com.mygg.sb.item.ItemDTO;
 import com.mygg.sb.item.ItemService;
 import com.mygg.sb.rune.RuneDTO;
 import com.mygg.sb.rune.RuneService;
+import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.PublicMatchService;
 import com.mygg.sb.user.UserDTO;
 import com.mygg.sb.user.UserService;
@@ -52,7 +53,7 @@ public class ApiController {
     
     // Public Match(API로부터 받아온 결과) API
     @GetMapping(path="/match/public/{matchId}")
-    public JSONObject publicMatch(@PathVariable("matchId") String matchId) throws Exception {
+    public MatchDTO publicMatch(@PathVariable("matchId") String matchId) throws Exception {
         //publicMatchService = new PublicMatchService(matchId);
         return publicMatchService.getMatchInfo(matchId);
     }

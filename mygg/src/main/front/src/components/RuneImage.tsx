@@ -65,8 +65,7 @@ const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
   height: 65px;
   padding: 15px 10px;
   border-radius: 7px;
-  background-color: #000000c2;
-  color: ${({ theme }) => theme.colors.primaryGold};
+  background-color: ${({ theme }) => theme.colors.background.dark};
   position: absolute;
   top: ${({ positionAbove, height }) =>
     positionAbove ? `${height + 3}px` : "-98px"};
@@ -76,13 +75,13 @@ const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
 `;
 
 const RuneName = styled.div`
-  color: ${({ theme }) => theme.colors.primaryGold};
+  color: ${({ theme }) => theme.colors.brand.gold.main};
   margin-bottom: 10px;
   font-weight: 600;
 `;
 
 const RuneDescription = styled.div`
-  color: ${({ theme }) => theme.colors.textWhite};
+  color: ${({ theme }) => theme.colors.text.white};
   font-size: 12px;
 `;
 

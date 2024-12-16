@@ -62,8 +62,8 @@ const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
   width: fit-content;
   white-space: nowrap;
   border-radius: 7px;
-  background-color: #000000c2;
-  color: ${({ theme }) => theme.colors.primaryGold};
+  background-color: ${({ theme }) => theme.colors.background.dark};
+  color: ${({ theme }) => theme.colors.brand.gold.main};
   position: absolute;
   top: ${({ positionAbove, height }) =>
     positionAbove ? `${height + 3}px` : "-49px"};

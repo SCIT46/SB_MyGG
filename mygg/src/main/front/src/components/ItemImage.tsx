@@ -65,9 +65,9 @@ const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
   height: 90px;
   padding: 15px 10px;
   border-radius: 7px;
-  background-color: #000000c2;
+  background-color: ${({ theme }) => theme.colors.background.dark};
   position: absolute;
-  color: ${({ theme }) => theme.colors.textWhite};
+  color: ${({ theme }) => theme.colors.text.primary};
   top: ${({ positionAbove, height }) =>
     positionAbove ? `-123px` : `${height + 3}px`};
 
@@ -83,7 +83,7 @@ const NullItemBox = styled.div<{ width: number; height: number }>`
 `;
 
 const ItemName = styled.div`
-  color: ${({ theme }) => theme.colors.primarySky};
+  color: ${({ theme }) => theme.colors.brand.sky.main};
   margin-bottom: 10px;
   font-weight: 600;
 `;
@@ -91,12 +91,13 @@ const ItemName = styled.div`
 const ItemDescription = styled.div`
   font-size: 12px;
   margin-bottom: 10px;
+  color: ${({ theme }) => theme.colors.text.white};
 `;
 
 const ItemGold = styled.div`
   font-size: 12px;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.primaryGold};
+  color: ${({ theme }) => theme.colors.brand.gold.main};
 `;
 
 interface IItemProps {

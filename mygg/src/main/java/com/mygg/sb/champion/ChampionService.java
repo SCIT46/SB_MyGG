@@ -3,6 +3,7 @@ package com.mygg.sb.champion;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import org.json.simple.JSONObject;
@@ -36,7 +37,41 @@ public class ChampionService {
       this.champion = new TreeMap();
     }
 
-    // =============================================================
+    // ===========================================================================
+    public void create(ChampionDTO dto){
+      championRepository.save(ChampionEntity.toEntity(dto));
+    }
+
+    public ChampionDTO readOne(String id){
+      Optional<ChampionEntity> tmp = championRepository.findById(id);
+      if(tmp.isPresent()){
+        ChampionEntity entity = tmp.get();
+        return ChampionDTO.toDTO(entity);
+      }
+      return null;
+    }
+    
+    public List<ChampionDTO> readAll(){
+      List<ChampionEntity> tmp = championRepository.findAll();
+      List<ChampionDTO> list = new ArrayList<>();
+      if(tmp.isEmpty()) return null;
+      for(ChampionEntity item : tmp){
+        list.add(ChampionDTO.toDTO(item));
+      }
+      return list;
+    }
+
+    public void update(ChampionDTO dto){
+      Optional<ChampionEntity> tmp = championRepository.findById(dto.getId());
+      if(tmp.isPresent()){
+        championRepository.save(ChampionEntity.toEntity(dto));
+      }
+    }
+
+    public void delete(String id){
+      championRepository.deleteById(id);
+    }
+    // ===========================================================================
 
     // 개별 챔피언 정보 조회
     public Map<String, ChampionDTO> getChampion(String id) throws Exception {

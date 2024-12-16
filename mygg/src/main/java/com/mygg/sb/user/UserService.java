@@ -1,8 +1,14 @@
 package com.mygg.sb.user;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
+import com.mygg.sb.champion.ChampionDTO;
+import com.mygg.sb.champion.ChampionEntity;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.DateTimeUtils;
 
@@ -12,13 +18,55 @@ import lombok.Getter;
 @Service
 public class UserService {
 
+    private final UserRepository userRepository;
     // 유저 정보
     UserDTO user;
 
     // 유저 정보 초기화/생성(lombok 자동 생성 불가)
     public UserService() throws Exception{
-        user = new UserDTO();
+        this.user = new UserDTO();
+        this.userRepository = null;
     }
+    public UserService(UserRepository userRepository) throws Exception{
+        this.user = new UserDTO();
+        this.userRepository = userRepository;
+    }
+
+    // ===========================================================================
+    public void create(UserDTO dto){
+      userRepository.save(UserEntity.toEntity(dto));
+    }
+
+    public UserDTO readOne(Long id){
+      Optional<UserEntity> tmp = userRepository.findById(id);
+      if(tmp.isPresent()){
+        UserEntity entity = tmp.get();
+        return UserDTO.toDTO(entity);
+      }
+      return null;
+    }
+    
+    public List<UserDTO> readAll(){
+      List<UserEntity> tmp = userRepository.findAll();
+      List<UserDTO> list = new ArrayList<>();
+      if(tmp.isEmpty()) return null;
+      for(UserEntity item : tmp){
+        list.add(UserDTO.toDTO(item));
+      }
+      return list;
+    }
+
+    public void update(UserDTO dto){
+      Optional<UserEntity> tmp = userRepository.findById(dto.getId());
+      if(tmp.isPresent()){
+        userRepository.save(UserEntity.toEntity(dto));
+      }
+    }
+
+    public void delete(Long id){
+        userRepository.deleteById(id);
+    }
+    // ===========================================================================
 
     // 이름과 태그를 통해 소환사 정보를 불러올 때 사용하는 생성자
     public UserDTO getUserInfo(String gameName, String tagLine) throws Exception{

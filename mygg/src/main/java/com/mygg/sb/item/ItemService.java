@@ -3,12 +3,15 @@ package com.mygg.sb.item;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mygg.sb.champion.ChampionDTO;
+import com.mygg.sb.champion.ChampionEntity;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDtoMapper;
 
@@ -35,27 +38,41 @@ public class ItemService {
         this.item = new TreeMap<>();
     }
 
-    // =============================================================
+    // ===========================================================================
     public void create(ItemDTO dto){
+      itemRepository.save(ItemEntity.toEntity(dto));
+    }
 
+    public ItemDTO readOne(String id){
+      Optional<ItemEntity> tmp = itemRepository.findById(id);
+      if(tmp.isPresent()){
+        ItemEntity entity = tmp.get();
+        return ItemDTO.toDTO(entity);
+      }
+      return null;
+    }
+    
+    public List<ItemDTO> readAll(){
+      List<ItemEntity> tmp = itemRepository.findAll();
+      List<ItemDTO> list = new ArrayList<>();
+      if(tmp.isEmpty()) return null;
+      for(ItemEntity item : tmp){
+        list.add(ItemDTO.toDTO(item));
+      }
+      return list;
     }
 
     public void update(ItemDTO dto){
-        
+      Optional<ItemEntity> tmp = itemRepository.findById(dto.getId());
+      if(tmp.isPresent()){
+        itemRepository.save(ItemEntity.toEntity(dto));
+      }
     }
 
-    public void delete(ItemDTO dto){
-        
+    public void delete(String id){
+      itemRepository.deleteById(id);
     }
-
-    public ItemDTO readOne(Long id){
-        return null;
-    }
-
-    public List<ItemDTO> readAll(){
-        return null;
-    }
-    // =============================================================
+    // ===========================================================================
 
     // 아이템 아이디로 아이템 정보 받아오기
     public Map<String, ItemDTO> getItem(String id) throws Exception{

@@ -16,6 +16,8 @@ import lombok.ToString;
 @ToString
 @Builder
 public class UserDTO {
+    private Long id;
+
     private String leagueId;
     private String puuid;
     private String summonerId;
@@ -42,6 +44,7 @@ public class UserDTO {
 
     public static UserDTO toDTO(UserEntity entity){
         return UserDTO.builder()
+                .id(entity.getId())
                 .leagueId(entity.getLeagueId())
                 .puuid(entity.getPuuid())
                 .summonerId(entity.getSummonerId())

@@ -38,7 +38,6 @@ const SearchedUsersContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 95%;
-
   &:last-child {
     margin-bottom: 4px;
   }
@@ -53,7 +52,6 @@ const SearchedUserBox = styled.div`
   border-radius: 10px;
   cursor: pointer;
   &:hover {
-    cursor: pointer;
     background-color: ${({ theme }) => theme.colors.brand.sky.light};
   }
 `;
@@ -90,7 +88,7 @@ const SearchInput = styled.input`
 `;
 
 const ActiveSearchedUserBox = styled(SearchedUserBox)`
-  background-color: lightblue; /* Highlight color for active suggestion */
+  background-color: lightblue;
 `;
 
 interface IUser {
@@ -121,34 +119,16 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [suggestions, setSuggestions] = useState<IUser[]>([]);
   const [activeSuggestionIndex, setActiveSuggestionIndex] =
-    useState<number>(-1); // Start from -1
+    useState<number>(-1);
+  const [isComposing, setIsComposing] = useState<boolean>(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      } else if (event.key === "ArrowDown") {
-        setActiveSuggestionIndex((prevIndex) =>
-          prevIndex === -1 ? 0 : Math.min(prevIndex + 1, suggestions.length - 1)
-        );
-      } else if (event.key === "ArrowUp") {
-        setActiveSuggestionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-      } else if (event.key === "Enter" && activeSuggestionIndex >= 0) {
-        handleSuggestionClick(suggestions[activeSuggestionIndex]);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [onClose, suggestions, activeSuggestionIndex]);
+  }, []);
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -161,23 +141,64 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
         user.gameName.toLowerCase().includes(query.toLowerCase())
       );
       setSuggestions(filteredSuggestions);
-      setActiveSuggestionIndex(filteredSuggestions.length > 0 ? 0 : -1); // Automatically select the first suggestion if available
+      setActiveSuggestionIndex(filteredSuggestions.length > 0 ? 0 : -1);
     } else {
       setSuggestions([]);
-      setActiveSuggestionIndex(-1); // Reset to -1 if no suggestions
+      setActiveSuggestionIndex(-1);
     }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    // 한글 입력 조합 중일 때는 방향키나 엔터키로 인덱스 변경을 하지 않음
+    if (isComposing) return;
+
+    if (event.key === "Escape") {
+      onClose();
+    } else if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveSuggestionIndex((prevIndex) =>
+        prevIndex < suggestions.length - 1 ? prevIndex + 1 : 0
+      );
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveSuggestionIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : suggestions.length - 1
+      );
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      handleSearch();
+    }
+  };
+
+  const handleCompositionStart = () => {
+    setIsComposing(true);
+  };
+
+  const handleCompositionEnd = () => {
+    setIsComposing(false);
   };
 
   const handleSuggestionClick = (user: IUser) => {
     setSearchQuery(`${user.gameName}#${user.tagLine}`);
     setSuggestions([]);
-    setActiveSuggestionIndex(-1); // Reset to -1 after selection
+    setActiveSuggestionIndex(-1);
+    navigate(`/search/${user.gameName}-${user.tagLine}`);
   };
 
   const handleSearch = () => {
-    const [userName, tagLine = ""] = searchQuery.split("#");
-    if (userName.trim() !== "") {
-      navigate(`/search/${userName}-${tagLine}`);
+    if (
+      activeSuggestionIndex >= 0 &&
+      activeSuggestionIndex < suggestions.length
+    ) {
+      const selectedUser = suggestions[activeSuggestionIndex];
+      const userName = selectedUser.gameName;
+      const tagLine = selectedUser.tagLine;
+
+      if (userName.trim() !== "") {
+        navigate(`/search/${userName}-${tagLine}`);
+      }
+    } else {
+      console.error("No valid suggestion selected");
     }
   };
 
@@ -191,12 +212,14 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
           placeholder="Search by game name"
           value={searchQuery}
           onChange={handleSearchInputChange}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
+          onKeyDown={handleKeyDown}
         />
         {suggestions.length > 0 && (
           <SearchedUsersContainer>
             {suggestions.map((user, index) => (
-              <div key={index} onMouseDown={() => handleSuggestionClick(user)}>
+              <div key={index} onClick={() => handleSuggestionClick(user)}>
                 {index === activeSuggestionIndex ? (
                   <ActiveSearchedUserBox>
                     <SearchedUserProfileImg />

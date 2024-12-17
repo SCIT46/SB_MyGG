@@ -24,7 +24,7 @@ public class SpellEntity {
     private String name;
 
     // 챔피언 스킬 설명
-    @Column(name = "description", length = 1000)
+    @Column(name = "description", length = 500)
     private String description;
 
     // 챔피언 스킬 최대 레벨

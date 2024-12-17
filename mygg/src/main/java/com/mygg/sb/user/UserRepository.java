@@ -11,4 +11,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     List<UserEntity> findByGameNameContains(String gameName);
 
     Optional<UserEntity> findByGameNameAndTagLine(String gameName, String tagLine);
+
+    List<UserEntity> findByGameNameAndTagLineContaining(String gameName, String nameTag);
+
+    List<UserEntity> findByGameNameStartingWith(String query);
 }

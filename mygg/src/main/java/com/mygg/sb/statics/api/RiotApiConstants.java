@@ -7,10 +7,10 @@ import io.github.cdimascio.dotenv.Dotenv;
 @Configuration
 public class RiotApiConstants {
     public static Dotenv dotenv = Dotenv.load();
-    public static final String API_KEY = "RGAPI-fe422441-3656-48f4-b43b-1b8d8f44c8e6";
+    public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
     // =============================================================================================
-    //https://developer.riotgames.com/docs/lol
-    public static final String LANGUAGE = CountryType.Korea.getCountry();  //RiotApiClient.getLanguage();
+    // https://developer.riotgames.com/docs/lol
+    public static final String LANGUAGE = CountryType.Korea.getCountry(); // RiotApiClient.getLanguage();
     public static final String LATEST_VERSION;
     static {
         try {
@@ -23,17 +23,22 @@ public class RiotApiConstants {
     public static final String RIOT_DATA_API_URL = "https://ddragon.leagueoflegends.com";
     public static final String RIOT_DATA_API_VERSION = "/api/versions.json";
     public static final String RIOT_DATA_API_LANGUAGE = "/cdn/languages.json";
-    public static final String RIOT_DATA_API_ITEM = "/cdn/"+LATEST_VERSION+"/data/"+LANGUAGE+"/item.json";
-    public static final String RIOT_DATA_API_ITEM_IMG = "/cdn/"+LATEST_VERSION+"/img/item/";
-    public static final String RIOT_DATA_API_CHAMPION = "/cdn/"+LATEST_VERSION+"/data/"+LANGUAGE+"/championFull.json";
-    public static final String RIOT_DATA_API_CHAMPION_IMG = "/cdn/"+LATEST_VERSION+"/img/champion/";
-    public static final String RIOT_DATA_API_RUNE = "/cdn/"+LATEST_VERSION+"/data/"+LANGUAGE+"/runesReforged.json";
-    //public final static String RIOT_DATA_API_RUNE = "/cdn/{version}/data/{language}/runes.json";
-    //public final static String RIOT_DATA_API_SPELL = "/cdn/{version}/data/{language}/summoner.json";
+    public static final String RIOT_DATA_API_ITEM = "/cdn/" + LATEST_VERSION + "/data/" + LANGUAGE + "/item.json";
+    public static final String RIOT_DATA_API_ITEM_IMG = "/cdn/" + LATEST_VERSION + "/img/item/";
+    public static final String RIOT_DATA_API_CHAMPION = "/cdn/" + LATEST_VERSION + "/data/" + LANGUAGE
+            + "/championFull.json";
+    public static final String RIOT_DATA_API_CHAMPION_IMG = "/cdn/" + LATEST_VERSION + "/img/champion/";
+    public static final String RIOT_DATA_API_RUNE = "/cdn/" + LATEST_VERSION + "/data/" + LANGUAGE
+            + "/runesReforged.json";
+    // public final static String RIOT_DATA_API_RUNE =
+    // "/cdn/{version}/data/{language}/runes.json";
+    // public final static String RIOT_DATA_API_SPELL =
+    // "/cdn/{version}/data/{language}/summoner.json";
     // =============================================================================================
-    public static final String RIOT_API_URL = "https://"+RegionServer.ASIA+".api.riotgames.com";
-    public static final String RIOT_API_URL_KR = "https://"+CountryServer.KR+".api.riotgames.com";
-    // =================================== League of Legends API ===================================
+    public static final String RIOT_API_URL = "https://" + RegionServer.ASIA + ".api.riotgames.com";
+    public static final String RIOT_API_URL_KR = "https://" + CountryServer.KR + ".api.riotgames.com";
+    // =================================== League of Legends API
+    // ===================================
     // =============================================================================================
     public static final String RIOT_API_ACCOUNT_RID = "/riot/account/v1/accounts/by-riot-id/"; // public match
     public static final String RIOT_API_ACCOUNT_PID = "/riot/account/v1/accounts/by-puuid/"; // public match

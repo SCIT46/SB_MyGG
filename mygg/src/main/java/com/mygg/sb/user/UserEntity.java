@@ -70,6 +70,7 @@ public class UserEntity {
 
     public static UserEntity toEntity(UserDTO dto){
         return UserEntity.builder()
+                .id(dto.getId())
                 .leagueId(dto.getLeagueId())
                 .puuid(dto.getPuuid())
                 .summonerId(dto.getSummonerId())

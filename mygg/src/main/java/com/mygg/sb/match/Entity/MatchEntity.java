@@ -3,9 +3,6 @@ package com.mygg.sb.match.Entity;
 import jakarta.persistence.*;
 import java.util.List;
 
-import com.mygg.sb.champion.ChampionDTO;
-import com.mygg.sb.champion.ChampionEntity;
-
 @Entity
 @Table(name = "Matches")
 public class MatchEntity {

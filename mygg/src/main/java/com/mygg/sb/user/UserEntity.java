@@ -2,6 +2,8 @@ package com.mygg.sb.user;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,37 +28,37 @@ import lombok.ToString;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")    //인덱스
-    private Long id; //약 21.4억명의 유저(양의 정수 기준) 저장가능
+    @Column(name = "id") // 인덱스
+    private Long id; // 약 21.4억명의 유저(양의 정수 기준) 저장가능
 
-    @Column(name = "leagueId")
+    @Column(name = "league_id")
     private String leagueId;
 
     @Column(name = "puuid")
     private String puuid;
-   
+
     @Column(name = "summonerId")
     private String summonerId;
 
-    @Column(name = "profileIconId")
+    @Column(name = "profile_icon_id")
     private int profileIconId;
 
-    @Column(name = "gameName")
+    @Column(name = "game_name")
     private String gameName;
 
-    @Column(name = "tagLine")
+    @Column(name = "tag_line")
     private String tagLine;
-    
-    @Column(name = "summonerlevel")
+
+    @Column(name = "summoner_level")
     private int summonerLevel;
-    
+
     @Column(name = "tier")
     private String tier;
 
-    @Column(name = "_rank") //rank는 DB 예약어이기 때문에 사용불가
+    @Column(name = "_rank") // rank는 DB 예약어이기 때문에 사용불가
     private String rank;
 
-    @Column(name = "leaguePoints")
+    @Column(name = "league_points")
     private int leaguePoints;
 
     @Column(name = "wins")
@@ -65,10 +67,14 @@ public class UserEntity {
     @Column(name = "losses")
     private int losses;
 
-    @Column(name = "revisionDate")
+    @Column(name = "revision_date")
     private LocalDateTime revisionDate;
 
-    public static UserEntity toEntity(UserDTO dto){
+    @Column(name = "search_count")
+    @ColumnDefault("0")
+    private long searchCount;
+
+    public static UserEntity toEntity(UserDTO dto) {
         return UserEntity.builder()
                 .id(dto.getId())
                 .leagueId(dto.getLeagueId())

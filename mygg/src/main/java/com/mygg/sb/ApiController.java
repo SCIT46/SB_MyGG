@@ -1,5 +1,6 @@
 package com.mygg.sb;
 
+import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -66,6 +67,10 @@ public class ApiController {
             // DB에 유저 정보가 없으면 API로부터 유저 정보를 받아와 DB에 저장
             user = userService.getUserInfo(name, tag);
             userService.create(user);
+        } else {
+            // 유저 검색 횟수 증가
+            user.setSearchCount(user.getSearchCount() + 1);
+            userService.update(user);
         }
         // DB에 저장된 유저 정보를 반환
         return user;
@@ -103,12 +108,9 @@ public class ApiController {
         return runeService.getRuneDto();
     }
     // Search(검색 정보제공) API
-    /*
-     * @GetMapping(path="/search/{keyword}")
-     * public SearchService search(@PathVariable("keyword") String keyword) throws
-     * Exception {
-     * searchService = new SearchService(keyword);
-     * return searchService;
-     * }
-     */
+
+    @GetMapping(path = "/search/{keyword}")
+    public Map<String, List<? extends BaseDTO>> search(@PathVariable("keyword") String keyword) throws Exception {
+        return searchService.search(keyword);
+    }
 }

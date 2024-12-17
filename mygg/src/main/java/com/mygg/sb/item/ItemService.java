@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
@@ -21,19 +20,13 @@ public class ItemService {
   // ############################ Field & Constructor ############################
   // JPA Repository
   private final ItemRepository itemRepository;
+
   // 아이템 맵
   Map<String, ItemDTO> item;
 
   // 아이템 맵 초기화/생성(lombok 자동 생성 불가)
-  @Autowired
   public ItemService(ItemRepository itemRepository) {
     this.itemRepository = itemRepository;
-    this.item = new TreeMap<>();
-  }
-
-  public ItemService() throws Exception {
-    // item = new ArrayList<>();
-    this.itemRepository = null;
     this.item = new TreeMap<>();
   }
   // ===========================================================================
@@ -92,6 +85,10 @@ public class ItemService {
     // 아이템 맵 초기화
     item.clear();
 
+    // itemRepository.findAll().forEach(itemEntity -> {
+    // item.put(itemEntity.getId(), ItemDTO.toDTO(itemEntity));
+    // });
+
     // 아이템 아이디 리스트 조회
     List<String> itemIdList = getItemIds();
 
@@ -100,12 +97,14 @@ public class ItemService {
       item.put(id, createItemDto(id));
     }
 
-    JSONObject resultItem = new JSONObject();
+    return this.item;
 
-    resultItem.put("version", RiotApiClient.getLatestVersion());
-    resultItem.put("data", item);
+    // JSONObject resultItem = new JSONObject();
 
-    return resultItem;
+    // resultItem.put("version", RiotApiClient.getLatestVersion());
+    // resultItem.put("data", item);
+
+    // return resultItem;
   }
 
   // 아이디로 아이템 정보 추출/저장하여 객체화 시켜주는 메서드
@@ -113,14 +112,24 @@ public class ItemService {
     // 아이템 정보 초기화
     ItemDTO item = new ItemDTO();
 
-    // 아이템 정보 조회
-    JSONObject jsonObject = RiotApiClient.getItem(id);
+    // DB에서 아이템 정보 조회
+    Optional<ItemEntity> itemEntity = itemRepository.findById(id);
+    if (itemEntity.isPresent()) {
+      item = ItemDTO.toDTO(itemEntity.get());
+    }
+    // DB에 없는 아이템일 경우
+    else {
+      // 아이템 정보 조회
+      JSONObject jsonObject = RiotApiClient.getItem(id);
 
-    // JSON으로 부터 받아온 정보를 itemDto 객체에 설정
-    JsonToDtoMapper mapper = new JsonToDtoMapper();
-    item = mapper.mapToDto(jsonObject, ItemDTO.class);
-    item.setId(id);
+      // JSON으로 부터 받아온 정보를 itemDto 객체에 설정
+      JsonToDtoMapper mapper = new JsonToDtoMapper();
+      item = mapper.mapToDto(jsonObject, ItemDTO.class);
+      item.setId(id);
 
+      // DB에 아이템 정보 저장
+      itemRepository.save(ItemEntity.toEntity(item));
+    }
     return item;
   }
 

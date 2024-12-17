@@ -13,6 +13,8 @@ public class InfoDto
 	{
 		String endOfGameResult; // 게임 정상적으로 끝났는지
 		long gameDuration;		// 게임시간
+		long gameStartTimestamp;// 게임시작시간
+		long gameEndTimestamp;	// 게임종료시간
 		String gameMode;		// 게임 모드 ex) "CLASSIC"
 		String gameVersion;		// 게임버전 ex) 14.23.636.9832
 		String gameType;		// 게임타입 ex) "MATCHED_GAME"

@@ -39,7 +39,7 @@ public class ChampionEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "blurb")
+    @Column(name = "blurb", length = 1000)
     private String blurb;
 
     @Embedded
@@ -47,16 +47,16 @@ public class ChampionEntity {
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "champion_stats", joinColumns = @JoinColumn(name = "champion_id"))
-    @Column(name = "stats")
+    @Column(name = "stats", length = 1000)
     private Map<String, Number> stats;
 
     @Embedded
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "champion_spells", joinColumns = @JoinColumn(name = "champion_id"))
-    @Column(name = "spells")
+    @Column(name = "spells", length = 1000)
     private List<SpellDTO> spells;
 
-    public static ChampionEntity toEntity(ChampionDTO dto){
+    public static ChampionEntity toEntity(ChampionDTO dto) {
         return ChampionEntity.builder()
                 .id(dto.getId())
                 .key(dto.getKey())
@@ -67,5 +67,5 @@ public class ChampionEntity {
                 .stats(dto.getStats())
                 .spells(dto.getSpells())
                 .build();
-    } 
+    }
 }

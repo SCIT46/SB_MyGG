@@ -21,5 +21,4 @@ public class MatchEntity {
     private List<UserMatchEntity> userMatches;
 
     // Getters, Setters, 기본 생성자 생략
-
 }

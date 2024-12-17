@@ -149,7 +149,6 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    // 한글 입력 조합 중일 때는 방향키나 엔터키로 인덱스 변경을 하지 않음
     if (isComposing) return;
 
     if (event.key === "Escape") {

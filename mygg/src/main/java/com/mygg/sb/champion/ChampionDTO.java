@@ -3,6 +3,8 @@ package com.mygg.sb.champion;
 import java.util.List;
 import java.util.Map;
 
+import com.mygg.sb.BaseDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,23 +18,23 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder
-public class ChampionDTO {
-    //field
+public class ChampionDTO extends BaseDTO {
+    // field
     private String id;
     private String key;
     private String name;
     private String title;
     private String blurb;
     private InfoDTO info;
-    //private String[] tags;
+    // private String[] tags;
     private Map<String, Number> stats;
     private List<SpellDTO> spells;
 
     // public ChampDTO(){
-    //     info = new InfoDTO();
-    //     spells = new SpellDTO[4];
+    // info = new InfoDTO();
+    // spells = new SpellDTO[4];
     // }
-    public static ChampionDTO toDTO(ChampionEntity entity){
+    public static ChampionDTO toDTO(ChampionEntity entity) {
         return ChampionDTO.builder()
                 .id(entity.getId())
                 .key(entity.getKey())
@@ -43,6 +45,6 @@ public class ChampionDTO {
                 .stats(entity.getStats())
                 .spells(entity.getSpells())
                 .build();
-    } 
+    }
 
 }

@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChampionRepository extends JpaRepository<ChampionEntity, String> {
     List<ChampionEntity> findByNameContaining(String name);
+
     List<ChampionEntity> findByNameContains(String name);
+
     List<ChampionEntity> findByNameIsContaining(String name);
+
+    List<ChampionEntity> findByNameStartingWith(String name);
 }

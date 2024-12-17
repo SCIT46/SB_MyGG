@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -20,9 +20,11 @@ import com.mygg.sb.user.UserEntity;
 import com.mygg.sb.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SearchService {
     // 0.5초마다 검색창 업데이트 되는 기능의 일부
     // 3개(item, chap, user) 조회해서 like 연산해서 JSON 프론트에 반환
@@ -42,7 +44,17 @@ public class SearchService {
     }
 
     public List<ItemDTO> itemFind(String query) {
-        List<ItemEntity> itemTmp = itemRepo.findByNameContaining(query);
+        int limit = 3;
+        List<ItemEntity> itemTmp = itemRepo.findByNameStartingWith(query);
+        itemTmp.subList(0, Math.min(limit, itemTmp.size()));
+        log.info("itemTmp: {}", itemTmp);
+        if (itemTmp.size() < limit) {
+            List<ItemEntity> itemTmp2 = (itemRepo.findByNameContaining(query)).stream()
+                    .filter(item -> !item.getName().startsWith(query))
+                    .collect(Collectors.toList());
+            // log.info("itemTmp2: {}", itemTmp2);
+            itemTmp.addAll(itemTmp2.subList(0, Math.min(limit, itemTmp2.size())));
+        }
         List<ItemDTO> result = new ArrayList<>();
         if (itemTmp.isEmpty())
             return null;
@@ -53,7 +65,16 @@ public class SearchService {
     }
 
     public List<ChampionDTO> champFind(String query) {
-        List<ChampionEntity> champTmp = champRepo.findByNameContaining(query);
+        int limit = 3;
+        List<ChampionEntity> champTmp = champRepo.findByNameStartingWith(query);
+        champTmp.subList(0, Math.min(limit, champTmp.size()));
+        log.info("champTmp: {}", champTmp);
+        if (champTmp.size() < limit) {
+            List<ChampionEntity> champTmp2 = (champRepo.findByNameContaining(query)).stream()
+                    .filter(champ -> !champ.getName().startsWith(query))
+                    .collect(Collectors.toList());
+            champTmp.addAll(champTmp2.subList(0, Math.min(limit, champTmp2.size())));
+        }
         List<ChampionDTO> result = new ArrayList<>();
         if (champTmp.isEmpty())
             return null;
@@ -64,8 +85,20 @@ public class SearchService {
     }
 
     public List<UserDTO> userFind(String query) {
-        // TODO: 검색어 상위 우선순위 반영하여 3명 반환
-        List<UserEntity> userTmp = userRepo.findByGameNameContaining(query);
+        int limit = 3;
+        List<UserEntity> userTmp = new ArrayList<>();
+        if (query.contains("#")) {
+            String gameName = query.split("#")[0];
+            String nameTag = query.split("#")[1];
+            userTmp = userRepo.findByGameNameAndTagLineContaining(gameName, nameTag);
+        } else {
+            List<UserEntity> userTmp2 = userRepo.findByGameNameStartingWith(query);
+            if (userTmp2.size() < limit) {
+                List<UserEntity> userTmp3 = userRepo.findByGameNameContaining(query);
+                userTmp2.addAll(userTmp3.subList(0, Math.min(limit, userTmp3.size())));
+            }
+            userTmp = userTmp2.subList(0, Math.min(limit, userTmp2.size()));
+        }
         List<UserDTO> result = new ArrayList<>();
         if (userTmp.isEmpty())
             return null;

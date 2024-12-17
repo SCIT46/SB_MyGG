@@ -6,5 +6,5 @@ import com.mygg.sb.match.Entity.UserMatchEntity;
 
 public interface UserMatchesRepository extends JpaRepository<UserMatchEntity, Integer>
 	{
-
+		UserMatchEntity findFirstByOrderByIdDesc();
 	}

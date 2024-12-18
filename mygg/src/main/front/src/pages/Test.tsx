@@ -7,6 +7,7 @@ import SummonerImage from "../components/SummonerImage";
 import { useState, useEffect } from "react";
 import { getSearchedResult } from "../services/Api";
 import { useDebounce } from "../hooks/useDebounce";
+import { ISuggestion } from "./Home/type";
 
 const SearchIcon = styled(MagnifyingGlassIcon)`
   width: 20px;
@@ -43,21 +44,25 @@ const TestInput = styled.input`
 //테스트 페이지
 export default function Test() {
   const [query, setQuery] = useState("");
-  const debouncedQuery = useDebounce(query, 200);
+  const debouncedQuery = useDebounce(query, 300);
   const [suggestions, setSuggestions] = useState<any>();
   useEffect(() => {
     if (debouncedQuery) {
       const fetchSuggestions = async () => {
         try {
-          const suggestion: any = await getSearchedResult(debouncedQuery);
+          console.log("debouncedQuery:", debouncedQuery);
+          const suggestion: ISuggestion = await getSearchedResult(
+            debouncedQuery
+          );
           setSuggestions(suggestion);
           console.log("Suggestions:", suggestions);
         } catch (error) {
           console.error("Error fetching suggestions:", error);
         }
       };
-
       fetchSuggestions();
+    } else {
+      setSuggestions([]);
     }
   }, [debouncedQuery]);
 
@@ -74,6 +79,9 @@ export default function Test() {
       <StyledRuneImage runeId={8300} />
       <SummonerImage summonerId="21" />
       <TestInput type="text" value={query} onChange={onChangeQuery} />
+      <div>{suggestions?.item?.map((item: any) => item.name)}</div>
+      <div>{suggestions?.champion?.map((item: any) => item.name)}</div>
+      <div>{suggestions?.user?.map((item: any) => item.gameName)}</div>
     </GradientBackground>
   );
 }

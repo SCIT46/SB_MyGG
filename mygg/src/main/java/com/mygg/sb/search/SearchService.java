@@ -32,6 +32,7 @@ public class SearchService {
     private final ChampionRepository champRepo;
     private final UserRepository userRepo;
 
+    // query를 받아서 검색하여 BaseDTO를 상속받는 객체(ItemDTO, ChampionDTO, UserDTO)를 반환하는 메서드
     public Map<String, List<? extends BaseDTO>> search(String query) {
         // 검색어 결과 JSON으로 반환해줄 객체
         Map<String, List<? extends BaseDTO>> result = new HashMap<>();
@@ -47,7 +48,7 @@ public class SearchService {
         int limit = 3;
         List<ItemEntity> itemTmp = itemRepo.findByNameStartingWith(query);
         itemTmp.subList(0, Math.min(limit, itemTmp.size()));
-        log.info("itemTmp: {}", itemTmp);
+        // log.info("itemTmp: {}", itemTmp);
         if (itemTmp.size() < limit) {
             List<ItemEntity> itemTmp2 = (itemRepo.findByNameContaining(query)).stream()
                     .filter(item -> !item.getName().startsWith(query))
@@ -66,10 +67,13 @@ public class SearchService {
 
     public List<ChampionDTO> champFind(String query) {
         int limit = 3;
+        // champTmp : query로 시작하는 챔피언, 3명 이하
         List<ChampionEntity> champTmp = champRepo.findByNameStartingWith(query);
         champTmp.subList(0, Math.min(limit, champTmp.size()));
-        log.info("champTmp: {}", champTmp);
+        // log.info("champTmp: {}", champTmp);
+        // query로 시작하는 챔피언이 3명 이하라면 query가 포함되는 챔피언도 3명 추가
         if (champTmp.size() < limit) {
+            // 중복제거 query가 포함되는 챔피언 중 query로 시작하는 챔피언은 제거
             List<ChampionEntity> champTmp2 = (champRepo.findByNameContaining(query)).stream()
                     .filter(champ -> !champ.getName().startsWith(query))
                     .collect(Collectors.toList());
@@ -90,13 +94,23 @@ public class SearchService {
         if (query.contains("#")) {
             String gameName = query.split("#")[0];
             String nameTag = query.split("#")[1];
+            // userTmp : gameName이 정확하고 tagLine에 포함되는 유저
             userTmp = userRepo.findByGameNameAndTagLineContaining(gameName, nameTag);
         } else {
+            // userTmp2 : gameName이 query로 시작하는 유저
             List<UserEntity> userTmp2 = userRepo.findByGameNameStartingWith(query);
+            // query로 시작하는 유저가 3명 이하라면 query가 포함되는 유저도 3명 추가
             if (userTmp2.size() < limit) {
+                // userTmp3 : gameName에 query가 포함되는 유저
                 List<UserEntity> userTmp3 = userRepo.findByGameNameContaining(query);
+                // 중복제거(userTmp2에 있는 유저는 제거)
+                userTmp3 = userTmp3.stream()
+                        .filter(user -> !user.getGameName().startsWith(query))
+                        .collect(Collectors.toList());
+                // userTmp2에 userTmp3의 3명 이하를 추가
                 userTmp2.addAll(userTmp3.subList(0, Math.min(limit, userTmp3.size())));
             }
+            // userTmp(최종결과)를 3명으로 제한
             userTmp = userTmp2.subList(0, Math.min(limit, userTmp2.size()));
         }
         List<UserDTO> result = new ArrayList<>();

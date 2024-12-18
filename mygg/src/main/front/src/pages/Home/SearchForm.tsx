@@ -2,8 +2,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import SearchDetail from "./SearchDetail";
-import { useNavigate } from "react-router-dom";
-import dummy from "./dummy";
 
 const SearchFormContainer = styled.form`
   position: relative;
@@ -34,9 +32,10 @@ const SearchInputBox = styled.div`
   height: 60px;
   border-radius: 10px;
   display: flex;
-  justify-content: center;
   align-items: center;
+
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
 const RegionSelectBtn = styled.div`
@@ -77,12 +76,19 @@ const SearchInput = styled.input`
   font-size: 14px;
 `;
 
+const SearchInputSpan = styled.span`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.text.light};
+  font-weight: 600;
+`;
+
 const SearchIcon = styled(MagnifyingGlassIcon)`
   width: 28px;
   height: 28px;
   margin-right: 14px;
-  color: ${({ theme }) => theme.colors.brand.gold.main};
+  color: ${({ theme }) => theme.colors.border.dark};
   margin-bottom: 2px;
+  margin-left: 16px;
   cursor: pointer;
 `;
 
@@ -92,7 +98,8 @@ export default function SearchForm() {
   return (
     <SearchFormContainer>
       <SearchInputBox onClick={() => setIsModalOpen(true)}>
-        quick search
+        <SearchIcon />
+        <SearchInputSpan>quick search...</SearchInputSpan>
       </SearchInputBox>
 
       {isModalOpen && <SearchDetail onClose={() => setIsModalOpen(false)} />}

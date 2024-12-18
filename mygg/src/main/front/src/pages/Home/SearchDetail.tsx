@@ -39,60 +39,54 @@ const ModalOverlay = styled.div`
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
 const SearchDetailContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.background.white};
-  margin-top: 3px;
-  margin-left: 30px;
-  width: 80%;
+  width: 60%; //전체 창 너비
   height: 400px;
-  border-radius: 10px;
-  border: 1.5px solid ${({ theme }) => theme.colors.brand.gold.main};
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
-`;
-
-const Line = styled.div`
-  width: 97%;
-  height: 1px;
-  margin-top: 6px;
-  margin-bottom: 4px;
-  background-color: ${({ theme }) => theme.colors.brand.gold.main};
+  border-radius: 0 0 10px 10px;
 `;
 
 const SearchDetailTitle = styled.div`
   font-size: 14px;
-  color: ${({ theme }) => theme.colors.brand.gold.main};
+  color: ${({ theme }) => theme.colors.text.light};
   font-weight: 600;
-  margin-top: 10px;
-  margin-left: 12px;
+  margin-top: 16px;
+  margin-left: 16px;
   margin-right: auto;
+  user-select: none;
 `;
 
 const SearchedUsersContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 95%;
+  margin-top: 10px;
+  width: 97%;
   &:last-child {
     margin-bottom: 4px;
   }
 `;
 
 const SearchedUserBox = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
+  margin-top: 4px;
   margin-bottom: 4px;
-  margin-left: 3px;
-  padding: 6px 0px 6px 0px;
+  padding: 8px 4px 8px 4px;
   border-radius: 10px;
   cursor: pointer;
   &:hover {
-    background-color: ${({ theme }) => theme.colors.brand.sky.light};
+    background-color: ${({ theme }) => theme.colors.background.primary};
   }
 `;
 
@@ -116,18 +110,47 @@ const SearchedUserTag = styled.div`
 `;
 
 const SearchInput = styled.input`
-  width: 90%;
-  height: 30px;
+  height: 35px;
+  width: 95%;
+  border: none;
+  font-size: 18px;
+  color: ${({ theme }) => theme.colors.text.primary};
   margin: 10px 0;
   padding: 5px;
-  border: 1px solid ${({ theme }) => theme.colors.border.dark};
   border-radius: 5px;
   outline: none;
-  font-size: 14px;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.text.light};
+  }
 `;
 
 const ActiveSearchedUserBox = styled(SearchedUserBox)`
-  background-color: lightblue;
+  background-color: ${({ theme }) =>
+    theme.colors.background.secondary} !important;
+`;
+
+const SearchFormContainer = styled.div`
+  background-color: ${({ theme }) => theme.colors.background.white};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
+  border-radius: 10px 10px 0 0;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.border.light};
+`;
+
+const SearchedUserDetail = styled.div`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.light};
+  font-weight: 400;
+  margin-left: auto;
+`;
+
+const BoxContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
 `;
 
 export default function SearchDetail({ onClose }: ISearchDeailProps) {
@@ -149,6 +172,8 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   const totalItem = suggestions?.item?.length || 0;
   const totalLength = totalUser + totalChampion + totalItem;
 
+  const suggestionRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -163,6 +188,13 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
             debouncedQuery
           );
           setSuggestions(suggestion);
+          if (
+            suggestion.user.length > 0 ||
+            suggestion.champion.length > 0 ||
+            suggestion.item.length > 0
+          ) {
+            setActiveSuggestionIndex(0);
+          }
         } catch (error) {
           console.error("Error fetching suggestions:", error);
         }
@@ -173,6 +205,18 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       setActiveSuggestionIndex(-1);
     }
   }, [debouncedQuery]);
+
+  useEffect(() => {
+    if (
+      activeSuggestionIndex >= 0 &&
+      suggestionRefs.current[activeSuggestionIndex]
+    ) {
+      suggestionRefs.current[activeSuggestionIndex]?.scrollIntoView({
+        behavior: "auto",
+        block: "nearest",
+      });
+    }
+  }, [activeSuggestionIndex]);
 
   const handleSearchInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -266,8 +310,9 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       const isActive = index === activeSuggestionIndex;
       const Box = isActive ? ActiveSearchedUserBox : SearchedUserBox;
       elements.push(
-        <div
+        <BoxContainer
           key={`user-${index}`}
+          ref={(el) => (suggestionRefs.current[index] = el)}
           onClick={() => handleSuggestionClick("user", user)}
         >
           <Box>
@@ -276,8 +321,9 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
             />
             <SearchedUserName>{user.gameName}</SearchedUserName>
             <SearchedUserTag>#{user.tagLine}</SearchedUserTag>
+            <SearchedUserDetail>유저</SearchedUserDetail>
           </Box>
-        </div>
+        </BoxContainer>
       );
     });
 
@@ -287,8 +333,9 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       const isActive = currentIndex === activeSuggestionIndex;
       const Box = isActive ? ActiveSearchedUserBox : SearchedUserBox;
       elements.push(
-        <div
+        <BoxContainer
           key={`champion-${index}`}
+          ref={(el) => (suggestionRefs.current[currentIndex] = el)}
           onClick={() => handleSuggestionClick("champion", champ)}
         >
           <Box>
@@ -296,8 +343,9 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
               src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champ.id}.png`}
             />
             <SearchedUserName>{champ.name}</SearchedUserName>
+            <SearchedUserDetail>챔피언</SearchedUserDetail>
           </Box>
-        </div>
+        </BoxContainer>
       );
     });
 
@@ -307,8 +355,9 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       const isActive = currentIndex === activeSuggestionIndex;
       const Box = isActive ? ActiveSearchedUserBox : SearchedUserBox;
       elements.push(
-        <div
+        <BoxContainer
           key={`item-${index}`}
+          ref={(el) => (suggestionRefs.current[currentIndex] = el)}
           onClick={() => handleSuggestionClick("item", item)}
         >
           <Box>
@@ -316,8 +365,9 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
               src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/item/${item.id}.png`}
             />
             <SearchedUserName>{item.name}</SearchedUserName>
+            <SearchedUserDetail>아이템</SearchedUserDetail>
           </Box>
-        </div>
+        </BoxContainer>
       );
     });
 
@@ -326,8 +376,7 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
 
   return (
     <ModalOverlay onClick={onClose}>
-      <SearchDetailContainer onClick={(e) => e.stopPropagation()}>
-        <SearchDetailTitle>소환사</SearchDetailTitle>
+      <SearchFormContainer onClick={(e) => e.stopPropagation()}>
         <SearchInput
           ref={inputRef}
           type="text"
@@ -338,10 +387,12 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
           onCompositionEnd={handleCompositionEnd}
           onKeyDown={handleKeyDown}
         />
+      </SearchFormContainer>
+      <SearchDetailContainer onClick={(e) => e.stopPropagation()}>
+        <SearchDetailTitle>검색 결과</SearchDetailTitle>
         {totalLength > 0 && (
           <SearchedUsersContainer>{renderSuggestions()}</SearchedUsersContainer>
         )}
-        <Line />
       </SearchDetailContainer>
     </ModalOverlay>
   );

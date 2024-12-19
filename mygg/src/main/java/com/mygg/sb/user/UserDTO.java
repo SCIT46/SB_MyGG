@@ -62,6 +62,7 @@ public class UserDTO extends BaseDTO {
                 .wins(entity.getWins())
                 .losses(entity.getLosses())
                 .revisionDate(entity.getRevisionDate())
+                .searchCount(entity.getSearchCount())
                 .build();
     }
 }

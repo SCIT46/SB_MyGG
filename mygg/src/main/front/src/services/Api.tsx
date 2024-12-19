@@ -28,6 +28,16 @@ export const getItems = async (version: string): Promise<any> => {
   }
 };
 
+export const getItemDetail = async (itemId: string): Promise<any> => {
+  try {
+    const itemDetailResponse = await apiClient.get(`/item/${itemId}`);
+    return itemDetailResponse.data;
+  } catch (error: any) {
+    console.error("Item detail fetch error: ", error);
+    throw error;
+  }
+};
+
 export const getChamps = async (version: string): Promise<any> => {
   try {
     const chamResponse = await ddragonClient.get(

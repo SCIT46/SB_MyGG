@@ -90,6 +90,7 @@ public class UserEntity {
                 .wins(dto.getWins())
                 .losses(dto.getLosses())
                 .revisionDate(dto.getRevisionDate())
+                .searchCount(dto.getSearchCount())
                 .build();
     }
 }

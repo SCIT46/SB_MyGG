@@ -185,9 +185,11 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       const fetchSuggestions = async () => {
         try {
           const suggestion: ISuggestion = await getSearchedResult(
-            debouncedQuery
+            encodeURIComponent(debouncedQuery)
           );
           setSuggestions(suggestion);
+          console.log(suggestion);
+
           if (
             suggestion.user.length > 0 ||
             suggestion.champion.length > 0 ||

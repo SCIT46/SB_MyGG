@@ -26,3 +26,15 @@ export interface IItem {
     sell: number;
   };
 }
+
+export interface IItemDetail {
+  name: string;
+  description: string;
+  id: string;
+  gold: {
+    base: number;
+    purchasable: boolean;
+    total: number;
+    sell: number;
+  };
+}

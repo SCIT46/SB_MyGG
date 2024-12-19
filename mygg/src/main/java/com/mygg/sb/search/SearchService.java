@@ -2,10 +2,14 @@ package com.mygg.sb.search;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.BaseDTO;
@@ -45,15 +49,10 @@ public class SearchService {
 
     public List<ItemDTO> itemFind(String query) {
         int limit = 3;
-        List<ItemEntity> itemTmp = itemRepo.findByNameStartingWith(query);
-        itemTmp.subList(0, Math.min(limit, itemTmp.size()));
-        log.info("itemTmp: {}", itemTmp);
+        Set<ItemEntity> itemTmp = new HashSet<>(itemRepo.findByNameStartingWith(query));
         if (itemTmp.size() < limit) {
-            List<ItemEntity> itemTmp2 = (itemRepo.findByNameContaining(query)).stream()
-                    .filter(item -> !item.getName().startsWith(query))
-                    .collect(Collectors.toList());
-            // log.info("itemTmp2: {}", itemTmp2);
-            itemTmp.addAll(itemTmp2.subList(0, Math.min(limit, itemTmp2.size())));
+            itemTmp.addAll(new HashSet<>(itemRepo.findByNameContaining(query)));
+            itemTmp = itemTmp.stream().limit(limit).collect(Collectors.toSet());
         }
         List<ItemDTO> result = new ArrayList<>();
         if (itemTmp.isEmpty())
@@ -66,14 +65,10 @@ public class SearchService {
 
     public List<ChampionDTO> champFind(String query) {
         int limit = 3;
-        List<ChampionEntity> champTmp = champRepo.findByNameStartingWith(query);
-        champTmp.subList(0, Math.min(limit, champTmp.size()));
-        log.info("champTmp: {}", champTmp);
+        Set<ChampionEntity> champTmp = new HashSet<>(champRepo.findByNameStartingWith(query));
         if (champTmp.size() < limit) {
-            List<ChampionEntity> champTmp2 = (champRepo.findByNameContaining(query)).stream()
-                    .filter(champ -> !champ.getName().startsWith(query))
-                    .collect(Collectors.toList());
-            champTmp.addAll(champTmp2.subList(0, Math.min(limit, champTmp2.size())));
+            champTmp.addAll(new HashSet<>(champRepo.findByNameContaining(query)));
+            champTmp = champTmp.stream().limit(limit).collect(Collectors.toSet());
         }
         List<ChampionDTO> result = new ArrayList<>();
         if (champTmp.isEmpty())
@@ -86,18 +81,19 @@ public class SearchService {
 
     public List<UserDTO> userFind(String query) {
         int limit = 3;
-        List<UserEntity> userTmp = new ArrayList<>();
+        Set<UserEntity> userTmp = new HashSet<>();
+        log.info("query: {}", query);
         if (query.contains("#")) {
-            String gameName = query.split("#")[0];
-            String nameTag = query.split("#")[1];
-            userTmp = userRepo.findByGameNameAndTagLineContaining(gameName, nameTag);
+            String[] splitQuery = query.split("#");
+            String gameName = splitQuery[0];
+            String nameTag = splitQuery.length > 1 ? splitQuery[1] : "";
+            userTmp.addAll(userRepo.findByGameNameAndTagLineContaining(gameName, nameTag));
         } else {
-            List<UserEntity> userTmp2 = userRepo.findByGameNameStartingWith(query);
-            if (userTmp2.size() < limit) {
-                List<UserEntity> userTmp3 = userRepo.findByGameNameContaining(query);
-                userTmp2.addAll(userTmp3.subList(0, Math.min(limit, userTmp3.size())));
-            }
-            userTmp = userTmp2.subList(0, Math.min(limit, userTmp2.size()));
+            userTmp.addAll(userRepo.findByGameNameStartingWith(query));
+        }
+        if (userTmp.size() < limit) {
+            userTmp.addAll(userRepo.findByGameNameContaining(query, Sort.by(Direction.DESC, "searchCount")));
+            userTmp = userTmp.stream().limit(limit).collect(Collectors.toSet());
         }
         List<UserDTO> result = new ArrayList<>();
         if (userTmp.isEmpty())

@@ -8,10 +8,13 @@ ${reset}
 
 
 
+
 //디폴드 bgcolor 및 폰트색상 설정
 body {
-    background-color: ${({ theme }) => theme.colors.backgroundGray};
-    color: ${({ theme }) => theme.colors.textBlack}
+    background-color: #ffffff; /* 원하는 배경색 설정 */
+    min-height: 100vh;
+    color: ${({ theme }) => theme.colors.text.primary};
+
 }
 
 //기본 하이퍼링크 Css 속성 제거

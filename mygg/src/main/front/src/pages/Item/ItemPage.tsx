@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { getItems, getVersions } from "../../services/Api";
 import { IItems } from "./type";
 import styled from "styled-components";
-import Item from "./Item";
 import LoadingSpinner from "../../components/Loading";
 import useItemStore from "../../stores/useItemStore";
 import ItemImage from "../../components/ItemImage";
@@ -22,11 +21,11 @@ const TitleLine = styled.div`
 
   width: 60vw;
   height: 3px;
-  background-color: ${({ theme }) => theme.colors.primaryGold};
+  background-color: ${({ theme }) => theme.colors.brand.gold.main};
 `;
 
 const Title = styled.div`
-  color: ${({ theme }) => theme.colors.lightText};
+  color: ${({ theme }) => theme.colors.text.primary};
   font-weight: 600;
   font-size: 24px;
 `;
@@ -49,7 +48,6 @@ const ItemContainer = styled.div`
 // '/item' 라우트 이동시 랜더링 되는 컴포넌트
 export default function Itempage() {
   const items = useItemStore((state) => state.items);
-  console.log(items);
   return (
     <ItemsContainer>
       <TitleBox>

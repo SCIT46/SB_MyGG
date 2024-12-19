@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 const PatchNoteBtn = styled.div`
-  color: ${({ theme }) => theme.colors.textBlack};
+  color: ${({ theme }) => theme.colors.text.primary};
   position: relative;
   margin-left: auto;
   margin-right: 10px;
@@ -23,7 +23,7 @@ const PatchNoteBox = styled.div`
   gap: 3px;
   top: 47px;
   right: 10px;
-  background-color: ${({ theme }) => theme.colors.backgroundWhite};
+  background-color: ${({ theme }) => theme.colors.background.white};
   width: 88px;
   border: 1px solid black;
   border-radius: 7px;
@@ -31,7 +31,7 @@ const PatchNoteBox = styled.div`
 
 const PatchNoteSpan = styled.div`
   padding: 5px;
-  color: ${({ theme }) => theme.colors.textBlack};
+  color: ${({ theme }) => theme.colors.text.primary};
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.15s ease;

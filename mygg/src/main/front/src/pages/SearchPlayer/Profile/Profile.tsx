@@ -5,8 +5,8 @@ const ProfileContainer = styled.div`
   margin-top: 70px;
   width: 1000px;
   height: 150px;
-  background-color: ${({ theme }) => theme.colors.backgroundWhite};
-  border: 1px ${({ theme }) => theme.colors.primaryGold} solid;
+  background-color: ${({ theme }) => theme.colors.background.white};
+  border: 1px ${({ theme }) => theme.colors.brand.gold.main} solid;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -31,11 +31,11 @@ const DetailContainer = styled.div`
 const NameSpan = styled.div`
   font-size: 20px;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.textBlack};
+  color: ${({ theme }) => theme.colors.text.primary};
 `;
 
 const LevelSpan = styled.div`
-  color: ${({ theme }) => theme.colors.lightText};
+  color: ${({ theme }) => theme.colors.text.disabled};
   margin-bottom: 30px;
   font-size: 16px;
 `;

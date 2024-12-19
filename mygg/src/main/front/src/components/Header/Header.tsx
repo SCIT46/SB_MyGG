@@ -6,10 +6,8 @@ import PatchNote from "./PatchNote";
 const HeaderContainer = styled.nav`
   display: flex;
   align-items: center;
-  width: 100vw;
-  height: 50px;
-  background-color: ${({ theme }) => theme.colors.backgroundWhite};
-  box-shadow: 0px 4px 4px -2px rgba(0, 0, 0, 0.2);
+  height: 80px;
+  margin-left: 10px;
 `;
 
 //헤더 링크 버튼
@@ -20,13 +18,13 @@ const LinkBtn = styled(NavLink)<{ isActive?: boolean }>`
   margin-right: 7px;
   margin-bottom: 2px;
   font-size: 14px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.textBlack};
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text.secondary};
   &:hover {
-    border-bottom: 3px solid ${({ theme }) => theme.colors.primarySky};
+    color: ${({ theme }) => theme.colors.brand.sky.main};
   }
   &.active {
-    border-bottom: 3px solid ${({ theme }) => theme.colors.primarySky};
+    color: ${({ theme }) => theme.colors.brand.sky.main};
   }
 `;
 
@@ -37,12 +35,13 @@ const LogoImg = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${({ theme }) => theme.colors.primaryGold};
+  color: ${({ theme }) => theme.colors.text.primary};
   font-weight: 800;
   margin-left: 5px;
   margin-right: 20px;
-  font-size: 18px;
+  font-size: 24px;
   text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
+  margin-left: 14px;
 `;
 
 //헤더 컴포넌트

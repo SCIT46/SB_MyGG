@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +61,7 @@ public class ApiController {
 
     // User(유저 정보제공) API
     @GetMapping(path = "/user/{name}/{tag}")
+    @Transactional
     public UserDTO user(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception {
         // DB에 저장된 유저 정보를 받아오기
         UserDTO user = userService.readOne(name, tag);
@@ -67,11 +69,12 @@ public class ApiController {
             // DB에 유저 정보가 없으면 API로부터 유저 정보를 받아와 DB에 저장
             user = userService.getUserInfo(name, tag);
             userService.create(user);
-        } else {
-            // 유저 검색 횟수 증가
-            user.setSearchCount(user.getSearchCount() + 1);
-            userService.update(user);
+
+            return user;
         }
+        // 유저 검색 횟수 증가
+        user.setSearchCount(user.getSearchCount() + 1);
+        userService.update(user);
         // DB에 저장된 유저 정보를 반환
         return user;
     }

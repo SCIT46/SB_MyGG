@@ -15,7 +15,7 @@ const rotation = keyframes`
 const Spinner = styled.div`
   height: 30px;
   width: 30px;
-  border: 1px solid ${({ theme }) => theme.colors.primarySky};
+  border: 1px solid ${({ theme }) => theme.colors.brand.sky.main};
   border-radius: 50%;
   border-top: none;
   border-right: none;

@@ -94,3 +94,13 @@ export const getMatch = async (matchId: string): Promise<any> => {
     throw error;
   }
 };
+
+export const getSearchedResult = async (query: string): Promise<any> => {
+  try {
+    const searchedResultResponse = await apiClient.get(`/search/${query}`);
+    return searchedResultResponse.data;
+  } catch (error: any) {
+    console.error("Searched result fetch error: ", error);
+    throw error;
+  }
+};

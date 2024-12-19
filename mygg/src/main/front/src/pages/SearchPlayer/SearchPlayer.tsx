@@ -44,7 +44,7 @@ export default function SearchPlayer() {
         setUser(data);
       } catch (error) {
         console.error("user fetch error!", error);
-        navigate("/not-found");
+        // navigate("/not-found");
       } finally {
         setIsLoading(false);
       }

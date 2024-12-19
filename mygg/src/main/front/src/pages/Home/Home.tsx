@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import SearchForm from "./SearchForm";
-const HoemContainer = styled.div`
+const HomeContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,10 +16,10 @@ const TitleBox = styled.div`
 `;
 
 const Title = styled.div`
-  color: ${({ theme }) => theme.colors.primaryGold};
+  color: ${({ theme }) => theme.colors.brand.sky.dark};
   font-size: 72px;
   font-weight: 700;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 `;
 
 const SearchBox = styled.div`
@@ -33,7 +33,7 @@ const SearchBox = styled.div`
 // 메인 홈페이지 컴포넌트
 export default function Home() {
   return (
-    <HoemContainer>
+    <HomeContainer>
       <TitleBox>
         <Title>MY.GG</Title>
       </TitleBox>
@@ -41,6 +41,6 @@ export default function Home() {
       <SearchBox>
         <SearchForm />
       </SearchBox>
-    </HoemContainer>
+    </HomeContainer>
   );
 }

@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import router from "./Router";
 import { ThemeProvider } from "styled-components";
-import theme from "./styles/theme";
+import { theme } from "./styles/theme";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 //index.html 의 root element에서 모든 랜더링 시작

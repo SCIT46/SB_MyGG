@@ -2,8 +2,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import SearchDetail from "./SearchDetail";
-import { useNavigate } from "react-router-dom";
-import dummy from "./dummy";
 
 const SearchFormContainer = styled.form`
   position: relative;
@@ -16,7 +14,7 @@ const SearchFormContainer = styled.form`
 `;
 
 const RegionSelectContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.backgroundWhite};
+  background-color: ${({ theme }) => theme.colors.background.white};
   position: absolute;
   top: 53px;
   left: 0px;
@@ -24,25 +22,20 @@ const RegionSelectContainer = styled.div`
   width: 60px;
   height: 80px;
   border-radius: 10px;
-  border: 1.5px solid ${({ theme }) => theme.colors.primaryGold};
+  border: 1.5px solid ${({ theme }) => theme.colors.brand.gold.main};
 `;
 
 const SearchInputBox = styled.div`
+  background-color: ${({ theme }) => theme.colors.background.white};
+  border: 1px solid ${({ theme }) => theme.colors.border.dark};
   width: 100%;
-  height: 50px;
-  border-radius: 30px;
-  border: 1.5px solid ${({ theme }) => theme.colors.primaryGold};
-  padding-left: 8px;
-  background-color: ${({ theme }) => theme.colors.backgroundWhite};
+  height: 60px;
+  border-radius: 10px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
-  &:focus {
-    outline: none;
-    border-bottom: none;
-    border-radius: 10px 10px 0px 0px;
-  }
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
 const RegionSelectBtn = styled.div`
@@ -61,8 +54,8 @@ const RegionSelectSpan = styled.div`
   border-radius: 15px;
   font-weight: 600;
   font-size: 14px;
-  color: ${({ theme }) => theme.colors.textWhite};
-  background-color: ${({ theme }) => theme.colors.primarySky};
+  color: ${({ theme }) => theme.colors.text.white};
+  background-color: ${({ theme }) => theme.colors.brand.sky.main};
   margin-right: 7px;
   display: flex;
   justify-content: center;
@@ -72,7 +65,7 @@ const RegionSelectSpan = styled.div`
 const RegionSelectIcon = styled.div`
   border-left: 4px solid transparent; /* 왼쪽 투명한 테두리 */
   border-right: 4px solid transparent; /* 오른쪽 투명한 테두리 */
-  border-top: 6px solid ${({ theme }) => theme.colors.primaryGold}; /* 아래쪽에 색을 채운 테두리 */
+  border-top: 6px solid ${({ theme }) => theme.colors.brand.gold.main}; /* 아래쪽에 색을 채운 테두리 */
 `;
 
 const SearchInput = styled.input`
@@ -83,86 +76,33 @@ const SearchInput = styled.input`
   font-size: 14px;
 `;
 
+const SearchInputSpan = styled.span`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.text.light};
+  font-weight: 600;
+`;
+
 const SearchIcon = styled(MagnifyingGlassIcon)`
   width: 28px;
   height: 28px;
   margin-right: 14px;
-  color: ${({ theme }) => theme.colors.primaryGold};
+  color: ${({ theme }) => theme.colors.border.dark};
   margin-bottom: 2px;
+  margin-left: 16px;
   cursor: pointer;
 `;
 
-interface IUserSearchInput {
-  userName: string;
-  tagLine: string;
-}
-
 export default function SearchForm() {
-  const navigate = useNavigate();
-  const [isSearchInputFocused, setIsSearchInputFocused] =
-    useState<boolean>(false);
-  const [isRegionSelectClicked, setIsRegionSelectClicked] =
-    useState<boolean>(false);
-  const [userSearchInput, setUserSearchInput] = useState<IUserSearchInput>({
-    userName: "",
-    tagLine: "",
-  });
-
-  const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const [userName, tagLine = ""] = event.target.value.split("#");
-
-    setUserSearchInput({
-      userName: userName,
-      tagLine: tagLine,
-    });
-  };
-
-  const handleSearch = () => {
-    const { userName, tagLine } = userSearchInput;
-    if (userName.trim() !== "") {
-      navigate(`/search/${userName}-${tagLine}`);
-    } else {
-    }
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleSearch();
-    }
-  };
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   return (
     <SearchFormContainer>
-      <SearchInputBox>
-        <RegionSelectBtn
-          onClick={() => {
-            setIsRegionSelectClicked((prev) => !prev);
-            setIsSearchInputFocused(false);
-          }}
-        >
-          <RegionSelectSpan>KR</RegionSelectSpan>
-          <RegionSelectIcon></RegionSelectIcon>
-        </RegionSelectBtn>
-
-        <SearchInput
-          onChange={handleSearchInputChange}
-          onFocus={() => {
-            setIsSearchInputFocused(true);
-            setIsRegionSelectClicked(false);
-          }}
-          onBlur={() => setIsSearchInputFocused(false)}
-          onKeyDown={handleKeyDown}
-          placeholder="소환사 이름을 입력해주세요! 소환사#태그"
-        />
-        <SearchIcon onClick={handleSearch} />
+      <SearchInputBox onClick={() => setIsModalOpen(true)}>
+        <SearchIcon />
+        <SearchInputSpan>quick search...</SearchInputSpan>
       </SearchInputBox>
-      {isRegionSelectClicked ? (
-        <RegionSelectContainer></RegionSelectContainer>
-      ) : null}
-      {isSearchInputFocused ? <SearchDetail searchedUser={dummy} /> : null}
+
+      {isModalOpen && <SearchDetail onClose={() => setIsModalOpen(false)} />}
     </SearchFormContainer>
   );
 }

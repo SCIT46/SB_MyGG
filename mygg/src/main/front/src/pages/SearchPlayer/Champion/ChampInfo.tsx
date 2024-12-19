@@ -2,10 +2,10 @@ import styled from "styled-components";
 import ChampDetail from "./ChamDetail";
 
 const ChampInfoContainer = styled.div`
-  border: 1px ${({ theme }) => theme.colors.primaryGold} solid;
+  border: 1px ${({ theme }) => theme.colors.brand.gold.main} solid;
   width: 100%;
   height: 400px;
-  background-color: ${({ theme }) => theme.colors.backgroundWhite};
+  background-color: ${({ theme }) => theme.colors.background.white};
   border-radius: 10px;
   margin-top: 15px;
   display: flex;

@@ -2,10 +2,10 @@ import { useState } from "react";
 import styled from "styled-components";
 
 const RankContianer = styled.div`
-  border: 1px ${({ theme }) => theme.colors.primaryGold} solid;
+  border: 1px ${({ theme }) => theme.colors.brand.gold.main} solid;
   width: 100%;
   height: 200px;
-  background-color: ${({ theme }) => theme.colors.backgroundWhite};
+  background-color: ${({ theme }) => theme.colors.background.white};
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -15,10 +15,10 @@ const RankContianer = styled.div`
 `;
 
 const UnRankContianer = styled.div`
-  border: 1px ${({ theme }) => theme.colors.primaryGold} solid;
+  border: 1px ${({ theme }) => theme.colors.brand.gold.main} solid;
   width: 100%;
   height: 50px;
-  background-color: ${({ theme }) => theme.colors.backgroundWhite};
+  background-color: ${({ theme }) => theme.colors.background.white};
   border-radius: 10px;
   display: flex;
   flex-direction: column;

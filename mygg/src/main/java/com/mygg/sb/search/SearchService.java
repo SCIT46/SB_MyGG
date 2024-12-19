@@ -19,6 +19,7 @@ import com.mygg.sb.champion.ChampionRepository;
 import com.mygg.sb.item.ItemDTO;
 import com.mygg.sb.item.ItemEntity;
 import com.mygg.sb.item.ItemRepository;
+import com.mygg.sb.statics.util.KoreanInputSupport;
 import com.mygg.sb.user.UserDTO;
 import com.mygg.sb.user.UserEntity;
 import com.mygg.sb.user.UserRepository;
@@ -37,6 +38,7 @@ public class SearchService {
     private final UserRepository userRepo;
 
     public Map<String, List<? extends BaseDTO>> search(String query) {
+        // log.info("query: {}", KoreanInputSupport.toKorean(query));
         // 검색어 결과 JSON으로 반환해줄 객체
         Map<String, List<? extends BaseDTO>> result = new HashMap<>();
         // 아이템, 챔피언, 유저 정보를 각각 찾아서 넣음

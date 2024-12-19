@@ -19,7 +19,7 @@ import com.mygg.sb.rune.RuneDTO;
 import com.mygg.sb.rune.RuneService;
 import com.mygg.sb.search.SearchService;
 import com.mygg.sb.match.MatchDTO;
-import com.mygg.sb.match.PublicMatchService;
+import com.mygg.sb.match.service.PublicMatchService;
 import com.mygg.sb.user.UserDTO;
 import com.mygg.sb.user.UserService;
 

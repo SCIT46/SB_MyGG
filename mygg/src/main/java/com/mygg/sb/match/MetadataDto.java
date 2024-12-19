@@ -3,10 +3,12 @@ package com.mygg.sb.match;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class MetadataDto
 	{
 		String  dataVersion;		// Match data version.

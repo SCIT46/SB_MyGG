@@ -10,13 +10,13 @@ import com.mygg.sb.statics.util.UrlToJson;
 
 public class RiotApiClient {
     // API : 최신 데이터 버전 조회(Array로 이루어진 JSON 데이터에서 첫번째(최신) 값 반환);
-    public static String getLatestVersion() throws Exception{
+    public static String getLatestVersion() throws Exception {
         String versionJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("dataVersion"));
         return (String) ((JSONArray) new JSONParser().parse(versionJSON)).get(0);
     }
 
     // API : 데이터 언어 조회(JSON 데이터 반환);
-    public static String getLanguage() throws Exception{
+    public static String getLanguage() throws Exception {
         String languageJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("dataLanguage"));
         return languageJSON;
     }
@@ -58,7 +58,7 @@ public class RiotApiClient {
         String gameName = (String) jsonObject.get("gameName");
         String tagLine = (String) jsonObject.get("tagLine");
 
-        return new String[] {gameName,tagLine};
+        return new String[] { gameName, tagLine };
     }
 
     // API : puuid(String)로 summonerId(String) 변환
@@ -88,7 +88,7 @@ public class RiotApiClient {
 
         // JSON 데이터가 Array로 오기 때문에 JSONArray로 변환
         JSONArray jsonArray = (JSONArray) parser.parse(userJSON);
-    
+
         // 리그 정보가 없는 경우 기본값을 가진 JSONObject 반환
         if (jsonArray.isEmpty()) {
             JSONObject defaultObj = new JSONObject();
@@ -99,25 +99,25 @@ public class RiotApiClient {
             defaultObj.put("losses", 0L);
             return defaultObj;
         }
-    
+
         return (JSONObject) jsonArray.get(0);
     }
 
     // API : puuid(String)로 소환사 정보(JSONObject) 변환
-    public static JSONObject getSummonerInfo(String puuid) throws Exception{
-        //url을 json으로 변환
+    public static JSONObject getSummonerInfo(String puuid) throws Exception {
+        // url을 json으로 변환
         String summoJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("summonerInfo", puuid));
 
-		// JSON 데이터를 분석해주는 JSONParser 객체 생성
-		JSONParser parser = new JSONParser();
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
 
-		// 소환사 정보 JSON
+        // 소환사 정보 JSON
         return (JSONObject) parser.parse(summoJSON);
     }
 
     // API : matchId(String)로 매치 정보(JSONObject) 변환
-    public static JSONObject getMatchInfo(String matchId) throws Exception{
-        //url을 json으로 변환
+    public static JSONObject getMatchInfo(String matchId) throws Exception {
+        // url을 json으로 변환
         String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchInfo", matchId));
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
@@ -127,9 +127,15 @@ public class RiotApiClient {
     }
 
     // API : puuid(String)로 매치 목록(String[]) 변환
-    public static String[] getMatchList(String puuid, int start, int cnt) throws Exception{
+    // 옵션 : start(default : 0), cnt(default : 20, max : 100), startDate(default :
+    // null), endDate(default : null),
+    // queue(default : null, value : ),
+    // gameType(default : null, value : ranked, normal, tourney, tutorial)
+    public static String[] getMatchList(String puuid, int start, int cnt, int startDate, int endDate, int queue,
+            String gameType) throws Exception {
         // url을 json으로 변환
-        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, start, cnt)); 
+        String matchJSON = UrlToJson
+                .urlToJson(UrlToJson.urlConvertor("matchList", puuid, start, cnt, startDate, endDate, queue, gameType));
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
@@ -145,9 +151,49 @@ public class RiotApiClient {
 
         return matchList;
     }
-    public static String[] getMatchList(String puuid) throws Exception{
+
+    public static String[] getMatchList(String puuid, int start, int cnt, int startDate, int endDate) throws Exception {
         // url을 json으로 변환
-        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, 0, 20)); 
+        String matchJSON = UrlToJson
+                .urlToJson(UrlToJson.urlConvertor("matchList", puuid, start, cnt, startDate, endDate));
+
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
+
+        // JSON 데이터가 Array로 오기 때문에 JSONArray로 변환
+        JSONArray jsonArray = (JSONArray) parser.parse(matchJSON);
+
+        // JSONArray를 String[]로 변환
+        String[] matchList = new String[jsonArray.size()];
+        for (int i = 0; i < jsonArray.size(); i++) {
+            matchList[i] = (String) jsonArray.get(i);
+        }
+
+        return matchList;
+    }
+
+    public static String[] getMatchList(String puuid, int start, int cnt) throws Exception {
+        // url을 json으로 변환
+        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, start, cnt));
+
+        // JSON 데이터를 분석해주는 JSONParser 객체 생성
+        JSONParser parser = new JSONParser();
+
+        // JSON 데이터가 Array로 오기 때문에 JSONArray로 변환
+        JSONArray jsonArray = (JSONArray) parser.parse(matchJSON);
+
+        // JSONArray를 String[]로 변환
+        String[] matchList = new String[jsonArray.size()];
+        for (int i = 0; i < jsonArray.size(); i++) {
+            matchList[i] = (String) jsonArray.get(i);
+        }
+
+        return matchList;
+    }
+
+    public static String[] getMatchList(String puuid) throws Exception {
+        // url을 json으로 변환
+        String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchList", puuid, 0, 20));
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
@@ -165,26 +211,27 @@ public class RiotApiClient {
     }
 
     // API : itemId(String)로 아이템 정보(JSONObject) 변환
-    public static JSONObject getItem(String itemId) throws Exception{
-        //if(itemId == null) return null;
+    public static JSONObject getItem(String itemId) throws Exception {
+        // if(itemId == null) return null;
         // url을 json으로 변환
         String itemJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("item"));
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
-        
+
         // 아이템 정보 JSON
         JSONObject jsonObject = (JSONObject) parser.parse(itemJSON);
-        
+
         // id를 지정해주지 않았을 때 전체 정보 반환
-        if(itemId.equals("all")) return (JSONObject) jsonObject.get("data");
+        if (itemId.equals("all"))
+            return (JSONObject) jsonObject.get("data");
 
         // 아이템 정보 JSON에서 아이템 아이디로 해당하는 정보 조회
         return (JSONObject) ((JSONObject) jsonObject.get("data")).get(itemId);
     }
 
     // API : championId(String)로 챔피언 정보(JSONObject) 변환
-    public static JSONObject getChampion(String champId) throws Exception{
+    public static JSONObject getChampion(String champId) throws Exception {
         // url을 json으로 변환
         String championJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("champion"));
 
@@ -195,14 +242,15 @@ public class RiotApiClient {
         JSONObject jsonObject = (JSONObject) parser.parse(championJSON);
 
         // id를 지정해주지 않았을 때 전체 정보 반환
-        if(champId.equals("all")) return (JSONObject) jsonObject.get("data");
+        if (champId.equals("all"))
+            return (JSONObject) jsonObject.get("data");
 
         // 챔피언 정보 JSON에서 챔피언 아이디로 해당하는 정보 조회
         return (JSONObject) ((JSONObject) jsonObject.get("data")).get(champId);
     }
-    
+
     // API : championId(String)로 챔피언 정보(JSONObject) 변환
-    public static JSONObject getRune(String runeId) throws Exception{
+    public static JSONObject getRune(String runeId) throws Exception {
         // url을 json으로 변환
         String runeJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("runesReforged"));
 
@@ -211,7 +259,7 @@ public class RiotApiClient {
 
         // 룬 정보 JSON
         JSONArray jsonArray = (JSONArray) parser.parse(runeJSON);
-        
+
         // 전체 정보를 반환 (runeId가 "all"일 경우)
         if ("all".equals(runeId)) {
             JSONObject allRunes = new JSONObject();

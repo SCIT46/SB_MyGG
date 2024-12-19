@@ -41,6 +41,22 @@ const TestInput = styled.input`
   padding: 0 10px;
 `;
 
+const ExitButton = styled.div`
+  margin: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 12px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  border: 1px solid ${({ theme }) => theme.colors.background.secondary};
+  border-radius: 5px;
+`;
+
 //테스트 페이지
 export default function Test() {
   const [query, setQuery] = useState("");
@@ -82,6 +98,7 @@ export default function Test() {
       <div>{suggestions?.item?.map((item: any) => item.name)}</div>
       <div>{suggestions?.champion?.map((item: any) => item.name)}</div>
       <div>{suggestions?.user?.map((item: any) => item.gameName)}</div>
+      <ExitButton>ESC</ExitButton>
     </GradientBackground>
   );
 }

@@ -5,17 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.DateTimeUtils;
 
+import jakarta.transaction.Transactional;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Service
+@Slf4j
 public class UserService {
   // ############################ Field & Constructor ############################
   private final UserRepository userRepository;
@@ -54,6 +55,7 @@ public class UserService {
     return list;
   }
 
+  @Transactional
   public void update(UserDTO dto) {
     Optional<UserEntity> tmp = userRepository.findById(dto.getId());
     if (tmp.isPresent()) {

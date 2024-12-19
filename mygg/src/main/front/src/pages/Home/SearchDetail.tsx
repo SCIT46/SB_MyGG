@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
 import { getSearchedResult } from "../../services/Api";
 import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import LoadingSpinner from "../../components/Loading";
 
 export interface ISuggestion {
   champion: IChampionSuggestion[];
@@ -37,12 +39,12 @@ const ModalOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${({ theme }) => theme.colors.background.overlay};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(1.5px);
 `;
 
 const SearchDetailContainer = styled.div`
@@ -54,6 +56,11 @@ const SearchDetailContainer = styled.div`
   align-items: center;
   overflow-y: auto;
   border-radius: 0 0 10px 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 600px) {
+    width: 85%; // 스마트폰 사이즈일 때
+  }
 `;
 
 const SearchDetailTitle = styled.div`
@@ -110,13 +117,13 @@ const SearchedUserTag = styled.div`
 `;
 
 const SearchInput = styled.input`
-  height: 35px;
+  height: 41px;
   width: 95%;
   border: none;
-  font-size: 18px;
+  font-size: 16px;
   color: ${({ theme }) => theme.colors.text.primary};
-  margin: 10px 0;
   padding: 5px;
+  margin: 4px 0;
   border-radius: 5px;
   outline: none;
 
@@ -133,11 +140,15 @@ const ActiveSearchedUserBox = styled(SearchedUserBox)`
 const SearchFormContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.background.white};
   display: flex;
-  flex-direction: column;
   align-items: center;
   width: 60%;
   border-radius: 10px 10px 0 0;
   border-bottom: 2px solid ${({ theme }) => theme.colors.border.light};
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.15);
+
+  @media (max-width: 600px) {
+    width: 85%; // 스마트폰 사이즈일 때
+  }
 `;
 
 const SearchedUserDetail = styled.div`
@@ -153,6 +164,73 @@ const BoxContainer = styled.div`
   align-items: center;
 `;
 
+const SearchedRecentContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+`;
+
+const SearchedRecentTitle = styled.div`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.light};
+  font-weight: 600;
+  margin-top: 16px;
+  margin-left: 16px;
+  margin-right: auto;
+  user-select: none;
+`;
+
+const SearchIcon = styled(MagnifyingGlassIcon)`
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  color: ${({ theme }) => theme.colors.border.dark};
+  margin-bottom: 2px;
+  margin-left: 16px;
+  cursor: pointer;
+`;
+
+const SearchNotFound = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-bottom: 20px;
+`;
+
+const SearchNotFoundText = styled.div`
+  font-size: 20px;
+  color: ${({ theme }) => theme.colors.text.light};
+  font-weight: 400;
+`;
+
+const SearchNotFoundInfoText = styled.span`
+  color: ${({ theme }) => theme.colors.brand.sky.dark};
+  font-weight: 600;
+`;
+
+const ExitButton = styled.div`
+  margin: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 40px;
+  height: 25px;
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 12px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.light};
+  border: 1.5px solid ${({ theme }) => theme.colors.background.secondary};
+  border-radius: 5px;
+  transition: all 0.1s ease;
+  &:hover {
+    border: 1.5px solid ${({ theme }) => theme.colors.brand.sky.main};
+  }
+`;
+
 export default function SearchDetail({ onClose }: ISearchDeailProps) {
   const navigate = useNavigate();
 
@@ -163,6 +241,7 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   const [activeSuggestionIndex, setActiveSuggestionIndex] =
     useState<number>(-1);
   const [isComposing, setIsComposing] = useState<boolean>(false);
+  const [isQueryLoading, setIsQueryLoading] = useState<boolean>(false);
 
   const debouncedQuery = useDebounce(searchQuery, 300);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -183,6 +262,7 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   useEffect(() => {
     if (debouncedQuery) {
       const fetchSuggestions = async () => {
+        setIsQueryLoading(true);
         try {
           const suggestion: ISuggestion = await getSearchedResult(
             encodeURIComponent(debouncedQuery)
@@ -199,6 +279,8 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
           }
         } catch (error) {
           console.error("Error fetching suggestions:", error);
+        } finally {
+          setIsQueryLoading(false);
         }
       };
       fetchSuggestions();
@@ -379,6 +461,7 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   return (
     <ModalOverlay onClick={onClose}>
       <SearchFormContainer onClick={(e) => e.stopPropagation()}>
+        {isQueryLoading ? <LoadingSpinner /> : <SearchIcon />}
         <SearchInput
           ref={inputRef}
           type="text"
@@ -389,12 +472,33 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
           onCompositionEnd={handleCompositionEnd}
           onKeyDown={handleKeyDown}
         />
+        <ExitButton onClick={onClose}>ESC</ExitButton>
       </SearchFormContainer>
       <SearchDetailContainer onClick={(e) => e.stopPropagation()}>
-        <SearchDetailTitle>검색 결과</SearchDetailTitle>
-        {totalLength > 0 && (
-          <SearchedUsersContainer>{renderSuggestions()}</SearchedUsersContainer>
-        )}
+        {searchQuery && totalLength > 0 ? (
+          <>
+            <SearchDetailTitle>검색 결과</SearchDetailTitle>
+            <SearchedUsersContainer>
+              {renderSuggestions()}
+            </SearchedUsersContainer>
+          </>
+        ) : debouncedQuery && totalLength === 0 && !isQueryLoading ? (
+          <SearchedRecentContainer>
+            <SearchNotFound>
+              <SearchNotFoundText>
+                '
+                <SearchNotFoundInfoText>
+                  {debouncedQuery}
+                </SearchNotFoundInfoText>{" "}
+                '의 검색결과가 없습니다
+              </SearchNotFoundText>
+            </SearchNotFound>
+          </SearchedRecentContainer>
+        ) : !searchQuery ? (
+          <SearchedRecentContainer>
+            <SearchedRecentTitle>최근 검색</SearchedRecentTitle>
+          </SearchedRecentContainer>
+        ) : null}
       </SearchDetailContainer>
     </ModalOverlay>
   );

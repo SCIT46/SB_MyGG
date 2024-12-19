@@ -13,14 +13,18 @@ const rotation = keyframes`
 `;
 
 const Spinner = styled.div`
-  height: 30px;
-  width: 30px;
-  border: 1px solid ${({ theme }) => theme.colors.brand.sky.main};
+  height: 20px;
+  width: 20px;
+  border: 2px solid ${({ theme }) => theme.colors.brand.sky.dark};
   border-radius: 50%;
-  border-top: none;
-  border-right: none;
-  margin: 16px auto;
+  border-top: 2px solid transparent;
+  border-right: 2px solid transparent;
+  margin-left: 20px;
+  margin-right: 10.9px;
+  margin-bottom: 2px;
+
   animation: ${rotation} 1s linear infinite;
+  box-sizing: border-box;
 `;
 
 //loading 스피너 컴포넌트

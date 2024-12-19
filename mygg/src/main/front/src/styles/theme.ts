@@ -9,7 +9,7 @@ const theme: DefaultTheme = {
       secondary: "#E2E2E2",
       white: "#ffffff",
       dark: "#333333",
-      overlay: "rgba(0, 0, 0, 0.5)",
+      overlay: "rgba(0, 0, 0, 0.3)",
     },
 
     // 브랜드/테마 컬러

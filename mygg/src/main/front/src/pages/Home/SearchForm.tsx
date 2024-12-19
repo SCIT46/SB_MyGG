@@ -11,6 +11,10 @@ const SearchFormContainer = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 600px) {
+    width: 70vw;
+  }
 `;
 
 const RegionSelectContainer = styled.div`

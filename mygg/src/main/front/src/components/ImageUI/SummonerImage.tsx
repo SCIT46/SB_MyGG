@@ -1,9 +1,9 @@
 import styled, { keyframes } from "styled-components";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import useSummonerStore from "../stores/useSummonerStore"; // Assuming a similar store for summoners
-import { SummonerSpellDictionary } from "../utils/SummonerObj";
-import useCurrentVersionStore from "../stores/useCurrentVersionStore";
+import useSummonerStore from "../../stores/useSummonerStore"; // Assuming a similar store for summoners
+import { SummonerSpellDictionary } from "../../utils/SummonerObj";
+import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
 
 interface SummonerImgProps {
   loaded: string;

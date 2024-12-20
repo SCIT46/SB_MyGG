@@ -5,7 +5,7 @@ import { useDebounce } from "../../hooks/useDebounce";
 import { getSearchedResult } from "../../services/Api";
 import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import LoadingSpinner from "../../components/Loading";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export interface ISuggestion {
   champion: IChampionSuggestion[];

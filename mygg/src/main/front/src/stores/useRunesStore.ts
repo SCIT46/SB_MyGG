@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IRune } from "../interfaces/type";
+import { IRune } from "../types/type";
 
 interface IRunesStore {
   runes: IRune[] | null;

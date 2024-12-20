@@ -2,12 +2,12 @@ import { createBrowserRouter, redirect } from "react-router-dom";
 import Root from "./Root";
 import ChampionDetail from "./pages/ChampionDetail";
 import NotFound from "./pages/NotFound";
-import Test from "./pages/Test";
 import Itempage from "./pages/Item/ItemPage";
-import ItemDetailPage from "./pages/Item/ItemDetailPage";
-import Home from "./pages/Home/Home";
+import Home from "./pages/HomePage/Home";
 import SearchPlayer from "./pages/SearchPlayer/SearchPlayer";
 import Champions from "./pages/Champion/Champions";
+import Test from "./pages/Test/Test";
+import ItemDetailPage from "./pages/ItemDetail/ItemDetailPage";
 
 //라우터 생성
 const router = createBrowserRouter([

@@ -1,5 +1,11 @@
 import styled, { keyframes } from "styled-components";
 
+// loading 스피너 컴포넌트
+// 해당 컴포넌트를 사용 중인 컴포넌트
+// - SearchDetail.tsx
+// - SearchPlayer.tsx
+// - MatchDetail.tsx
+
 // styled 의 애니메이션 효과를 이용해 구현
 const rotation = keyframes`
     from{

@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { IMatchDetailProp } from "./MatchDetail";
-import ChampionImage from "../../../components/ChampionImage";
-import SummonerImage from "../../../components/SummonerImage";
-import ItemImage from "../../../components/ItemImage";
-import StyledRuneImage from "../../../components/StyledRuneImage";
-import RuneImage from "../../../components/RuneImage";
+import ChampionImage from "../../../components/ImageUI/ChampionImage";
+import SummonerImage from "../../../components/ImageUI/SummonerImage";
+import ItemImage from "../../../components/ImageUI/ItemImage";
+import StyledRuneImage from "../../../components/ImageUI/StyledRuneImage";
+import RuneImage from "../../../components/ImageUI/RuneImage";
 
 const MatchDetailContentContainer = styled.div`
   border: 2px solid black;

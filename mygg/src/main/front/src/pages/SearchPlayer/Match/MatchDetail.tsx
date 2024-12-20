@@ -2,14 +2,14 @@ import styled from "styled-components";
 
 import { useEffect, useState } from "react";
 import { IMatchDetail } from "../type";
-import LoadingSpinner from "../../../components/Loading";
-import ChampionImage from "../../../components/ChampionImage";
-import SummonerImage from "../../../components/SummonerImage";
-import ItemImage from "../../../components/ItemImage";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import ChampionImage from "../../../components/ImageUI/ChampionImage";
+import SummonerImage from "../../../components/ImageUI/SummonerImage";
+import ItemImage from "../../../components/ImageUI/ItemImage";
 import Participants from "./Participants";
 import MatchDetailContent from "./MatchDetailContent";
-import StyledRuneImage from "../../../components/StyledRuneImage";
-import RuneImage from "../../../components/RuneImage";
+import StyledRuneImage from "../../../components/ImageUI/StyledRuneImage";
+import RuneImage from "../../../components/ImageUI/RuneImage";
 import { queueIdObj } from "../../../utils/QueueIdObj";
 
 const MatchDetailContainer = styled.div<{ isWinning: boolean }>`

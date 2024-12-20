@@ -12,7 +12,10 @@ import useCurrentVersionStore from "../stores/useCurrentVersionStore";
 import useSummonerStore from "../stores/useSummonerStore";
 import useRunesStore from "../stores/useRunesStore";
 
-//todo 아이템, 스펠, 룬 패치 추가
+// 초기 데이터 로드 컴포넌트
+// 사용자가 페이지 접속 시 초기 데이터를 로드하는 컴포넌트
+// 초기 데이터는 챔피언, 아이템, 스펠, 룬 데이터와 버전 데이터
+
 export default function InitLoader() {
   const setChampions = useChampionStore((state) => state.setChampions);
   const setItems = useItemStore((state) => state.setItems);

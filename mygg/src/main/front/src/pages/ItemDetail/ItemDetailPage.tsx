@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import { getItemDetail, getItems } from "../../services/Api";
 import { useEffect, useState } from "react";
-import { IItemDetail } from "./type";
+
 import styled from "styled-components";
-import ItemImage from "../../components/ItemImage";
+import ItemImage from "../../components/ImageUI/ItemImage";
+import { IItemDetail } from "../Item/type";
 
 const ItemDetailContainer = styled.div`
   display: flex;

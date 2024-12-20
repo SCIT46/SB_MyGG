@@ -1,13 +1,14 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import styled, { keyframes } from "styled-components";
 
-import RuneImage from "../components/RuneImage";
-import StyledRuneImage from "../components/StyledRuneImage";
-import SummonerImage from "../components/SummonerImage";
-import { useState, useEffect } from "react";
-import { getSearchedResult } from "../services/Api";
-import { useDebounce } from "../hooks/useDebounce";
-import { ISuggestion } from "./Home/type";
+import { ExitButton } from "./Test.styles";
+import RuneImage from "../../components/ImageUI/RuneImage";
+import StyledRuneImage from "../../components/ImageUI/StyledRuneImage";
+import SummonerImage from "../../components/ImageUI/SummonerImage";
+import { useEffect, useState } from "react";
+import { useDebounce } from "../../hooks/useDebounce";
+import { ISuggestion } from "../HomePage/type";
+import { getSearchedResult } from "../../services/Api";
 
 const SearchIcon = styled(MagnifyingGlassIcon)`
   width: 20px;
@@ -39,22 +40,6 @@ const TestInput = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.brand.sky.main};
   border-radius: 5px;
   padding: 0 10px;
-`;
-
-const ExitButton = styled.div`
-  margin: 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 100px;
-  height: 30px;
-  background-color: rgba(0, 0, 0, 0);
-  font-size: 12px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text.secondary};
-  border: 1px solid ${({ theme }) => theme.colors.background.secondary};
-  border-radius: 5px;
 `;
 
 //테스트 페이지

@@ -1,8 +1,8 @@
 import styled, { keyframes } from "styled-components";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import useItemStore from "../stores/useItemStore"; // Assuming a similar store for items
-import useCurrentVersionStore from "../stores/useCurrentVersionStore";
+import useItemStore from "../../stores/useItemStore"; // Assuming a similar store for items
+import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
 
 interface ItemImgProps {
   loaded: string;

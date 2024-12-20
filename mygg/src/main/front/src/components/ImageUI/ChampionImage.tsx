@@ -1,8 +1,10 @@
 import styled, { keyframes } from "styled-components";
-import { useEffect, useState } from "react";
-import useRunesStore from "../stores/useRunesStore";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import useChampionStore from "../../stores/useChampionStore";
+import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
 
-interface RuneImgProps {
+interface ChampionImgProps {
   loaded: string;
   width: number;
   height: number;
@@ -17,10 +19,10 @@ const fadeIn = keyframes`
   }
 `;
 
-const RuneImg = styled.img<RuneImgProps>`
-  width: ${({ width }) => width}px;
+const ChampionImg = styled.img<ChampionImgProps>`
   height: ${({ height }) => height}px;
-  border-radius: 100%;
+  width: ${({ width }) => width}px;
+  border-radius: 5px;
   position: absolute;
   top: 0;
   left: 0;
@@ -30,9 +32,10 @@ const RuneImg = styled.img<RuneImgProps>`
 `;
 
 const LoadingBox = styled.div<{ width: number; height: number }>`
-  border-radius: 100%;
+  border-radius: 5px;
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
+  border-radius: 5px;
   position: absolute;
   top: 0;
   left: 0;
@@ -40,10 +43,10 @@ const LoadingBox = styled.div<{ width: number; height: number }>`
   background-size: 200% 100%;
 `;
 
-const RuneBox = styled.div<{ width: number; height: number }>`
+const ChampionBox = styled.div<{ width: number; height: number }>`
   position: relative;
-  width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
+  width: ${({ width }) => width}px;
 `;
 
 const Container = styled.div`
@@ -63,36 +66,32 @@ const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
   white-space: nowrap;
   border-radius: 7px;
   background-color: ${({ theme }) => theme.colors.background.dark};
-  color: ${({ theme }) => theme.colors.brand.gold.main};
   position: absolute;
+  color: ${({ theme }) => theme.colors.brand.sky.main};
+
   top: ${({ positionAbove, height }) =>
-    positionAbove ? `${height + 3}px` : "-49px"};
+    positionAbove ? `${height + 3}px` : "-46px"};
   z-index: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: top 0.2s ease-in-out;
 `;
 
-interface IRuneProps {
-  runeId: number;
+interface IChampionProps {
+  championId: string;
   width?: number;
   height?: number;
 }
 
-export default function StyledRuneImage({
-  runeId,
-  width = 28,
-  height = 28,
-}: IRuneProps) {
-  const rune = useRunesStore((state) => state.runes);
+export default function ChampionImage({
+  championId,
+  width = 60,
+  height = 60,
+}: IChampionProps) {
+  const champions = useChampionStore((state) => state.champions);
+  const version = useCurrentVersionStore((state) => state.version);
   const [isHover, setIsHover] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [positionAbove, setPositionAbove] = useState<boolean>(false);
-  const [styleRuneIndex, setStyleRuneIndex] = useState<number>(0);
-  useEffect(() => {
-    if (rune) {
-      setStyleRuneIndex(rune.findIndex((item) => item.id === runeId));
-    }
-  }, [rune, runeId]);
 
   const onMouseOver = (event: React.MouseEvent) => {
     setIsHover(true);
@@ -106,25 +105,23 @@ export default function StyledRuneImage({
 
   return (
     <Container>
-      <RuneBox width={width} height={height}>
-        {!loaded && <LoadingBox width={width} height={height} />}
-        <RuneImg
-          width={width}
-          height={height}
-          src={
-            rune
-              ? `https://ddragon.leagueoflegends.com/cdn/img/${rune[styleRuneIndex].icon}`
-              : ""
-          }
-          onMouseOver={onMouseOver}
-          onMouseOut={onMouseOut}
-          onLoad={() => setLoaded(true)}
-          loaded={loaded.toString() as any}
-        />
-      </RuneBox>
+      <Link to={`/champion/${championId}`}>
+        <ChampionBox width={width} height={height}>
+          {!loaded && <LoadingBox width={width} height={height} />}
+          <ChampionImg
+            src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${championId}.png`}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
+            onLoad={() => setLoaded(true)}
+            loaded={loaded.toString() as any}
+            width={width}
+            height={height}
+          />
+        </ChampionBox>
+      </Link>
       {isHover && (
         <DetailBox positionAbove={positionAbove} height={height}>
-          {rune?.[styleRuneIndex].name || "Unknown Rune"}
+          {String(champions?.[championId as any]?.name || "Unknown Champion")}
         </DetailBox>
       )}
     </Container>

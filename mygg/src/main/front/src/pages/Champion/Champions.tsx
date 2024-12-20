@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import useChampionStore from "../../stores/useChampionStore";
-import ChampionImage from "../../components/ChampionImage";
+import ChampionImage from "../../components/ImageUI/ChampionImage";
 
 const TitleBox = styled.div`
   margin-top: 50px;

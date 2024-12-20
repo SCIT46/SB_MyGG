@@ -1,10 +1,6 @@
-import { useEffect, useState } from "react";
-import { getItems, getVersions } from "../../services/Api";
-import { IItems } from "./type";
 import styled from "styled-components";
-import LoadingSpinner from "../../components/Loading";
 import useItemStore from "../../stores/useItemStore";
-import ItemImage from "../../components/ItemImage";
+import ItemImage from "../../components/ImageUI/ItemImage";
 
 const LoadingContainer = styled.div`
   margin-top: 300px;

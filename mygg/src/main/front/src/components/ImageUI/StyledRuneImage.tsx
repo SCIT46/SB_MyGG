@@ -1,7 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import { useEffect, useState } from "react";
-import useRunesStore from "../stores/useRunesStore";
-import { IRuneSlot } from "../interfaces/type";
+import useRunesStore from "../../stores/useRunesStore";
 
 interface RuneImgProps {
   loaded: string;
@@ -19,7 +18,6 @@ const fadeIn = keyframes`
 `;
 
 const RuneImg = styled.img<RuneImgProps>`
-  background-color: black;
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
   border-radius: 100%;
@@ -57,43 +55,30 @@ const Container = styled.div`
 
 const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
   display: flex;
-  flex-direction: column;
-  min-width: 350px;
-  max-width: 400px; // Maximum width before wrapping text
-  width: fit-content; // Allow width to adjust based on content: ;
-  white-space: normal; // Allow text to wrap
-  height: 65px;
-  padding: 15px 10px;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  height: 20px;
+  width: fit-content;
+  white-space: nowrap;
   border-radius: 7px;
   background-color: ${({ theme }) => theme.colors.background.dark};
+  color: ${({ theme }) => theme.colors.brand.gold.main};
   position: absolute;
   top: ${({ positionAbove, height }) =>
-    positionAbove ? `${height + 3}px` : "-98px"};
+    positionAbove ? `${height + 3}px` : "-49px"};
   z-index: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: top 0.2s ease-in-out;
 `;
 
-const RuneName = styled.div`
-  color: ${({ theme }) => theme.colors.brand.gold.main};
-  margin-bottom: 10px;
-  font-weight: 600;
-`;
-
-const RuneDescription = styled.div`
-  color: ${({ theme }) => theme.colors.text.white};
-  font-size: 12px;
-`;
-
 interface IRuneProps {
-  styleRuneId: number;
   runeId: number;
   width?: number;
   height?: number;
 }
 
-export default function RuneImage({
-  styleRuneId,
+export default function StyledRuneImage({
   runeId,
   width = 28,
   height = 28,
@@ -102,25 +87,12 @@ export default function RuneImage({
   const [isHover, setIsHover] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [positionAbove, setPositionAbove] = useState<boolean>(false);
-  const [foundRune, setFoundRune] = useState<IRuneSlot>();
-
+  const [styleRuneIndex, setStyleRuneIndex] = useState<number>(0);
   useEffect(() => {
     if (rune) {
-      const index = rune.findIndex((item) => item.id === styleRuneId);
-      if (index !== -1) {
-        const selectedRune = rune[index];
-        if (selectedRune?.slots) {
-          for (const group of selectedRune.slots) {
-            const foundRune = group.runes.find((rune) => rune.id === runeId);
-            if (foundRune) {
-              setFoundRune(foundRune);
-              break;
-            }
-          }
-        }
-      }
+      setStyleRuneIndex(rune.findIndex((item) => item.id === runeId));
     }
-  }, [rune, runeId, styleRuneId]);
+  }, [rune, runeId]);
 
   const onMouseOver = (event: React.MouseEvent) => {
     setIsHover(true);
@@ -141,7 +113,7 @@ export default function RuneImage({
           height={height}
           src={
             rune
-              ? `https://ddragon.leagueoflegends.com/cdn/img/${foundRune?.icon}`
+              ? `https://ddragon.leagueoflegends.com/cdn/img/${rune[styleRuneIndex].icon}`
               : ""
           }
           onMouseOver={onMouseOver}
@@ -152,8 +124,7 @@ export default function RuneImage({
       </RuneBox>
       {isHover && (
         <DetailBox positionAbove={positionAbove} height={height}>
-          <RuneName>{foundRune?.name || "Unknown Rune"}</RuneName>
-          <RuneDescription>{foundRune?.shortDesc || ""}</RuneDescription>
+          {rune?.[styleRuneIndex].name || "Unknown Rune"}
         </DetailBox>
       )}
     </Container>

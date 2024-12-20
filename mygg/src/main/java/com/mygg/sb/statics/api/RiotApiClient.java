@@ -152,7 +152,7 @@ public class RiotApiClient {
         return matchList;
     }
 
-    public static String[] getMatchList(String puuid, int start, int cnt, int startDate, int endDate) throws Exception {
+    public static String[] getMatchList(String puuid, int start, int cnt, long startDate, long endDate) throws Exception {
         // url을 json으로 변환
         String matchJSON = UrlToJson
                 .urlToJson(UrlToJson.urlConvertor("matchList", puuid, start, cnt, startDate, endDate));

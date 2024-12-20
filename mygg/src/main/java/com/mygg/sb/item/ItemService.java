@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
-import com.mygg.sb.statics.util.JsonToDtoMapper;
+import com.mygg.sb.statics.util.JsonToDTOMapper;
 
 import lombok.Getter;
 
@@ -123,7 +123,7 @@ public class ItemService {
       JSONObject jsonObject = RiotApiClient.getItem(id);
 
       // JSON으로 부터 받아온 정보를 itemDto 객체에 설정
-      JsonToDtoMapper mapper = new JsonToDtoMapper();
+      JsonToDTOMapper mapper = new JsonToDTOMapper();
       item = mapper.mapToDto(jsonObject, ItemDTO.class);
       item.setId(id);
 

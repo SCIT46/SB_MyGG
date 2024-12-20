@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ChallengesDto
+public class ChallengesDTO
 	{
 		float controlWardTimeCoverageInRiverOrEnemyHalf; // 강가 또는 적 지역에서의 제어 와드 지속 시간.		
 		float kda; // kda	

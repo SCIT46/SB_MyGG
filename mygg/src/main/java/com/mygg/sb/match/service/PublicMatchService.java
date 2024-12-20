@@ -7,13 +7,13 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.mygg.sb.match.InfoDto;
+import com.mygg.sb.match.InfoDTO;
 import com.mygg.sb.match.MatchDTO;
-import com.mygg.sb.match.MetadataDto;
+import com.mygg.sb.match.MetadataDTO;
 import com.mygg.sb.match.repository.UserMatchesRepository;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.api.RiotSeasonConstants;
-import com.mygg.sb.statics.util.JsonToDtoMapper;
+import com.mygg.sb.statics.util.JsonToDTOMapper;
 import com.mygg.sb.user.UserRepository;
 
 import lombok.AllArgsConstructor;
@@ -134,12 +134,12 @@ public class PublicMatchService
 		}
 		public MatchDTO getMatchInfo(String matchId) throws Exception
 			{
-				MetadataDto metadata = new MetadataDto();
-				InfoDto info = new InfoDto();
+				MetadataDTO metadata = new MetadataDTO();
+				InfoDTO info = new InfoDTO();
 
 				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
-				JsonToDtoMapper mapper = new JsonToDtoMapper();
+				JsonToDTOMapper mapper = new JsonToDTOMapper();
 				
 				// jsonObject의 JSON Key값으로 모든 데이터 조회
 				for (Object key : jsonObject.keySet())
@@ -151,8 +151,8 @@ public class PublicMatchService
 						// Extract Player Identity KEY
 						// JSON파일 내부의 metadata, info 데이터 불러오기
 						
-						if (key.equals("metadata")) metadata = mapper.mapToDto(jsonObj, MetadataDto.class);
-						if (key.equals("info")) info = mapper.mapToDto(jsonObj, InfoDto.class);
+						if (key.equals("metadata")) metadata = mapper.mapToDto(jsonObj, MetadataDTO.class);
+						if (key.equals("info")) info = mapper.mapToDto(jsonObj, InfoDTO.class);
 					}
 
 				MatchDTO result = new MatchDTO();

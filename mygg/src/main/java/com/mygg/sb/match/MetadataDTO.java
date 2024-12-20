@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MetadataDto
+public class MetadataDTO
 	{
 		String  dataVersion;		// Match data version.
 		String	matchId;			// Match id.

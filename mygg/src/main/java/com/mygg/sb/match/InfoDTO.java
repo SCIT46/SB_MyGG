@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class InfoDto
+public class InfoDTO
 	{
 		String endOfGameResult; // 게임 정상적으로 끝났는지
 		long gameDuration;		// 게임시간

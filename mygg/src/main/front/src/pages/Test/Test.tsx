@@ -7,7 +7,7 @@ import StyledRuneImage from "../../components/ImageUI/StyledRuneImage";
 import SummonerImage from "../../components/ImageUI/SummonerImage";
 import { useEffect, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
-import { ISuggestion } from "../HomePage/type";
+import { ISuggestion } from "../Home/type";
 import { getSearchedResult } from "../../services/Api";
 
 const SearchIcon = styled(MagnifyingGlassIcon)`

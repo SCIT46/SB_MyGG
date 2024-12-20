@@ -1,13 +1,13 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
 import Root from "./Root";
-import ChampionDetail from "./pages/ChampionDetail";
-import NotFound from "./pages/NotFound";
-import Itempage from "./pages/Item/ItemPage";
-import Home from "./pages/HomePage/Home";
-import SearchPlayer from "./pages/SearchPlayer/SearchPlayer";
-import Champions from "./pages/Champion/Champions";
+import HomePage from "./pages/Home/HomePage";
+import ItemPage from "./pages/Item/ItemPage";
+import ItemDetailPage from "./pages/ItemDetail/ItemPage";
+import ChampionsPage from "./pages/Champion/ChampionsPage";
+import ChampionDetailPage from "./pages/championDetail/ChampionDetailPage";
+import SearchPlayerPage from "./pages/SearchPlayer/SearchPlayerPage";
 import Test from "./pages/Test/Test";
-import ItemDetailPage from "./pages/ItemDetail/ItemDetailPage";
+import NotFound from "./pages/NotFound/NotFound";
 
 //라우터 생성
 const router = createBrowserRouter([
@@ -17,12 +17,12 @@ const router = createBrowserRouter([
     element: <Root />,
     // 하위 컴포넌트 지정
     children: [
-      { path: "", element: <Home /> },
-      { path: "item", element: <Itempage /> },
+      { path: "", element: <HomePage /> },
+      { path: "item", element: <ItemPage /> },
       { path: "item/:id", element: <ItemDetailPage /> },
-      { path: "champion", element: <Champions /> },
-      { path: "champion/:id", element: <ChampionDetail /> },
-      { path: "search/:id", element: <SearchPlayer /> },
+      { path: "champion", element: <ChampionsPage /> },
+      { path: "champion/:id", element: <ChampionDetailPage /> },
+      { path: "search/:id", element: <SearchPlayerPage /> },
       //테스트 페이지
       { path: "test", element: <Test /> },
       //not found 페이지

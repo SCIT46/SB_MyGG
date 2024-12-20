@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import Profile from "./Profile/Profile";
-import Rank from "./Rank";
+import Profile from "./ProfileInfo/Profile";
 import { useEffect, useState } from "react";
 import { getUser } from "../../services/Api";
 import { IUser } from "./type";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useNavigate, useParams } from "react-router-dom";
-import Match from "./Match/Match";
-import ChampInfo from "./Champion/ChampInfo";
+import Match from "./MatchInfo/Match";
+import ChampInfo from "./ChampionInfo/ChampInfo";
+import Rank from "./RankInfo/Rank";
 
 const SearchPlayerContainer = styled.div`
   width: 100vw;
@@ -28,7 +28,7 @@ const LeftContainer = styled.div`
 `;
 
 // '/search/:id 라우트 이동시 랜더링 되는 컴포넌트
-export default function SearchPlayer() {
+export default function SearchPlayerPage() {
   const { id } = useParams();
   const [user, setUser] = useState<IUser>();
   const [isLoading, setIsLoading] = useState<boolean>(true);

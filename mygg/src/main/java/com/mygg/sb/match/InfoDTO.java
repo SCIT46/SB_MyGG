@@ -22,5 +22,5 @@ public class InfoDTO
 		int mapId;				// 맵 ID,  11
 		String platformId;		// 게임 플랫폼, ex) "JP1"
 		List<ParticipantsDto> participants;
-		List<TeamDto> teams;	// 두 팀의 밴, 승리여부 등 여부
+		List<TeamDTO> teams;	// 두 팀의 밴, 승리여부 등 여부
 	}

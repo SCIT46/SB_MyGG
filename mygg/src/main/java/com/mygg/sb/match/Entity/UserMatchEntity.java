@@ -1,4 +1,4 @@
-package com.mygg.sb.match.entity;
+package com.mygg.sb.match.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

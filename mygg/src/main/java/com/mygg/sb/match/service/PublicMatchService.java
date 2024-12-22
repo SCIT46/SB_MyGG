@@ -37,7 +37,7 @@ public class PublicMatchService
 		private final UserMatchesRepository userMatchesRepo;
 		private final UserRepository userRepository;
 		
-		private final int count = 100;
+		private final int count = 100;					// api에 요청할 찾을 데이터 수
 		private final int limitRequestForSecond = 20;	// 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100;	// 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		
@@ -50,9 +50,13 @@ public class PublicMatchService
 		
 		private List<MatchDTO> indexingData(String _name, String _tag) throws Exception
 		{
+			//1. DB내의 마지막 매치 데이터를 조회한다.
+			//2. api에게 매치데이터 100개를 받아온다.
+			//3. 마지막 매치데이터 ~ api의 매치데이터의 데이터를 받아온다.
+			//	- DB내의 매치데이터가 없다면 전부 조회한다.
 			List<String> listUserMatches = new ArrayList<>();	// matchId들이 저장된 곳
 			List<MatchDTO> listMatchDto = new ArrayList<>();	// 매치 아이디로 DTO들 저장하는 곳 
-			String[] arrStr = new String[100];
+			String[] arrStr = new String[100];					// 매치 ID 저장할 곳(KR_...)
 
 			String puuid = RiotApiClient.getPuuidNameAndTag(_name, _tag);
 			String lastMatchId = "";
@@ -60,38 +64,45 @@ public class PublicMatchService
 			int indexInList = -1;
 			int currentRequestCnt = 0;
 
-			// 매치 데이터에 기간을 두고, 그 기간 안의 데이터가 100개인 경우 게속 데이터를 뽑아낸다.
+			// 종료조건:
+			// 		- 매치 데이터에 기간을 두고, 그 기간 안의 데이터가 100개가 아닌 경우 혹은
+			// 		  인덱스가 발견된 경우에는 루프를 종료한다
 			boolean isRoopEnd = false;
 			int nullIdx = -1;
-			while(arrStr.length > 99)
+			while(arrStr.length > 99 && nullIdx == -1)
 			{
-				// 3. player의 최근 데이터 100개를 갖고 온다
-				//	3-1) index 찾는다.
-				//	3-2) 찾을 인덱스 100을 더한다.
 				currentRequestCnt++;
+				
+				// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
 				arrStr = RiotApiClient.getMatchList(puuid, start, count,
 						RiotSeasonConstants.getCurrentYearSeasonStartTimeStamp(), RiotSeasonConstants.getNowEndSeasonTimeStamp());
 
 				// DB에 접근해서 lastMatchId를 갖고 온다. 없다면 pass
-				//indexInList = indexOf(arrStr, lastMatchId);
+				// indexInList = indexOf(arrStr, lastMatchId);
 				start += 100;
 				
 				//  3-4) List에 [index]부터 [0]까지 저장(list가 최근 - 오래된)
 				for(int i = 0; i < arrStr.length; i++)
 					{
 						listUserMatches.add(arrStr[i]);
-						System.out.println(arrStr[i]);
 					}
 			}
+			log.info("-------------------- arrStr 안의 데이터 --------------------");
+			for(int i = 0; i < arrStr.length; i++)
+				{
+					System.out.println(arrStr[i]);
+				}
 			
 			for(int i = 0; i < ((nullIdx < 0)? listUserMatches.size(): nullIdx); i++)
 				{
 					currentRequestCnt++;
 					MatchDTO dto = getMatchInfo(listUserMatches.get(i));
+					if(dto.getInfo().getMapId() == 0) continue;	// 데이터 못 받아오는 것들 거르기
+					
 					if(dto != null)
 						{
-							System.out.println("dddddddddddddddddddddddddddddddddddddd");
-							System.out.println(dto.getInfo().getMapId());
+							System.out.println(dto.getMetadata().getMatchId() + " : "
+											   + dto.getInfo().getMapId());
 							listMatchDto.add(dto);
 						}
 					

@@ -27,6 +27,7 @@ export default function InitLoader() {
       try {
         const versionsData = await getVersions();
         const champData: any = await getChamps(versionsData[0]);
+        console.log(champData);
         const itemData: any = await getItems(versionsData[0]);
         const summonerData: any = await getSummoner(versionsData[0]);
         const runesData: any = await getRunes(versionsData[0]);

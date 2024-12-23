@@ -91,13 +91,19 @@ export const getUser = async (
   }
 };
 
-export const getMatch = async (matchId: string): Promise<any> => {
+export const getMatch = async (
+  userName: string,
+  tagLine: string
+): Promise<any> => {
   try {
-    const matchResponse = await apiClient.get(`/match/public/${matchId}`, {
-      headers: {
-        "Cache-Control": "max-age=300",
-      },
-    });
+    const matchResponse = await apiClient.get(
+      `/match/test/${userName}/${tagLine}`,
+      {
+        headers: {
+          "Cache-Control": "max-age=300",
+        },
+      }
+    );
     return matchResponse.data;
   } catch (error: any) {
     console.error("Match fetch error: ", error);

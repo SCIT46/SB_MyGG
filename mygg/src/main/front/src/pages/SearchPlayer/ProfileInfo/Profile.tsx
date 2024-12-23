@@ -2,7 +2,7 @@ import styled from "styled-components";
 import useCurrentVersionStore from "../../../stores/useCurrentVersionStore";
 
 const ProfileContainer = styled.div`
-  margin-top: 70px;
+  margin-top: 30px;
   width: 1000px;
   height: 150px;
   background-color: ${({ theme }) => theme.colors.background.white};
@@ -24,20 +24,39 @@ const ProfileImg = styled.img`
 const DetailContainer = styled.div`
   height: 90px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  margin-bottom: auto;
 `;
 
 const NameSpan = styled.div`
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.text.primary};
+  display: inline-block;
+  margin-right: 10px;
 `;
 
-const LevelSpan = styled.div`
-  color: ${({ theme }) => theme.colors.text.disabled};
-  margin-bottom: 30px;
-  font-size: 16px;
+const LevelBox = styled.div`
+  color: ${({ theme }) => theme.colors.text.white};
+  font-size: 14px;
+  background-color: ${({ theme }) => theme.colors.background.dark};
+  border-radius: 7px;
+  padding: 5px 7px;
+  margin-top: -12px;
+`;
+
+const TagSpan = styled.span`
+  color: ${({ theme }) => theme.colors.text.light};
+  margin-top: 2px;
+  font-weight: 500;
+  font-size: 18px;
+`;
+
+const ProfileImgBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: -10px;
 `;
 
 interface IProfileProps {
@@ -56,15 +75,15 @@ export default function Profile({
   const version = useCurrentVersionStore((state) => state.version);
   return (
     <ProfileContainer>
-      <ProfileImg
-        src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${profileIconId}.png`}
-      />
+      <ProfileImgBox>
+        <ProfileImg
+          src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${profileIconId}.png`}
+        />
+        <LevelBox>{summonerLevel}</LevelBox>
+      </ProfileImgBox>
       <DetailContainer>
-        <NameSpan>
-          {gameName} #{tagLine}
-        </NameSpan>
-        <LevelSpan>{summonerLevel}</LevelSpan>
-        <div>전적갱신 버튼</div>
+        <NameSpan>{gameName}</NameSpan>
+        <TagSpan>#{tagLine}</TagSpan>
       </DetailContainer>
     </ProfileContainer>
   );

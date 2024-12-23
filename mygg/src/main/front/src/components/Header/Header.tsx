@@ -2,6 +2,10 @@ import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import PatchNote from "./PatchNote";
+import { useState } from "react";
+import SearchForm from "../../pages/Home/SearchForm";
+import SearchDetail from "../../pages/Home/SearchDetail";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 const HeaderContainer = styled.nav`
   display: flex;
@@ -44,8 +48,37 @@ const LogoImg = styled.div`
   margin-left: 14px;
 `;
 
+const SearchInputBox = styled.div`
+  background-color: ${({ theme }) => theme.colors.background.white};
+  border: 1px solid ${({ theme }) => theme.colors.border.dark};
+  width: 100px;
+  height: 40px;
+  margin-right: 20px;
+  margin-left: auto;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+  font-size: 14px;
+
+  color: ${({ theme }) => theme.colors.text.light};
+`;
+
+const SearchIcon = styled(MagnifyingGlassIcon)`
+  width: 20px;
+  height: 20px;
+  color: ${({ theme }) => theme.colors.border.dark};
+  margin-bottom: 2px;
+  margin-left: 8px;
+  margin-right: 8px;
+`;
+
 //헤더 컴포넌트
 export default function Header() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <HeaderContainer>
       {/* Link 컴포넌트를 통해 라우트 이동 */}
@@ -56,10 +89,15 @@ export default function Header() {
       </Link>
       <LinkBtn to={"item"}>아이템</LinkBtn>
       <LinkBtn to={"champion"}>챔피언</LinkBtn>
-      <LinkBtn to={"search/이시형-페미니스트"}>플레이어</LinkBtn>
+      <LinkBtn to={"search/Happy-day12"}>플레이어</LinkBtn>
       <LinkBtn to={"test"}>테스트</LinkBtn>
       {/* 패치노트 컴포넌트 */}
-      <PatchNote />
+
+      <SearchInputBox onClick={() => setIsModalOpen(true)}>
+        <SearchIcon />
+        search...
+      </SearchInputBox>
+      {isModalOpen && <SearchDetail onClose={() => setIsModalOpen(false)} />}
     </HeaderContainer>
   );
 }

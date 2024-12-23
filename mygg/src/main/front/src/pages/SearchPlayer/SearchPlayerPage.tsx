@@ -84,7 +84,11 @@ export default function SearchPlayerPage() {
           />
           <ChampInfo />
         </LeftContainer>
-        <Match matchList={user?.matchList} puuid={user?.puuid} />
+        <Match
+          userName={user?.gameName}
+          tagLine={user?.tagLine}
+          puuid={user?.puuid}
+        />
       </BottomContainer>
     </SearchPlayerContainer>
   );

@@ -24,6 +24,8 @@ export interface IMatchDetail {
   info: {
     endOfGameResult: string;
     gameDuration: number;
+    gameStartTimestamp: number;
+    gameEndTimestamp: number;
     gameMode: string;
     gameVersion: string;
     gameType: string;

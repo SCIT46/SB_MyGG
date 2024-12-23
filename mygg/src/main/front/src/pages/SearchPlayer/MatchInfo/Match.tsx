@@ -28,12 +28,13 @@ const CustomGameBtn = styled.div`
 `;
 
 interface IMatchProps {
-  matchList?: string[];
+  userName: string;
+  tagLine: string;
   puuid?: string;
 }
 
-export default function Match({ matchList, puuid }: IMatchProps) {
-  const { matchDetails, isLoading } = useFetchMatchDetails(matchList);
+export default function Match({ userName, tagLine, puuid }: IMatchProps) {
+  const { matchDetails, isLoading } = useFetchMatchDetails(userName, tagLine);
 
   if (isLoading) {
     return (
@@ -42,6 +43,9 @@ export default function Match({ matchList, puuid }: IMatchProps) {
       </MacthContainer>
     );
   }
+
+  console.log(matchDetails);
+
   return (
     <MacthContainer>
       <CustomGameBtn>커스텀 게임 보러가기 -</CustomGameBtn>

@@ -2,21 +2,15 @@ import { useState, useEffect } from "react";
 import { getMatch } from "../../services/Api";
 import { IMatchDetail } from "./type";
 
-export function useFetchMatchDetails(matchList?: string[]) {
+export function useFetchMatchDetails(userName: string, tagLine: string) {
   const [matchDetails, setMatchDetails] = useState<IMatchDetail[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (matchList && matchList.length > 0) {
-          const details = await Promise.all(
-            matchList.map((id) => getMatch(id))
-          );
-          setMatchDetails(details);
-        } else {
-          setMatchDetails([]);
-        }
+        const data = await getMatch(userName, tagLine);
+        setMatchDetails(data);
       } catch (error) {
         console.error("match fetch error!", error);
       } finally {
@@ -25,7 +19,7 @@ export function useFetchMatchDetails(matchList?: string[]) {
     };
 
     fetchData();
-  }, [matchList?.length]);
+  }, [userName, tagLine]);
 
   return { matchDetails, isLoading };
 }

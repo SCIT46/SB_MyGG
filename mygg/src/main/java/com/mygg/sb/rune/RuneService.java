@@ -7,7 +7,7 @@ import java.util.Set;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
-import com.mygg.sb.match.MetadataDTO;
+
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDTOMapper;
 

@@ -45,6 +45,7 @@ const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   backdrop-filter: blur(1.5px);
+  z-index: 1000;
 `;
 
 const SearchDetailContainer = styled.div`
@@ -352,6 +353,7 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       navigate(`/item/${suggestion.id}`);
     }
     setSuggestions(undefined);
+    onClose();
     setActiveSuggestionIndex(-1);
   };
 
@@ -382,6 +384,7 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
         console.error("Invalid search format. Please use 'gameName#tagLine'");
       }
     }
+    onClose();
   };
 
   const renderSuggestions = () => {

@@ -113,12 +113,12 @@ export default function MatchDetail({
   const [userIndex, setUserIndex] = useState<number>();
   const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
 
-  // const currentTime = Date.now();
-  // const timeDifference = currentTime - matchDetail.info.;
+  const currentTime = Date.now();
 
-  // const minutesAgo = Math.floor(timeDifference / (1000 * 60));
-  // const hoursAgo = Math.floor(timeDifference / (1000 * 60 * 60));
-  // const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const timeDifference = currentTime - matchDetail.info.gameStartTimestamp;
+  const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const hoursAgo = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
+  const minutesAgo = Math.floor((timeDifference / (1000 * 60)) % 60);
 
   useEffect(() => {
     if (userPuuid && matchDetail.metadata) {
@@ -146,7 +146,13 @@ export default function MatchDetail({
           <GameModeSpan>
             {queueIdObj[matchDetail.info.queueId].description}
           </GameModeSpan>
-          <div>x일전</div>
+          <div>
+            {daysAgo > 0
+              ? `${daysAgo}일 전`
+              : hoursAgo > 0
+              ? `${hoursAgo}시간 전`
+              : `${minutesAgo}분 전`}
+          </div>
           <div>
             {Math.floor(matchDetail.info.gameDuration / 60)}:
             {matchDetail.info.gameDuration % 60}

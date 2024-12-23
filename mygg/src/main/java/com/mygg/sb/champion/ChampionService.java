@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
-import com.mygg.sb.statics.util.JsonToDtoMapper;
+import com.mygg.sb.statics.util.JsonToDTOMapper;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -133,7 +133,7 @@ public class ChampionService {
       JSONObject jsonObject = RiotApiClient.getChampion(id);
 
       // JSON으로 부터 받아온 정보를 champDto 객체에 설정
-      JsonToDtoMapper mapper = new JsonToDtoMapper();
+      JsonToDTOMapper mapper = new JsonToDTOMapper();
       champion = mapper.mapToDto(jsonObject, ChampionDTO.class);
 
       // DB에 챔피언 정보 저장

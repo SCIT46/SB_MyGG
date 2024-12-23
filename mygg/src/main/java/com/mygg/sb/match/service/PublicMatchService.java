@@ -5,20 +5,19 @@ import java.util.List;
 
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.mygg.sb.match.InfoDto;
+import com.mygg.sb.match.InfoDTO;
 import com.mygg.sb.match.MatchDTO;
-import com.mygg.sb.match.MetadataDto;
+import com.mygg.sb.match.MetadataDTO;
 import com.mygg.sb.match.repository.UserMatchesRepository;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.api.RiotSeasonConstants;
-import com.mygg.sb.statics.util.JsonToDtoMapper;
+import com.mygg.sb.statics.util.JsonToDTOMapper;
+import com.mygg.sb.statics.util.DateTimeUtils;
+
 import com.mygg.sb.user.UserRepository;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 // riot api로 부터 받아온 match JSON 파일을 DB에 저장(matchId / match.JSON)
@@ -38,108 +37,95 @@ public class PublicMatchService
 		private final UserMatchesRepository userMatchesRepo;
 		private final UserRepository userRepository;
 		
-		public List<String> run(String name, String tag) throws Exception
-			{
-				//1. userDb에 저장된 id(index) 값을 받는다
-
-				// 2. [미완]
-				//	userMatch userId가 있는지 체크해서 index 제일 아래 것(제일최신) matchId를 갖고 온다.
-				// 	없다면 user 정보를 갱신하는 작업을 진행한다
-				//checkEntity();
-				
-				// 3.데이터 처리(puuid 필요)
-				//List<String> matchIds = indexingData(name, tag);
-				
-				//return matchIds;
-				return null;
-			}
+		private final int count = 100;					// api에 요청할 찾을 데이터 수
+		private final int limitRequestForSecond = 20;	// 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
+		private final int limitRequestFor2Min = 100;	// 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		
-		private int indexOf(String[] array, String keyword) {
-		    for (int i = 0; i < array.length; i++) 
-		    {
-		        if (array[i] != null && array[i].equals(keyword)) {
-		            return i; // 단어를 찾으면 인덱스 반환
-		        }
-		    }
-		    return -1; // 찾지 못한 경우 -1 반환
-		}
+		public List<MatchDTO> run(String name, String tag) throws Exception
+			{
+				// 테스트 코드
+				return indexingData(name, tag);
+			}
+
 		
 		private List<MatchDTO> indexingData(String _name, String _tag) throws Exception
 		{
+			//1. DB내의 마지막 매치 데이터를 조회한다.
+			//2. api에게 매치데이터 100개를 받아온다.
+			//3. 마지막 매치데이터 ~ api의 매치데이터의 데이터를 받아온다.
+			//	- DB내의 매치데이터가 없다면 전부 조회한다.
 			List<String> listUserMatches = new ArrayList<>();	// matchId들이 저장된 곳
-			List<MatchDTO> listMatchDto = new ArrayList<>();	// 
-			
-			// puuid로 matchId를 뱉어낸다.
+			List<MatchDTO> listMatchDto = new ArrayList<>();	// 매치 아이디로 DTO들 저장하는 곳 
+			String[] arrStr = new String[100];					// 매치 ID 저장할 곳(KR_...)
+
 			String puuid = RiotApiClient.getPuuidNameAndTag(_name, _tag);
 			String lastMatchId = "";
 			int start = 0;
-			int count = 100;
 			int indexInList = -1;
-			//long startTime = System.currentTimeMillis();
-			String[] arrStr = new String[100];
-			boolean isRoop = true;
-			while(indexInList < 0 && isRoop)
+			int currentRequestCnt = 0;
+
+			// 종료조건:
+			// 		- 매치 데이터에 기간을 두고, 그 기간 안의 데이터가 100개가 아닌 경우 혹은
+			// 		  인덱스가 발견된 경우에는 루프를 종료한다
+			boolean isRoopEnd = false;
+			int nullIdx = -1;
+			while(arrStr.length > 99 && nullIdx == -1)
 			{
-				// 3. player의 최근 데이터 100개를 갖고 온다
-				//	3-1) index 찾는다.
-				//	3-2) 찾을 인덱스 100을 더한다.
-				arrStr = RiotApiClient.getMatchList(puuid, start, count);
-				indexInList = indexOf(arrStr, lastMatchId);
+				currentRequestCnt++;
+				
+				// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
+				arrStr = RiotApiClient.getMatchList(puuid, start, count,
+						RiotSeasonConstants.getCurrentYearSeasonStartTimeStamp(), RiotSeasonConstants.getNowEndSeasonTimeStamp());
+
+				// DB에 접근해서 lastMatchId를 갖고 온다. 없다면 pass
+				// indexInList = indexOf(arrStr, lastMatchId);
 				start += 100;
-				if(arrStr.length < 1) 
-					{
-						log.info("attStr이 비어 있습니다.");
-						return null;
-					}
 				
 				//  3-4) List에 [index]부터 [0]까지 저장(list가 최근 - 오래된)
-				for(int i = (indexInList == -1? arrStr.length -1: 0); i >= 0; i--)
+				for(int i = 0; i < arrStr.length; i++)
 					{
-						// Queue 필요할 듯?
-						if(checkDataTime(listMatchDto, arrStr[i]) == false)
-							return listMatchDto;
-						
 						listUserMatches.add(arrStr[i]);
 					}
 			}
-			
-			System.out.println("roop를 전부 돌았습니다.");
-			
-			return null;
-		}
-		
-		private boolean checkDataTime(List<MatchDTO> list, String matchId) throws Exception
-		{
-			// matchId의 데이터를 체크해서 일정타임 안쪽인지 체크해보도록 하자!
-			
-			//1. 받은 matchId의 데이터를 받는다.
-			MatchDTO match = getMatchInfo(matchId);
-			//2. timeStamp를 체크한다.
-			if(checkTimeStamp(match.getInfo().getGameStartTimestamp(),
-							  RiotSeasonConstants.SEASON_2024_SPLIT3_START))
+			log.info("-------------------- arrStr 안의 데이터 --------------------");
+			for(int i = 0; i < arrStr.length; i++)
 				{
-					//3. 이번 시즌(true)라면 list에 저장한다.
-					list.add(match);
-					return true;
+					System.out.println(arrStr[i]);
 				}
 			
-			//4. 이번 시즌이 아니라면 false 반환한다
-			return false;
+			for(int i = 0; i < ((nullIdx < 0)? listUserMatches.size(): nullIdx); i++)
+				{
+					currentRequestCnt++;
+					MatchDTO dto = getMatchInfo(listUserMatches.get(i));
+					if(dto.getInfo().getMapId() == 0) continue;	// 데이터 못 받아오는 것들 거르기
+					
+					if(dto != null)
+						{
+							System.out.println(dto.getMetadata().getMatchId() + " : "
+											   + dto.getInfo().getMapId());
+							listMatchDto.add(dto);
+						}
+					
+					if(checkRequestSecondLimit(currentRequestCnt)) 
+						{
+							log.info("sleep");
+							//Thread.sleep(1000l);
+							currentRequestCnt = 0;
+						};
+				}
+
+			return listMatchDto;
 		}
 		
-		private boolean checkTimeStamp(long time, long seasonStart)
-		{
-			// 현재부터 과거까지의 데이터를 조회할 때 일정 기간 안쪽인지 true | false를 반환하는 함수이다
-			return time > seasonStart;
-		}
 		public MatchDTO getMatchInfo(String matchId) throws Exception
 			{
-				MetadataDto metadata = new MetadataDto();
-				InfoDto info = new InfoDto();
+				// matchid를 받아서 그 매치의 정보를 받아오는 함수
+				MetadataDTO metadata = new MetadataDTO();
+				InfoDTO info = new InfoDTO();
 
 				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
-				JsonToDtoMapper mapper = new JsonToDtoMapper();
+				JsonToDTOMapper mapper = new JsonToDTOMapper();
 				
 				// jsonObject의 JSON Key값으로 모든 데이터 조회
 				for (Object key : jsonObject.keySet())
@@ -151,8 +137,8 @@ public class PublicMatchService
 						// Extract Player Identity KEY
 						// JSON파일 내부의 metadata, info 데이터 불러오기
 						
-						if (key.equals("metadata")) metadata = mapper.mapToDto(jsonObj, MetadataDto.class);
-						if (key.equals("info")) info = mapper.mapToDto(jsonObj, InfoDto.class);
+						if (key.equals("metadata")) metadata = mapper.mapToDto(jsonObj, MetadataDTO.class);
+						if (key.equals("info")) info = mapper.mapToDto(jsonObj, InfoDTO.class);
 					}
 
 				MatchDTO result = new MatchDTO();
@@ -161,18 +147,31 @@ public class PublicMatchService
 
 				return result;
 			}
-	
-//	    public List<String> getMatchIds(String puuid, long startTime, long endTime) {
-//	        RestTemplate restTemplate = new RestTemplate();
-//
-//	        String url = BASE_URL + "?startTime=" + startTime + "&endTime=" + endTime + "&count=100&api_key=" + API_KEY;
-//
-//	        ResponseEntity<List> response = restTemplate.getForEntity(url, List.class, puuid);
-//
-//	        if (response.getStatusCode().is2xxSuccessful()) {
-//	            return response.getBody();
-//	        } else {
-//	            throw new RuntimeException("Failed to fetch match IDs: " + response.getStatusCode());
-//	        }
-//	    }
+		
+		private int indexOf(String[] array, String keyword) {
+			// Index Of: 필요: 유저 데이터가 이미 조회가 된 상태에서
+			// 일정 데이터 ~ 마지막 로딩 데이터 사이를 조회하기 위해 만든 함수
+		    for (int i = 0; i < array.length; i++) 
+		    {
+		        if (array[i] != null && array[i].equals(keyword)) {
+		            return i; // 단어를 찾으면 인덱스 반환
+		        }
+		    }
+		    return -1; // 찾지 못한 경우 -1 반환
+		}
+		
+		private boolean checkTimeStamp(long time, long seasonStart)
+		{
+			// 일정 기간 안쪽인지 true | false를 반환하는 함수이다
+			return time > seasonStart;
+		}
+		
+		private boolean checkRequestSecondLimit(int curRequest) throws InterruptedException
+		{
+			// Request 요청제한을 넘었는지 체크한다.
+			// 넘었으면 True, 아니라면 false
+			if(limitRequestForSecond-1 <= curRequest) return true;
+
+			return false;
+		}
 	}

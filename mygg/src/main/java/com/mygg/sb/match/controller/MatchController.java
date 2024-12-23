@@ -24,17 +24,10 @@ public class MatchController
 		public List<MatchDTO> getMethodName(@PathVariable(name="name") String name,
 										  @PathVariable(name="tag") String tag) throws Exception 
 		{
-			List<String> matchesIds = publicService.run(name, tag);
-			List<MatchDTO> getMatchInfo = new ArrayList<>();
-			
+			//List<MatchDTO> matchesIds = publicService.run(name, tag);
 			// matchesIdes[0]: 제일최근, amtchesides[..]: 제일 나중
 			
-			for(int i = 0; i < matchesIds.size(); i++)
-				{
-					getMatchInfo.add(publicService.getMatchInfo(matchesIds.get(i)));
-				}
-			
-			return getMatchInfo;
+			return publicService.run(name, tag);
 		}
 		
 		

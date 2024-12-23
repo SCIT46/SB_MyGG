@@ -60,8 +60,8 @@ class ParticipantsDto
 	int holdPings;				// 홀드?핑
 	int needVisionPings;		// 시야필요 핑
 	
-	PerksDto perks;				// 룬
-	ChallengesDto challenges;	// 챌린지스
+	PerksDTO perks;				// 룬
+	ChallengesDTO challenges;	// 챌린지스
 	
 	//Double goldPerMinute;// 분당 골드 값 추출
 	// PerksDto perks;

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
-public class JsonToDtoMapper
+public class JsonToDTOMapper
 	{
 		private final Gson gson = new Gson();
 		private final ObjectMapper objectMapper = new ObjectMapper(); // ObjectMapper 인스턴스 추가

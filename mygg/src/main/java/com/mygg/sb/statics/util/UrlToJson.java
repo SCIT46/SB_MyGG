@@ -139,7 +139,7 @@ public class UrlToJson {
     }
 
     // (/match/v5/matchlists/by-puuid/{puuid}/ids?start={start}&count={count}&startTime={startDate}&endTime={endDate})
-    public static String urlConvertor(String type, String arg1, int start, int count, int startDate, int endDate) {
+    public static String urlConvertor(String type, String arg1, int start, int count, long startDate, long endDate) {
         switch (type) {
             case "matchList": // arg1 : puuid, start(default : 0), count(default : 20, max : 100),
                               // startDate(default : null), endDate(default : null) 결과가 없을 경우 빈 배열 반환

@@ -37,7 +37,7 @@ public class PublicMatchService
 		private final UserMatchesRepository userMatchesRepo;
 		private final UserRepository userRepository;
 		
-		private final int count = 100;					// api에 요청할 찾을 데이터 수
+		private final int count = 5;					// api에 요청할 찾을 데이터 수
 		private final int limitRequestForSecond = 20;	// 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100;	// 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		
@@ -67,7 +67,6 @@ public class PublicMatchService
 			// 종료조건:
 			// 		- 매치 데이터에 기간을 두고, 그 기간 안의 데이터가 100개가 아닌 경우 혹은
 			// 		  인덱스가 발견된 경우에는 루프를 종료한다
-			boolean isRoopEnd = false;
 			int nullIdx = -1;
 			while(arrStr.length > 99 && nullIdx == -1)
 			{
@@ -79,7 +78,7 @@ public class PublicMatchService
 
 				// DB에 접근해서 lastMatchId를 갖고 온다. 없다면 pass
 				// indexInList = indexOf(arrStr, lastMatchId);
-				start += 100;
+				start += count;
 				
 				//  3-4) List에 [index]부터 [0]까지 저장(list가 최근 - 오래된)
 				for(int i = 0; i < arrStr.length; i++)

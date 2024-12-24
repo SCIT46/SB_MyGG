@@ -13,8 +13,9 @@ import RuneImage from "../../../components/ImageUI/RuneImage";
 import { queueIdObj } from "../../../utils/QueueIdObj";
 
 const MatchDetailContainer = styled.div<{ isWinning: boolean }>`
-  background-color: ${(props) => (props.isWinning ? "#e2edff" : "#ffe8e8")};
-  border: 1px solid ${(props) => (props.isWinning ? "#a8c1ff" : "#ffa4a4")};
+  background-color: ${(props) => (props.isWinning ? "#e0ecff" : "#ffe5e5")};
+  border: 1px solid ${(props) => (props.isWinning ? "#a0b8ff" : "#ff8a8a")};
+  border-left: 8px solid ${(props) => (props.isWinning ? "#0056b3" : "#E63946")};
   width: 90%;
   height: 120px;
   border-radius: 10px;
@@ -25,16 +26,16 @@ const MatchDetailContainer = styled.div<{ isWinning: boolean }>`
 
 const GameInfoContainer = styled.div`
   display: flex;
-  margin-left: 7px;
+  margin-left: 9px;
   flex-direction: column;
   justify-content: center;
-  width: 70px;
+  width: 110px;
 `;
 
 const PlayerInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: -50px;
+  margin-left: -30px;
   gap: 8px;
 `;
 
@@ -70,14 +71,21 @@ const PlayerItemsInfoContainer = styled.div`
   display: flex;
 `;
 
-const KdaSpan = styled.div``;
+const KdaSpan = styled.div`
+  margin-bottom: 4px;
+  font-size: 16px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.text.primary};
+`;
 
 const KdaSocreSpan = styled.div`
   font-size: 12px;
+  color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
 const CsSpan = styled.div`
-  font-size: 12px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
 const DetailBtn = styled.div`
@@ -97,8 +105,47 @@ const DetailBtnContainer = styled.div`
   margin-right: 10px;
 `;
 
-const GameModeSpan = styled.div`
+const GameModeSpan = styled.div<{ isWinning: boolean }>`
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: ${({ isWinning }) => (isWinning ? "#0056b3" : "#E63946")};
+`;
+
+const GameTimeSpan = styled.div`
   font-size: 12px;
+  margin-bottom: 20px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
+const GameDurationSpan = styled.div`
+  font-size: 14px;
+  margin-bottom: 2px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
+const GameResultSpan = styled.div<{ isWinning: boolean }>`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ isWinning }) => (isWinning ? "#0056b3" : "#E63946")};
+`;
+
+const KdaNumber = styled.span`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.primary};
+`;
+
+const KdaNumberDeath = styled.span`
+  font-size: 16px;
+  font-weight: 600;
+  color: #e63946;
+`;
+
+const KdaSlash = styled.span`
+  font-size: 16px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
 export interface IMatchDetailProp {
@@ -143,23 +190,30 @@ export default function MatchDetail({
         isWinning={matchDetail.info.participants[userIndex].win}
       >
         <GameInfoContainer>
-          <GameModeSpan>
+          <GameModeSpan
+            isWinning={matchDetail.info.participants[userIndex].win}
+          >
             {queueIdObj[matchDetail.info.queueId].description}
           </GameModeSpan>
-          <div>
+          <GameTimeSpan>
             {daysAgo > 0
               ? `${daysAgo}일 전`
               : hoursAgo > 0
               ? `${hoursAgo}시간 전`
               : `${minutesAgo}분 전`}
-          </div>
-          <div>
-            {Math.floor(matchDetail.info.gameDuration / 60)}:
-            {matchDetail.info.gameDuration % 60}
-          </div>
-          <div>
+          </GameTimeSpan>
+          <GameDurationSpan>
+            {String(Math.floor(matchDetail.info.gameDuration / 60)).padStart(
+              2,
+              "0"
+            )}
+            :{String(matchDetail.info.gameDuration % 60).padStart(2, "0")}
+          </GameDurationSpan>
+          <GameResultSpan
+            isWinning={matchDetail.info.participants[userIndex].win}
+          >
             {matchDetail.info.participants[userIndex].win ? "승리" : "패배"}
-          </div>
+          </GameResultSpan>
         </GameInfoContainer>
         <PlayerInfoContainer>
           <PlayerChampionInfoContainer>
@@ -196,16 +250,25 @@ export default function MatchDetail({
             </PlayerRuneContianer>
             <PlayerKdaContianer>
               <KdaSpan>
-                {matchDetail.info.participants[userIndex].kills} /{" "}
-                {matchDetail.info.participants[userIndex].deaths} /{" "}
-                {matchDetail.info.participants[userIndex].assists}
+                <KdaNumber>
+                  {matchDetail.info.participants[userIndex].kills}
+                </KdaNumber>
+                <KdaSlash> / </KdaSlash>
+                <KdaNumberDeath>
+                  {matchDetail.info.participants[userIndex].deaths}
+                </KdaNumberDeath>
+                <KdaSlash> / </KdaSlash>
+                <KdaNumber>
+                  {matchDetail.info.participants[userIndex].assists}
+                </KdaNumber>
               </KdaSpan>
               <KdaSocreSpan>
                 {(
                   (matchDetail.info.participants[userIndex].kills +
                     matchDetail.info.participants[userIndex].assists) /
                   matchDetail.info.participants[userIndex].deaths
-                ).toFixed(2)}
+                ).toFixed(2)}{" "}
+                KDA
               </KdaSocreSpan>
               <CsSpan>
                 {matchDetail.info.participants[userIndex].totalMinionsKilled} cs

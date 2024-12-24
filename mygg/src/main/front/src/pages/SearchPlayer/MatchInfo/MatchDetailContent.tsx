@@ -7,26 +7,30 @@ import StyledRuneImage from "../../../components/ImageUI/StyledRuneImage";
 import RuneImage from "../../../components/ImageUI/RuneImage";
 
 const MatchDetailContentContainer = styled.div`
-  border: 2px solid black;
-  border-radius: 10px;
   width: 90%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 7px;
 `;
 
 const Table = styled.table`
+  border-radius: 10px;
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  overflow: hidden;
+  border: 1px solid ${({ theme }) => theme.colors.border.light};
 `;
 
 const TableHeader = styled.thead`
   th {
+    border-bottom: 2px solid ${({ theme }) => theme.colors.border.light};
     text-align: center;
-    font-weight: 600;
-    height: 40px;
+    font-weight: 800;
+    height: 30px;
     vertical-align: middle;
-    background-color: #f0f0f0;
+    background-color: ${({ theme }) => theme.colors.background.primary};
+    font-size: 12px;
+    color: ${({ theme }) => theme.colors.text.secondary};
   }
 `;
 
@@ -34,7 +38,7 @@ const TableRow = styled.tr<{ isWin: boolean }>`
   td {
     padding: 6px;
   }
-  background-color: ${({ isWin }) => (isWin ? "#d1d5ff" : "#ffd7d7")};
+  background-color: ${({ isWin }) => (isWin ? "#e0ecff" : "#ffe5e5")};
 `;
 
 const ProfileTd = styled.td`
@@ -59,7 +63,8 @@ const RuneBox = styled.div`
 const NameBox = styled.div`
   margin-left: 8px;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.secondary};
   cursor: pointer;
   &:hover {
     text-decoration: underline;

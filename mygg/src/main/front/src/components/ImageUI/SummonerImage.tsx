@@ -88,7 +88,7 @@ const SpellDescription = styled.div`
 `;
 
 interface ISummonerProps {
-  summonerId: string;
+  summonerId: number;
   width?: number;
   height?: number;
 }
@@ -123,7 +123,7 @@ export default function SummonerImage({
             width={width}
             height={height}
             src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${
-              SummonerSpellDictionary[summonerId as string]
+              SummonerSpellDictionary[summonerId as number]
             }.png`}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
@@ -136,13 +136,13 @@ export default function SummonerImage({
         <DetailBox positionAbove={positionAbove} height={height}>
           <SpellName>
             {String(
-              summoner?.[SummonerSpellDictionary[summonerId as string] as any]
+              summoner?.[SummonerSpellDictionary[summonerId as number] as any]
                 ?.name || "Unknown Summoner"
             )}
           </SpellName>
           <SpellDescription>
             {String(
-              summoner?.[SummonerSpellDictionary[summonerId as string] as any]
+              summoner?.[SummonerSpellDictionary[summonerId as number] as any]
                 ?.description || "Unknown Summoner"
             )}
           </SpellDescription>

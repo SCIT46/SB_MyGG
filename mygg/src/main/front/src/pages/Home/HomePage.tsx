@@ -5,13 +5,14 @@ const HomeContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 80vh;
+  width: 100vw;
 `;
 
 const TitleBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 220px;
   width: 100vw;
 `;
 

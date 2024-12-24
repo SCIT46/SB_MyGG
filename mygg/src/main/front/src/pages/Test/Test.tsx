@@ -78,7 +78,7 @@ export default function Test() {
 
       <RuneImage styleRuneId={8300} runeId={8351} />
       <StyledRuneImage runeId={8300} />
-      <SummonerImage summonerId="21" />
+      <SummonerImage summonerId={21} />
       <TestInput type="text" value={query} onChange={onChangeQuery} />
       <div>{suggestions?.item?.map((item: any) => item.name)}</div>
       <div>{suggestions?.champion?.map((item: any) => item.name)}</div>

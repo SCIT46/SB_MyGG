@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 const RankContianer = styled.div`
-  border: 1px ${({ theme }) => theme.colors.brand.gold.main} solid;
+  border: 1px ${({ theme }) => theme.colors.border.dark} solid;
   width: 100%;
   height: 120px;
   background-color: ${({ theme }) => theme.colors.background.white};
@@ -15,7 +15,7 @@ const RankContianer = styled.div`
 `;
 
 const UnRankContianer = styled.div`
-  border: 1px ${({ theme }) => theme.colors.brand.gold.main} solid;
+  border: 1px ${({ theme }) => theme.colors.border.dark} solid;
   width: 100%;
   height: 50px;
   background-color: ${({ theme }) => theme.colors.background.white};
@@ -26,6 +26,12 @@ const UnRankContianer = styled.div`
   justify-content: center;
   gap: 3px;
   font-size: 14px;
+`;
+
+const UnRankSpan = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.text.disabled};
 `;
 
 const RankImg = styled.img`
@@ -90,7 +96,7 @@ export default function Rank({
   if (tier === "UNRANKED") {
     return (
       <UnRankContianer>
-        <div>unranked</div>
+        <UnRankSpan>unranked</UnRankSpan>
       </UnRankContianer>
     );
   }

@@ -67,8 +67,8 @@ interface IParticipants {
   neutralMinionsKilled: number;
   totalDamageDealtToChampions: number;
   totalDamageTaken: number;
-  summoner1Id: string;
-  summoner2Id: string;
+  summoner1Id: number;
+  summoner2Id: number;
   dangerPings: number;
   getBackPings: number;
   holdPings: number;

@@ -37,7 +37,7 @@ public class PublicMatchService
 		private final UserMatchesRepository userMatchesRepo;
 		private final UserRepository userRepository;
 		
-		private final int count = 5;					// api에 요청할 찾을 데이터 수
+		private final int count = 20;					// api에 요청할 찾을 데이터 수
 		private final int limitRequestForSecond = 20;	// 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100;	// 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		
@@ -59,10 +59,10 @@ public class PublicMatchService
 			String[] arrStr = new String[100];					// 매치 ID 저장할 곳(KR_...)
 
 			String puuid = RiotApiClient.getPuuidNameAndTag(_name, _tag);
-			String lastMatchId = "";
-			int start = 0;
-			int indexInList = -1;
-			int currentRequestCnt = 0;
+			String lastMatchId = "";		// 마지막 matchID
+			int start = 0;					// 찾기 시작하는 위치 
+			int indexInList = -1;			// 리스트 내에서 DB에 있는 마지막 DB
+			int currentRequestCnt = 0;		// 
 
 			// 종료조건:
 			// 		- 매치 데이터에 기간을 두고, 그 기간 안의 데이터가 100개가 아닌 경우 혹은
@@ -86,12 +86,6 @@ public class PublicMatchService
 						listUserMatches.add(arrStr[i]);
 					}
 			}
-			log.info("-------------------- arrStr 안의 데이터 --------------------");
-			for(int i = 0; i < arrStr.length; i++)
-				{
-					System.out.println(arrStr[i]);
-				}
-			
 			for(int i = 0; i < ((nullIdx < 0)? listUserMatches.size(): nullIdx); i++)
 				{
 					currentRequestCnt++;
@@ -100,15 +94,14 @@ public class PublicMatchService
 					
 					if(dto != null)
 						{
-							System.out.println(dto.getMetadata().getMatchId() + " : "
-											   + dto.getInfo().getMapId());
 							listMatchDto.add(dto);
 						}
 					
+					// 예외처리: 요청 19개 되면 1초 종료(위에서 한 번 요청 보내는 거 포함해서 20개임)
 					if(checkRequestSecondLimit(currentRequestCnt)) 
 						{
-							log.info("sleep");
-							//Thread.sleep(1000l);
+							log.info("요청제한으로 1초 sleep 합니다.");
+							Thread.sleep(1000l);
 							currentRequestCnt = 0;
 						};
 				}
@@ -119,6 +112,8 @@ public class PublicMatchService
 		public MatchDTO getMatchInfo(String matchId) throws Exception
 			{
 				// matchid를 받아서 그 매치의 정보를 받아오는 함수
+				
+//				MatchDTO result = new MatchDTO();				
 				MetadataDTO metadata = new MetadataDTO();
 				InfoDTO info = new InfoDTO();
 
@@ -126,6 +121,8 @@ public class PublicMatchService
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
 				JsonToDTOMapper mapper = new JsonToDTOMapper();
 				
+				
+//				result = mapper.mapToDto(jsonObject, MatchDTO.class);
 				// jsonObject의 JSON Key값으로 모든 데이터 조회
 				for (Object key : jsonObject.keySet())
 					{

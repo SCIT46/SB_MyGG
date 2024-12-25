@@ -1,0 +1,79 @@
+name: mygg CI/CD with Docker Container & GitHub Actions
+
+on:
+  push:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  CI-CD:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 코드 체크아웃
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # JDK 설정
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # Gradle 캐싱
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    # Gradle 빌드 및 테스트
+    - name: Gradle Build and Test
+      working-directory: ./mygg
+      run: ./gradlew clean build
+
+    # 환경별 application.yml 생성
+    - name: Generate application.yml
+      working-directory: ./mygg
+      run: |
+        mkdir -p ./src/main/resources
+        echo "${{ secrets.YML }}" > ./src/main/resources/application.yml
+      shell: bash
+
+    # Docker 빌드 및 푸시
+    - name: Build & Push Docker Image
+      working-directory: ./mygg
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/mygg:stable .
+        docker push ${{ secrets.DOCKER_USERNAME }}/mygg:stable
+
+    # 서버 배포
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          echo "Stopping existing container if it exists..."
+          sudo docker ps -q --filter "name=mygg-stable" | grep . && sudo docker stop mygg-stable && sudo docker rm mygg-stable || echo "No container to stop."
+
+          echo "Pulling the latest image..."
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/mygg:stable
+
+          echo "Starting new container..."
+          sudo docker run -d --name mygg-stable -p 8081:8081 ${{ secrets.DOCKER_USERNAME }}/mygg:stable
+
+          echo "Cleaning up unused images..."
+          sudo docker image prune -f
+
+          echo "Deployment complete. Current running containers:"
+          sudo docker ps

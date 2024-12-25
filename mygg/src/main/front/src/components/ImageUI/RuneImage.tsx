@@ -55,7 +55,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
+const DetailBox = styled.div<{ positionabove: boolean; height: number }>`
   display: flex;
   flex-direction: column;
   min-width: 350px;
@@ -67,8 +67,8 @@ const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
   border-radius: 7px;
   background-color: ${({ theme }) => theme.colors.background.dark};
   position: absolute;
-  top: ${({ positionAbove, height }) =>
-    positionAbove ? `${height + 3}px` : "-98px"};
+  top: ${({ positionabove, height }) =>
+    positionabove ? `${height + 3}px` : "-98px"};
   z-index: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: top 0.2s ease-in-out;
@@ -151,7 +151,7 @@ export default function RuneImage({
         />
       </RuneBox>
       {isHover && (
-        <DetailBox positionAbove={positionAbove} height={height}>
+        <DetailBox positionabove={positionAbove} height={height}>
           <RuneName>{foundRune?.name || "Unknown Rune"}</RuneName>
           <RuneDescription>{foundRune?.shortDesc || ""}</RuneDescription>
         </DetailBox>

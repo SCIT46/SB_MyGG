@@ -6,7 +6,7 @@ const ProfileContainer = styled.div`
   width: 1000px;
   height: 150px;
   background-color: ${({ theme }) => theme.colors.background.white};
-  border: 1px ${({ theme }) => theme.colors.border.dark} solid;
+  border: 1px ${({ theme }) => theme.colors.border.main} solid;
   border-radius: 10px;
   display: flex;
   align-items: center;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import ChampDetail from "./ChamDetail";
 
 const ChampInfoContainer = styled.div`
-  border: 1px ${({ theme }) => theme.colors.border.dark} solid;
+  border: 1px ${({ theme }) => theme.colors.border.main} solid;
   width: 100%;
   height: 400px;
   background-color: ${({ theme }) => theme.colors.background.white};

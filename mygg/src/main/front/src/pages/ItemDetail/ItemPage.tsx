@@ -43,6 +43,7 @@ export default function ItemDetailPage() {
           const data = await getItemDetail(id);
           const itemData = data[id]; // Access the item using the ID as the key
           setItemDetail(itemData);
+          console.log(itemData);
         } catch (error) {
           console.error("Failed to fetch item detail:", error);
         }

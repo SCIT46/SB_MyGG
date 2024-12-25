@@ -12,10 +12,11 @@ import StyledRuneImage from "../../../components/ImageUI/StyledRuneImage";
 import RuneImage from "../../../components/ImageUI/RuneImage";
 import { queueIdObj } from "../../../utils/QueueIdObj";
 
-const MatchDetailContainer = styled.div<{ isWinning: boolean }>`
-  background-color: ${(props) => (props.isWinning ? "#e0ecff" : "#ffe5e5")};
-  border: 1px solid ${(props) => (props.isWinning ? "#a0b8ff" : "#ff8a8a")};
-  border-left: 8px solid ${(props) => (props.isWinning ? "#0056b3" : "#E63946")};
+const MatchDetailContainer = styled.div<{ iswinning: boolean }>`
+  background-color: ${(props) => (props.iswinning ? "#f0f6ff" : "#feeaea")};
+  border: 1px solid ${(props) => (props.iswinning ? "#c7d5ff" : "#ffb0b0")};
+  border-left: 8px solid
+    ${(props) => (props.iswinning ? "#0057b3cc" : "#e63947c6")};
   width: 90%;
   height: 120px;
   border-radius: 10px;
@@ -73,18 +74,19 @@ const PlayerItemsInfoContainer = styled.div`
 
 const KdaSpan = styled.div`
   margin-bottom: 4px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.colors.text.primary};
 `;
 
 const KdaSocreSpan = styled.div`
   font-size: 12px;
+  font-weight: 400;
   color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
 const CsSpan = styled.div`
-  font-size: 14px;
+  font-size: 12px;
   color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
@@ -105,11 +107,11 @@ const DetailBtnContainer = styled.div`
   margin-right: 10px;
 `;
 
-const GameModeSpan = styled.div<{ isWinning: boolean }>`
+const GameModeSpan = styled.div<{ iswinning: boolean }>`
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 2px;
-  color: ${({ isWinning }) => (isWinning ? "#0056b3" : "#E63946")};
+  color: ${({ iswinning }) => (iswinning ? "#0056b3" : "#E63946")};
 `;
 
 const GameTimeSpan = styled.div`
@@ -124,10 +126,10 @@ const GameDurationSpan = styled.div`
   color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
-const GameResultSpan = styled.div<{ isWinning: boolean }>`
+const GameResultSpan = styled.div<{ iswinning: boolean }>`
   font-size: 14px;
   font-weight: 600;
-  color: ${({ isWinning }) => (isWinning ? "#0056b3" : "#E63946")};
+  color: ${({ iswinning }) => (iswinning ? "#0056b3" : "#E63946")};
 `;
 
 const KdaNumber = styled.span`
@@ -178,7 +180,11 @@ export default function MatchDetail({
     !matchDetail.info ||
     !matchDetail.info.participants[userIndex]
   ) {
-    return <LoadingSpinner></LoadingSpinner>;
+    return (
+      <div>
+        Puuid 에러! (DB의 Puuid 와 MatchDetail 의 Puuid 가 다름) #발견시 DB 수정
+      </div>
+    );
   }
 
   return (
@@ -187,11 +193,11 @@ export default function MatchDetail({
         onClick={() => {
           setIsDetailOpen((prev) => !prev);
         }}
-        isWinning={matchDetail.info.participants[userIndex].win}
+        iswinning={matchDetail.info.participants[userIndex].win}
       >
         <GameInfoContainer>
           <GameModeSpan
-            isWinning={matchDetail.info.participants[userIndex].win}
+            iswinning={matchDetail.info.participants[userIndex].win}
           >
             {queueIdObj[matchDetail.info.queueId].description}
           </GameModeSpan>
@@ -210,7 +216,7 @@ export default function MatchDetail({
             :{String(matchDetail.info.gameDuration % 60).padStart(2, "0")}
           </GameDurationSpan>
           <GameResultSpan
-            isWinning={matchDetail.info.participants[userIndex].win}
+            iswinning={matchDetail.info.participants[userIndex].win}
           >
             {matchDetail.info.participants[userIndex].win ? "승리" : "패배"}
           </GameResultSpan>

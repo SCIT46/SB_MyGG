@@ -8,7 +8,7 @@ interface ItemImgProps {
   loaded: string;
   width: number;
   height: number;
-  isTrinket: boolean;
+  istrinket: boolean;
 }
 
 const fadeIn = keyframes`
@@ -23,7 +23,7 @@ const fadeIn = keyframes`
 const ItemImg = styled.img<ItemImgProps>`
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
-  border-radius: ${({ isTrinket }) => (isTrinket ? "100%" : "5px")};
+  border-radius: ${({ istrinket }) => (istrinket ? "100%" : "5px")};
   position: absolute;
   top: 0;
   left: 0;
@@ -35,9 +35,9 @@ const ItemImg = styled.img<ItemImgProps>`
 const LoadingBox = styled.div<{
   width: number;
   height: number;
-  isTrinket: boolean;
+  istrinket: boolean;
 }>`
-  border-radius: ${({ isTrinket }) => (isTrinket ? "100%" : "5px")};
+  border-radius: ${({ istrinket }) => (istrinket ? "100%" : "5px")};
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
   position: absolute;
@@ -60,7 +60,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
+const DetailBox = styled.div<{ positionabove: boolean; height: number }>`
   width: 200px;
   height: 90px;
   padding: 15px 10px;
@@ -68,9 +68,8 @@ const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
   background-color: ${({ theme }) => theme.colors.background.dark};
   position: absolute;
   color: ${({ theme }) => theme.colors.text.primary};
-  top: ${({ positionAbove, height }) =>
-    positionAbove ? `-123px` : `${height + 3}px`};
-
+  top: ${({ positionabove, height }) =>
+    positionabove ? `-123px` : `${height + 3}px`};
   z-index: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
@@ -137,22 +136,22 @@ export default function ItemImage({
       <Link to={`/item/${itemId}`}>
         <ItemBox width={width} height={height}>
           {!loaded && (
-            <LoadingBox width={width} height={height} isTrinket={isTrinket} />
+            <LoadingBox width={width} height={height} istrinket={isTrinket} />
           )}
           <ItemImg
             width={width}
             height={height}
-            isTrinket={isTrinket}
+            istrinket={isTrinket}
             src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/item/${itemId}.png`}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
             onLoad={() => setLoaded(true)}
-            loaded={loaded.toString() as any}
+            loaded={loaded.toString()}
           />
         </ItemBox>
       </Link>
       {isHover && (
-        <DetailBox positionAbove={positionAbove} height={height}>
+        <DetailBox positionabove={positionAbove} height={height}>
           <ItemName>
             {String(items?.[itemId as any]?.name || "Unknown Item")}
           </ItemName>

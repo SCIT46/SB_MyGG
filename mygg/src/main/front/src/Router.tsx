@@ -1,4 +1,4 @@
-import { createBrowserRouter, redirect } from "react-router-dom";
+import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
 import Root from "./Root";
 import HomePage from "./pages/Home/HomePage";
 import ItemPage from "./pages/Item/ItemPage";
@@ -25,6 +25,7 @@ const router = createBrowserRouter([
       { path: "search/:id", element: <SearchPlayerPage /> },
       //테스트 페이지
       { path: "test", element: <Test /> },
+      { path: "images/*", element: <Navigate to="/" replace /> },
       //not found 페이지
       { path: "*", element: <NotFound /> },
     ],

@@ -4,14 +4,14 @@ import MatchDetail from "./MatchDetail";
 import { IMatchDetail } from "../type";
 
 const MacthContainer = styled.div`
-  border: 1px ${({ theme }) => theme.colors.border.dark} solid;
+  border: 1px ${({ theme }) => theme.colors.border.main} solid;
   width: 100%;
   border-radius: 10px;
   background-color: ${({ theme }) => theme.colors.background.white};
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 10px;
 `;
 
 const CustomGameBtn = styled.div`

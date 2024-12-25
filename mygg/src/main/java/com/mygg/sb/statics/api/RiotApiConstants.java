@@ -10,7 +10,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 @Configuration
 public class RiotApiConstants {
     public static Dotenv dotenv = Dotenv.load();
-    public static final String API_KEY = "RGAPI-07c30a4f-eb18-47cb-9505-4da9af8d4d59";
+    public static final String API_KEY = "RGAPI-d9facde2-e92d-4059-b90f-16163e1c722f";
 
     // https://developer.riotgames.com/docs/lol
     public static final String LANGUAGE = CountryType.Korea.getCountry(); // RiotApiClient.getLanguage();

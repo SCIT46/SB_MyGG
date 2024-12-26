@@ -78,7 +78,7 @@ jobs:
           docker pull ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
 
           echo "Starting new container..."
-          docker run -d --name mygg-stable -p 8082:8081 ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
+          docker run -d --name mygg-stable -p 8081:8081 ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
 
           echo "Cleaning up unused images..."
           docker image prune -f

@@ -2,7 +2,7 @@ name: mygg CI/CD with Docker Container & GitHub Actions
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "deploy" ]
 
 permissions:
   contents: read

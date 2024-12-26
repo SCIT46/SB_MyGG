@@ -1,13 +1,17 @@
 import { createBrowserRouter, Navigate, redirect } from "react-router-dom";
+import React, { Suspense, lazy } from "react";
 import Root from "./Root";
-import HomePage from "./pages/Home/HomePage";
-import ItemPage from "./pages/Item/ItemPage";
-import ItemDetailPage from "./pages/ItemDetail/ItemPage";
-import ChampionsPage from "./pages/Champion/ChampionsPage";
-import ChampionDetailPage from "./pages/championDetail/ChampionDetailPage";
-import SearchPlayerPage from "./pages/SearchPlayer/SearchPlayerPage";
-import Test from "./pages/Test/Test";
 import NotFound from "./pages/NotFound/NotFound";
+import LoadingSpinner from "./components/LoadingSpinner";
+
+// Lazy load the components
+const HomePage = lazy(() => import("./pages/Home/HomePage"));
+const ItemPage = lazy(() => import("./pages/Item/ItemPage"));
+const ItemDetailPage = lazy(() => import("./pages/ItemDetail/ItemDetailPage"));
+const ChampionsPage = lazy(() => import("./pages/Champion/ChampionsPage"));
+const ChampionDetailPage = lazy(() => import("./pages/championDetail/ChampionDetailPage"));
+const SearchPlayerPage = lazy(() => import("./pages/SearchPlayer/SearchPlayerPage"));
+const Test = lazy(() => import("./pages/Test/Test"));
 
 //라우터 생성
 const router = createBrowserRouter([
@@ -17,14 +21,63 @@ const router = createBrowserRouter([
     element: <Root />,
     // 하위 컴포넌트 지정
     children: [
-      { path: "", element: <HomePage /> },
-      { path: "item", element: <ItemPage /> },
-      { path: "item/:id", element: <ItemDetailPage /> },
-      { path: "champion", element: <ChampionsPage /> },
-      { path: "champion/:id", element: <ChampionDetailPage /> },
-      { path: "search/:id", element: <SearchPlayerPage /> },
+      { 
+        path: "", 
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <HomePage />
+          </Suspense>
+        ) 
+      },
+      { 
+        path: "item", 
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <ItemPage />
+          </Suspense>
+        ) 
+      },
+      { 
+        path: "item/:id", 
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <ItemDetailPage />
+          </Suspense>
+        ) 
+      },
+      { 
+        path: "champion", 
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <ChampionsPage />
+          </Suspense>
+        ) 
+      },
+      { 
+        path: "champion/:id", 
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <ChampionDetailPage />
+          </Suspense>
+        ) 
+      },
+      { 
+        path: "search/:id", 
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <SearchPlayerPage />
+          </Suspense>
+        ) 
+      },
       //테스트 페이지
-      { path: "test", element: <Test /> },
+      { 
+        path: "test", 
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Test />
+          </Suspense>
+        ) 
+      },
       { path: "images/*", element: <Navigate to="/" replace /> },
       //not found 페이지
       { path: "*", element: <NotFound /> },

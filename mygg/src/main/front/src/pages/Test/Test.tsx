@@ -1,14 +1,7 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
-import { ExitButton } from "./Test.styles";
-import RuneImage from "../../components/ImageUI/RuneImage";
-import StyledRuneImage from "../../components/ImageUI/StyledRuneImage";
-import SummonerImage from "../../components/ImageUI/SummonerImage";
 import { useEffect, useState } from "react";
-import { useDebounce } from "../../hooks/useDebounce";
-import { ISuggestion } from "../Home/type";
-import { getSearchedResult } from "../../services/Api";
+
 
 
 

@@ -23,6 +23,7 @@ const theme: DefaultTheme = {
         light: "#8ccce381",
         main: "#72BFDB",
         dark: "#5BACC8",
+        title: "#6ed6fa",
       },
     },
 

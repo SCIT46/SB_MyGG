@@ -17,17 +17,7 @@ const SearchFormContainer = styled.form`
   }
 `;
 
-const RegionSelectContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.background.white};
-  position: absolute;
-  top: 53px;
-  left: 0px;
-  margin-top: 3px;
-  width: 60px;
-  height: 80px;
-  border-radius: 10px;
-  border: 1.5px solid ${({ theme }) => theme.colors.brand.gold.main};
-`;
+
 
 const SearchInputBox = styled.div`
   background-color: ${({ theme }) => theme.colors.background.white};
@@ -42,18 +32,12 @@ const SearchInputBox = styled.div`
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
-const SearchInput = styled.input`
-  width: 80%;
-  height: 40px;
-  border: none;
-  outline: none;
-  font-size: 14px;
-`;
+
 
 const SearchInputSpan = styled.span`
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: ${({ theme }) => theme.colors.text.light};
-  font-weight: 500;
+  font-weight: 600;
 `;
 
 const SearchIcon = styled(MagnifyingGlassIcon)`

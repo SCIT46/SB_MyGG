@@ -42,7 +42,7 @@ export default function InitLoader() {
     };
 
     fetchData();
-  }, [setChampions, setItems, setSummoner, setVersion]);
+  }, [setChampions, setItems, setSummoner, setVersion, setRunes]);
 
   return <></>;
 }

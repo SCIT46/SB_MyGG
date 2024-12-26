@@ -82,7 +82,7 @@ const theme: DefaultTheme = {
 
   // 반응형 브레이크포인트
   breakpoints: {
-    mobile: "320px",
+    mobile: "600px",
     tablet: "768px",
     desktop: "1024px",
     wide: "1440px",

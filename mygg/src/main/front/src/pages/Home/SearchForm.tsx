@@ -53,7 +53,7 @@ const SearchInput = styled.input`
 const SearchInputSpan = styled.span`
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.text.light};
-  font-weight: 600;
+  font-weight: 500;
 `;
 
 const SearchIcon = styled(MagnifyingGlassIcon)`

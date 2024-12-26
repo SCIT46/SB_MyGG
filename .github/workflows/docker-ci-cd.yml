@@ -55,7 +55,7 @@ jobs:
       working-directory: ./mygg
       run: |
         docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker build -f Dockerfile -t ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable .
+        docker build -f Dockerfile -t ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable . --platform linux/arm64/v8
         docker push ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
 
     # 서버 배포

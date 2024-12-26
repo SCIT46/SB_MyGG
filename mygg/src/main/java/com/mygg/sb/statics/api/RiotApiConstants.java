@@ -14,7 +14,7 @@ public class RiotApiConstants {
     //public static Dotenv dotenv = Dotenv.load(); // dotenv.get("RIOT_API_PERSONAL_KEY");
     //public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
     
-    @Value("${mygg.YML}")  // GitHub Secrets의 YML 변수와 매칭
+    @Value("${mygg.api_key}")  // GitHub Secrets의 YML 변수와 매칭
     private String apiKeyFromYml;
     public static String API_KEY;
 

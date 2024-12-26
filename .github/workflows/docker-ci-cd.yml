@@ -37,11 +37,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    # Gradle 빌드 및 테스트
-    - name: Gradle Build and Test
-      working-directory: ./mygg
-      run: ./gradlew clean build
-
     # 환경별 application.yml 생성
     - name: Generate application.yml
       working-directory: ./mygg
@@ -49,6 +44,11 @@ jobs:
         mkdir -p ./src/main/resources
         echo "${{ secrets.YML }}" > ./src/main/resources/application.yml
       shell: bash
+
+      # Gradle 빌드 및 테스트
+    - name: Gradle Build and Test
+      working-directory: ./mygg
+      run: ./gradlew clean build
 
     # Docker 빌드 및 푸시
     - name: Build & Push Docker Image
@@ -61,25 +61,27 @@ jobs:
     # 서버 배포
     - name: Deploy to Server
       uses: appleboy/ssh-action@master
+      
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
+          export PATH=$PATH:/usr/local/bin/
           echo "Stopping existing container if it exists..."
-          sudo docker ps -q --filter "name=mygg-stable" | grep . && sudo docker stop mygg-stable && sudo docker rm mygg-stable || echo "No container to stop."
+          docker ps -q --filter "name=mygg-stable" | grep . && docker stop mygg-stable && docker rm mygg-stable || echo "No container to stop."
 
           echo "GitHub registry login"
-          sudo docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
           echo "Pulling the latest image..."
-          sudo docker pull ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
+          docker pull ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
 
           echo "Starting new container..."
-          sudo docker run -d --name mygg-stable -p 8081:8081 ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
+          docker run -d --name mygg-stable -p 8082:8081 ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
 
           echo "Cleaning up unused images..."
-          sudo docker image prune -f
+          docker image prune -f
 
           echo "Deployment complete. Current running containers:"
-          sudo docker ps
+          docker ps

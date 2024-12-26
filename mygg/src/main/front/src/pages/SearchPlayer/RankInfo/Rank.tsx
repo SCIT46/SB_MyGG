@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 const RankContianer = styled.div`
-  border: 1px ${({ theme }) => theme.colors.border.dark} solid;
+  border: 1px ${({ theme }) => theme.colors.border.main} solid;
   width: 100%;
   height: 120px;
   background-color: ${({ theme }) => theme.colors.background.white};
@@ -15,7 +15,7 @@ const RankContianer = styled.div`
 `;
 
 const UnRankContianer = styled.div`
-  border: 1px ${({ theme }) => theme.colors.border.dark} solid;
+  border: 1px ${({ theme }) => theme.colors.border.main} solid;
   width: 100%;
   height: 50px;
   background-color: ${({ theme }) => theme.colors.background.white};
@@ -102,7 +102,9 @@ export default function Rank({
   }
   return (
     <RankContianer>
-      <RankImg src={`/images/Rank=${tier}.png`} />
+      <RankImg
+        src={`/static/images/Rank=${capitalizeFirstLetter(tier as string)}.png`}
+      />
       <RankInfoBox>
         <RankSpan>
           {capitalizeFirstLetter(tier as string)} {rank}

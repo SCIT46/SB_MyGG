@@ -10,7 +10,6 @@ import lombok.Getter;
 @Configuration
 @Getter
 public class RiotApiConstants {
-
     // .env 사용 안함 -> application.yml 사용하도록 변경
     //public static Dotenv dotenv = Dotenv.load(); // dotenv.get("RIOT_API_PERSONAL_KEY");
     //public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
@@ -23,7 +22,6 @@ public class RiotApiConstants {
     private void init() {
         API_KEY = this.apiKeyFromYml;
     }
-
     // =============================================================================================
 
     // https://developer.riotgames.com/docs/lol

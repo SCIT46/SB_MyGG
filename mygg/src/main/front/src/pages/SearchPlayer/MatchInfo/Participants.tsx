@@ -29,12 +29,11 @@ const ParticipantImg = styled.img`
 `;
 
 const ParticipantImgSpan = styled.div`
-  font-size: 14px;
   white-space: nowrap; /* 줄바꿈 방지 */
   overflow: hidden; /* 초과 내용 숨기기 */
   text-overflow: ellipsis; /* 초과 부분 "..."으로 표시 */
   width: 90px;
-  font-size: 13px;
+  font-size: 12px;
   margin-left: -1px;
   cursor: pointer;
 

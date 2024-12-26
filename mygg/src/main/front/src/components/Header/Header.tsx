@@ -11,19 +11,20 @@ const HeaderContainer = styled.nav`
   display: flex;
   align-items: center;
   height: 80px;
-  margin-left: 10px;
+
+  margin-left: 1rem;
 `;
 
 //헤더 링크 버튼
 //hover 시 bottom border 생성 & active 시 bottom border 유지
 const LinkBtn = styled(NavLink)<{ isActive?: boolean }>`
-  padding: 12px 5px 12px 5px;
-  margin-left: 7px;
-  margin-right: 7px;
-  margin-bottom: 2px;
-  font-size: 14px;
+  padding: 0.75rem 0.3rem 0.75rem 0.3rem;
+  margin-left: 0.2rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.1rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.text.secondary};
+  color: ${({ theme }) => theme.colors.text.primary};
   &:hover {
     color: ${({ theme }) => theme.colors.brand.sky.main};
   }
@@ -34,46 +35,42 @@ const LinkBtn = styled(NavLink)<{ isActive?: boolean }>`
 
 //*이미지로 수정 필요
 const LogoImg = styled.div`
-  height: 50px;
-  width: 80px;
+  height: 3rem;
+  width: 4%.5;
   display: flex;
   justify-content: center;
   align-items: center;
   color: ${({ theme }) => theme.colors.text.primary};
   font-weight: 800;
-  margin-left: 5px;
-  margin-right: 20px;
-  font-size: 24px;
+  margin-left: 0.2rem;
+  margin-right: 1.3rem;
+  font-size: 1.5rem;
   text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1);
   margin-left: 14px;
 `;
 
-const SearchInputBox = styled.div`
-  background-color: ${({ theme }) => theme.colors.background.white};
-  border: 1px solid ${({ theme }) => theme.colors.border.dark};
-  width: 100px;
-  height: 40px;
-  margin-right: 20px;
-  margin-left: auto;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-
+const SearchBtn = styled.div`
+  padding: 0.75rem 0.3rem 0.75rem 0.3rem;
+  margin-left: 0.175rem;
+  margin-right: 0.6rem;
+  margin-bottom: 0.135rem;
+  font-size: 0.9rem;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-
-  font-size: 14px;
-
-  color: ${({ theme }) => theme.colors.text.light};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  &:hover {
+    color: ${({ theme }) => theme.colors.brand.sky.main};
+  }
+  &.active {
+    color: ${({ theme }) => theme.colors.brand.sky.main};
+  }
 `;
 
-const SearchIcon = styled(MagnifyingGlassIcon)`
-  width: 20px;
-  height: 20px;
-  color: ${({ theme }) => theme.colors.border.dark};
-  margin-bottom: 2px;
-  margin-left: 8px;
-  margin-right: 8px;
+const LinkBox = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 1rem;
 `;
 
 //헤더 컴포넌트
@@ -87,16 +84,12 @@ export default function Header() {
           <div>MY.GG</div>
         </LogoImg>
       </Link>
-      <LinkBtn to={"item"}>아이템</LinkBtn>
-      <LinkBtn to={"champion"}>챔피언</LinkBtn>
-      <LinkBtn to={"search/Happy-day12"}>플레이어</LinkBtn>
-      <LinkBtn to={"test"}>테스트</LinkBtn>
+      <LinkBox>
+        <LinkBtn to={"item"}>아이템</LinkBtn>
+        <LinkBtn to={"champion"}>챔피언</LinkBtn>
+        <SearchBtn onClick={() => setIsModalOpen(true)}>검색</SearchBtn>
+      </LinkBox>
       {/* 패치노트 컴포넌트 */}
-
-      <SearchInputBox onClick={() => setIsModalOpen(true)}>
-        <SearchIcon />
-        search...
-      </SearchInputBox>
       {isModalOpen && <SearchDetail onClose={() => setIsModalOpen(false)} />}
     </HeaderContainer>
   );

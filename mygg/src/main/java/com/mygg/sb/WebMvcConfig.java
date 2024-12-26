@@ -1,6 +1,7 @@
 package com.mygg.sb;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -9,6 +10,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 // WebMvcConfigurer는 Spring MVC의 동작을 커스터마이징하기 위해 제공되는 인터페이스 이며 메서드구현을 통해 요청과 뷰 메핑을 정의 가능
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/images/**")
+                .addResourceLocations("classpath:/static/images/");
+    }
+	
+	
 	//Spring MVC에서 요청 경로와 뷰 이름을 연결
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -21,4 +30,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
         		// index.html로 전달
                 .setViewName("forward:/index.html");
     }
+
 }

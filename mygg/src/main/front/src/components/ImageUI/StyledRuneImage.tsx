@@ -53,7 +53,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
+const DetailBox = styled.div<{ positionabove: boolean; height: number }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -65,8 +65,8 @@ const DetailBox = styled.div<{ positionAbove: boolean; height: number }>`
   background-color: ${({ theme }) => theme.colors.background.dark};
   color: ${({ theme }) => theme.colors.brand.gold.main};
   position: absolute;
-  top: ${({ positionAbove, height }) =>
-    positionAbove ? `${height + 3}px` : "-49px"};
+  top: ${({ positionabove, height }) =>
+    positionabove ? `${height + 3}px` : "-49px"};
   z-index: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: top 0.2s ease-in-out;
@@ -123,7 +123,7 @@ export default function StyledRuneImage({
         />
       </RuneBox>
       {isHover && (
-        <DetailBox positionAbove={positionAbove} height={height}>
+        <DetailBox positionabove={positionAbove} height={height}>
           {rune?.[styleRuneIndex].name || "Unknown Rune"}
         </DetailBox>
       )}

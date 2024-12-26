@@ -17,14 +17,14 @@ const TitleBox = styled.div`
 `;
 
 const Title = styled.div`
-  color: ${({ theme }) => theme.colors.brand.sky.dark};
-  font-size: 72px;
+  color: ${({ theme }) => theme.colors.brand.sky.main};
+  font-size: 4rem;
   font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const SearchBox = styled.div`
-  margin-top: 30px;
+  margin-top: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;

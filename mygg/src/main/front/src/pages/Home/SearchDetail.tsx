@@ -51,7 +51,7 @@ const ModalOverlay = styled.div`
 const SearchDetailContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.background.white};
   width: 60%; //전체 창 너비
-  height: 400px;
+  height: 20rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -118,7 +118,7 @@ const SearchedUserTag = styled.div`
 `;
 
 const SearchInput = styled.input`
-  height: 41px;
+  height: 2.5rem;
   width: 95%;
   border: none;
   font-size: 16px;
@@ -142,12 +142,13 @@ const SearchFormContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.background.white};
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 60%;
   border-radius: 10px 10px 0 0;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.border.light};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border.light};
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.15);
 
-  @media (max-width: 600px) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     width: 85%; // 스마트폰 사이즈일 때
   }
 `;
@@ -184,12 +185,12 @@ const SearchedRecentTitle = styled.div`
 `;
 
 const SearchIcon = styled(MagnifyingGlassIcon)`
-  width: 28px;
-  height: 28px;
-  margin-right: 8px;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.6rem;
   color: ${({ theme }) => theme.colors.border.dark};
-  margin-bottom: 2px;
-  margin-left: 16px;
+  margin-bottom: 0.1rem;
+  margin-left: 1.15rem;
   cursor: pointer;
 `;
 

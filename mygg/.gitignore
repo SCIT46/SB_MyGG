@@ -38,3 +38,4 @@ out/
 
 # Env api key file
 .env
+application.yml

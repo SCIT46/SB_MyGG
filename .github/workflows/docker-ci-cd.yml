@@ -54,9 +54,9 @@ jobs:
     - name: Build & Push Docker Image
       working-directory: ./mygg
       run: |
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/mygg:stable .
-        docker push ${{ secrets.DOCKER_USERNAME }}/mygg:stable
+        docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker build -f Dockerfile -t ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable .
+        docker push ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
 
     # 서버 배포
     - name: Deploy to Server
@@ -69,11 +69,14 @@ jobs:
           echo "Stopping existing container if it exists..."
           sudo docker ps -q --filter "name=mygg-stable" | grep . && sudo docker stop mygg-stable && sudo docker rm mygg-stable || echo "No container to stop."
 
+          echo "GitHub registry login"
+          sudo docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
           echo "Pulling the latest image..."
-          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/mygg:stable
+          sudo docker pull ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
 
           echo "Starting new container..."
-          sudo docker run -d --name mygg-stable -p 8081:8081 ${{ secrets.DOCKER_USERNAME }}/mygg:stable
+          sudo docker run -d --name mygg-stable -p 8081:8081 ghcr.io/${{ secrets.DOCKER_USERNAME }}/mygg:stable
 
           echo "Cleaning up unused images..."
           sudo docker image prune -f

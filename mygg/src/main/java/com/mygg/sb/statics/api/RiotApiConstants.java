@@ -1,16 +1,30 @@
 package com.mygg.sb.statics.api;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import io.github.cdimascio.dotenv.Dotenv;
+//import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 
 @Configuration
+@Getter
 public class RiotApiConstants {
-    public static Dotenv dotenv = Dotenv.load(); // dotenv.get("RIOT_API_PERSONAL_KEY");
-    public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
+
+    // .env 사용 안함 -> application.yml 사용하도록 변경
+    //public static Dotenv dotenv = Dotenv.load(); // dotenv.get("RIOT_API_PERSONAL_KEY");
+    //public static final String API_KEY = dotenv.get("RIOT_API_PERSONAL_KEY");
+    
+    @Value("${mygg.YML}")  // GitHub Secrets의 YML 변수와 매칭
+    private String apiKeyFromYml;
+    public static String API_KEY;
+
+    @PostConstruct
+    private void init() {
+        API_KEY = this.apiKeyFromYml;
+    }
+
+    // =============================================================================================
 
     // https://developer.riotgames.com/docs/lol
     public static final String LANGUAGE = CountryType.Korea.getCountry(); // RiotApiClient.getLanguage();
@@ -40,8 +54,7 @@ public class RiotApiConstants {
     // =============================================================================================
     public static final String RIOT_API_URL = "https://" + RegionServer.ASIA + ".api.riotgames.com";
     public static final String RIOT_API_URL_KR = "https://" + CountryServer.KR + ".api.riotgames.com";
-    // =================================== League of Legends API
-    // ===================================
+    // =================================== League of Legends API ===================================
     // =============================================================================================
     public static final String RIOT_API_ACCOUNT_RID = "/riot/account/v1/accounts/by-riot-id/"; // public match
     public static final String RIOT_API_ACCOUNT_PID = "/riot/account/v1/accounts/by-puuid/"; // public match

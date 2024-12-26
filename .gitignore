@@ -26,3 +26,6 @@ replay_pid*
 # Ignore .env Files
 .env
 src/main/resources/.env
+
+# Ignore application.yml
+src/main/resources/application.yml

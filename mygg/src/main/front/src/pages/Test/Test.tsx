@@ -1,19 +1,9 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
-import { ExitButton } from "./Test.styles";
-import RuneImage from "../../components/ImageUI/RuneImage";
-import StyledRuneImage from "../../components/ImageUI/StyledRuneImage";
-import SummonerImage from "../../components/ImageUI/SummonerImage";
 import { useEffect, useState } from "react";
-import { useDebounce } from "../../hooks/useDebounce";
-import { ISuggestion } from "../Home/type";
-import { getSearchedResult } from "../../services/Api";
 
-const SearchIcon = styled(MagnifyingGlassIcon)`
-  width: 20px;
-  height: 20px;
-`;
+
+
 
 const GradientBackground = styled.div`
   margin: 0;
@@ -23,67 +13,48 @@ const GradientBackground = styled.div`
   font-family: sans-serif;
 `;
 
-const Spinner = styled.div`
-  height: 30px;
-  width: 30px;
-  border: 1px solid ${({ theme }) => theme.colors.brand.sky.main};
-  border-radius: 50%;
-  border-top: none;
-  border-right: none;
-  margin: 16px auto;
-`;
 
-const TestInput = styled.input`
-  width: 360px;
-  height: 30px;
-  margin: 16px auto;
-  border: 1px solid ${({ theme }) => theme.colors.brand.sky.main};
-  border-radius: 5px;
-  padding: 0 10px;
-`;
+interface IRecentSearch {
+  search: string;
+  userName: string;
+}
 
 //테스트 페이지
 export default function Test() {
-  const [query, setQuery] = useState("");
-  const debouncedQuery = useDebounce(query, 300);
-  const [suggestions, setSuggestions] = useState<any>();
-  useEffect(() => {
-    if (debouncedQuery) {
-      const fetchSuggestions = async () => {
-        try {
-          console.log("debouncedQuery:", debouncedQuery);
-          const suggestion: ISuggestion = await getSearchedResult(
-            debouncedQuery
-          );
-          setSuggestions(suggestion);
-          console.log("Suggestions:", suggestions);
-        } catch (error) {
-          console.error("Error fetching suggestions:", error);
-        }
-      };
-      fetchSuggestions();
-    } else {
-      setSuggestions([]);
-    }
-  }, [debouncedQuery]);
+  const [recentSearch, setRecentSearch] = useState<IRecentSearch[]>([]);
 
-  const onChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
+  useEffect(() => {
+    const recentSearch = localStorage.getItem("recentSearch");
+    if (recentSearch) {
+      setRecentSearch(JSON.parse(recentSearch));
+    }
+  }, []);
+
+  const handleRecentSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const search = e.currentTarget.search.value;
+    const userName = e.currentTarget.userName.value;
+    setRecentSearch((prev) => {
+      const updatedSearches = [...prev, { search, userName }];
+      localStorage.setItem("recentSearch", JSON.stringify(updatedSearches));
+      return updatedSearches;
+    });
   };
 
   return (
     <GradientBackground>
-      <SearchIcon />
-      <Spinner />
-
-      <RuneImage styleRuneId={8300} runeId={8351} />
-      <StyledRuneImage runeId={8300} />
-      <SummonerImage summonerId={21} />
-      <TestInput type="text" value={query} onChange={onChangeQuery} />
-      <div>{suggestions?.item?.map((item: any) => item.name)}</div>
-      <div>{suggestions?.champion?.map((item: any) => item.name)}</div>
-      <div>{suggestions?.user?.map((item: any) => item.gameName)}</div>
-      <ExitButton>ESC</ExitButton>
+      <form onSubmit={handleRecentSearch}>
+        <input type="text" name="search" />
+        <input type="text" name="userName" />
+        <button type="submit">검색</button>
+      </form>
+      <div>
+        {recentSearch.map((searchItem, index) => (
+          <div key={`${searchItem.search}-${index}`}>
+            {searchItem.search} - {searchItem.userName}
+          </div>
+        ))}
+      </div>
     </GradientBackground>
   );
 }

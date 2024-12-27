@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmy_app=self.webpackChunkmy_app||[]).push([[689],{689:(e,n,s)=>{s.r(n),s.d(n,{default:()=>p});var a=s(216),c=s(579);function p(){const{id:e}=(0,a.g)();return console.log(e),(0,c.jsxs)("div",{children:["champion detail ",e]})}}}]);
+//# sourceMappingURL=689.2fd7bfe8.chunk.js.map

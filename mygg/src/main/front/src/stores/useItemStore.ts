@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IItem } from "../pages/Item/type";
+import { IItem } from "../interfaces/itemType";
 
 interface IItemStore {
   items: IItem[] | null;

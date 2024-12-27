@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 import { useEffect, useState } from "react";
 import { IMatchDetail } from "../type";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 import ChampionImage from "../../../components/ImageUI/ChampionImage";
 import SummonerImage from "../../../components/ImageUI/SummonerImage";
 import ItemImage from "../../../components/ImageUI/ItemImage";

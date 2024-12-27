@@ -6,6 +6,7 @@ import { getSearchedResult } from "../../services/Api";
 import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import useRecentSearchStore from "../../stores/useRecentSearch";
 
 export interface ISuggestion {
   champion: IChampionSuggestion[];
@@ -59,7 +60,7 @@ const SearchDetailContainer = styled.div`
   border-radius: 0 0 10px 10px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1);
 
-  @media (max-width: 600px) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     width: 85%; // 스마트폰 사이즈일 때
   }
 `;
@@ -244,7 +245,10 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
     useState<number>(-1);
   const [isComposing, setIsComposing] = useState<boolean>(false);
   const [isQueryLoading, setIsQueryLoading] = useState<boolean>(false);
+  const [activeRecentIndex, setActiveRecentIndex] = useState<number>(-1);
 
+  const recentSearch = useRecentSearchStore((state) => state.recentSearch);
+  const setRecentSearch = useRecentSearchStore((state) => state.setRecentSearch);
   const debouncedQuery = useDebounce(searchQuery, 300);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -254,6 +258,8 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   const totalLength = totalUser + totalChampion + totalItem;
 
   const suggestionRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+
 
   useEffect(() => {
     if (inputRef.current) {
@@ -320,6 +326,8 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       event.preventDefault();
       if (totalLength > 0) {
         setActiveSuggestionIndex((prevIndex) => (prevIndex + 1) % totalLength);
+      } else if (recentSearch.length > 0) {
+        setActiveRecentIndex((prevIndex) => (prevIndex + 1) % recentSearch.length);
       }
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
@@ -327,10 +335,18 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
         setActiveSuggestionIndex(
           (prevIndex) => (prevIndex - 1 + totalLength) % totalLength
         );
+      } else if (recentSearch.length > 0) {
+        setActiveRecentIndex(
+          (prevIndex) => (prevIndex - 1 + recentSearch.length) % recentSearch.length
+        );
       }
     } else if (event.key === "Enter") {
       event.preventDefault();
-      handleSearch();
+      if (activeSuggestionIndex >= 0) {
+        handleSearch();
+      } else if (activeRecentIndex >= 0) {
+        handleSuggestionClick("user", recentSearch[activeRecentIndex]);
+      }
     }
   };
 
@@ -345,6 +361,12 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   const handleSuggestionClick = (type: string, suggestion: any) => {
     if (type === "user") {
       setSearchQuery(`${suggestion.gameName}#${suggestion.tagLine}`);
+
+      const recentSearchArr = [
+        ...recentSearch,
+        { gameName: suggestion.gameName, tagLine: suggestion.tagLine, profileIconId: suggestion.profileIconId },
+      ];
+      setRecentSearch(recentSearchArr);
       navigate(`/search/${suggestion.gameName}-${suggestion.tagLine}`);
     } else if (type === "champion") {
       setSearchQuery(suggestion.name);
@@ -364,6 +386,12 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       if (activeSuggestionIndex < totalUser) {
         // user 영역
         const user = suggestions.user[activeSuggestionIndex];
+        const recentSearchArr = [
+          ...recentSearch,
+          { gameName: user.gameName, tagLine: user.tagLine, profileIconId: user.profileIconId },
+        ];
+        
+        setRecentSearch(recentSearchArr);
         navigate(`/search/${user.gameName}-${user.tagLine}`);
       } else if (activeSuggestionIndex < totalUser + totalChampion) {
         // champion 영역
@@ -462,6 +490,30 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
     return elements;
   };
 
+  const renderRecentSearches = () => {
+    if (!recentSearch || recentSearch.length === 0) return null;
+
+    return recentSearch.map((search, index) => {
+      const isActive = index === activeRecentIndex;
+      const Box = isActive ? ActiveSearchedUserBox : SearchedUserBox;
+      return (
+        <BoxContainer
+          key={`recent-${index}`}
+          onClick={() => handleSuggestionClick("user", search)}
+        >
+          <Box>
+            <SearchedUserProfileImg
+              src={`https://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${search.profileIconId}.png`}
+            />
+            <SearchedUserName>{search.gameName}</SearchedUserName>
+            <SearchedUserTag>#{search.tagLine}</SearchedUserTag>
+            <SearchedUserDetail>유저</SearchedUserDetail>
+          </Box>
+        </BoxContainer>
+      );
+    });
+  };
+
   return (
     <ModalOverlay onClick={onClose}>
       <SearchFormContainer onClick={(e) => e.stopPropagation()}>
@@ -501,6 +553,9 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
         ) : !searchQuery ? (
           <SearchedRecentContainer>
             <SearchedRecentTitle>최근 검색</SearchedRecentTitle>
+            <SearchedUsersContainer>
+              {renderRecentSearches()}
+            </SearchedUsersContainer>
           </SearchedRecentContainer>
         ) : null}
       </SearchDetailContainer>

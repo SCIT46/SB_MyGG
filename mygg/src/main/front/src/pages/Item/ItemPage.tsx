@@ -2,9 +2,7 @@ import styled from "styled-components";
 import useItemStore from "../../stores/useItemStore";
 import ItemImage from "../../components/ImageUI/ItemImage";
 
-const LoadingContainer = styled.div`
-  margin-top: 300px;
-`;
+
 
 const TitleBox = styled.div`
   margin-top: 50px;

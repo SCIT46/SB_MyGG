@@ -37,12 +37,13 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    # 환경별 application.yml 생성
-    - name: Generate application.yml
+    # 환경별 secrets로 부터 민감한 정보(.yml) 주입
+    - name: Create Secrets data (Generate application.yml)
       working-directory: ./mygg
       run: |
         mkdir -p ./src/main/resources
-        echo "${{ secrets.YML }}" > ./src/main/resources/application.yml
+        echo "${{ secrets.DATABASE_SETTING }}" >> ./src/main/resources/application.properties
+        echo "api_key = ${{ secrets.YML }}" >> ./src/main/resources/application.properties
       shell: bash
 
       # Gradle 빌드 및 테스트

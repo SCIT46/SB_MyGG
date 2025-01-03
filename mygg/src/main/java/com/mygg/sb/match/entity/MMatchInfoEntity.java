@@ -1,15 +1,13 @@
-package com.mygg.sb.match;
+package com.mygg.sb.match.entity;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class InfoDTO
+import com.mygg.sb.match.TeamDTO;
+
+@Document
+public class MMatchInfoEntity
 	{
 		String endOfGameResult; // 게임 정상적으로 끝났는지
 		long gameDuration;		// 게임시간
@@ -21,6 +19,6 @@ public class InfoDTO
 		int queueId;
 		int mapId;				// 맵 ID,  11
 		String platformId;		// 게임 플랫폼, ex) "JP1"
-		List<ParticipantsDto> participants;
-		List<TeamDTO> teams;	// 두 팀의 밴, 승리여부 등 여부
+		List<MParticipantsEntity> participants;
+		List<MTeamEntity> teams;	// 두 팀의 밴, 승리여부 등 여부
 	}

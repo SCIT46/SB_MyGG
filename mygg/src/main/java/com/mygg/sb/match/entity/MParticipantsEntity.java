@@ -1,9 +1,15 @@
-package com.mygg.sb.match;
+package com.mygg.sb.match.entity;
+
+import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 @Document
-class ParticipantsDto
+class MParticipantsEntity
 {
 	// 플레이어 정보
 	String riotIdGameName;	// 라이엇 이름
@@ -54,8 +60,8 @@ class ParticipantsDto
 	int holdPings;				// 홀드?핑
 	int needVisionPings;		// 시야필요 핑
 	
-	PerksDTO perks;				// 룬
-	ChallengesDTO challenges;	// 챌린지스
+	MPerksEntity perks;				// 룬
+	MChallengesEntity challenges;	// 챌린지스
 	
 	//Double goldPerMinute;// 분당 골드 값 추출
 	// PerksDto perks;
@@ -73,10 +79,5 @@ class ParticipantsDto
 //			this.userLevel = userLevel;
 //			this.goldPerMin = goldPerMin;
 //		}
-
-	public ParticipantsDto()
-		{
-			// TODO Auto-generated constructor stub
-		}
 }
 

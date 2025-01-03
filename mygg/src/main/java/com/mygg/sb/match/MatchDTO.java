@@ -12,6 +12,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class MatchDTO {
-	private InfoDTO Info;
+	private MatchInfoDTO Info;
 	private MetadataDTO Metadata;
 }

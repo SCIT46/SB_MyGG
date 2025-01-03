@@ -6,7 +6,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
-import com.mygg.sb.match.InfoDTO;
+import com.mygg.sb.match.MatchInfoDTO;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.MetadataDTO;
 import com.mygg.sb.match.repository.UserMatchesRepository;
@@ -115,7 +115,7 @@ public class PublicMatchService
 				
 //				MatchDTO result = new MatchDTO();				
 				MetadataDTO metadata = new MetadataDTO();
-				InfoDTO info = new InfoDTO();
+				MatchInfoDTO info = new MatchInfoDTO();
 
 				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
@@ -134,7 +134,7 @@ public class PublicMatchService
 						// JSON파일 내부의 metadata, info 데이터 불러오기
 						
 						if (key.equals("metadata")) metadata = mapper.mapToDto(jsonObj, MetadataDTO.class);
-						if (key.equals("info")) info = mapper.mapToDto(jsonObj, InfoDTO.class);
+						if (key.equals("info")) info = mapper.mapToDto(jsonObj, MatchInfoDTO.class);
 					}
 
 				MatchDTO result = new MatchDTO();

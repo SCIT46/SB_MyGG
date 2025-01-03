@@ -1,6 +1,7 @@
 package com.mygg.sb.junseongTest;
 
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import lombok.Setter;
 public class JunTestUserService
 	{
 		private final JunUserRpeository userRepeository;
+		private final JunUserRpeository2 userRepeository2;
 		
 		public List<JunTestUser> getAllUsers()
 		{
@@ -27,6 +29,8 @@ public class JunTestUserService
 	    }
 	    
 	    public void createUser(String name, int age) {
-	    	userRepeository.save(new JunTestUser("1", name, "testEmail", age));
+	    	Random rand = new Random();
+	    	userRepeository.save(new JunTestUser("" + rand.nextInt(age), name, "testEmail", age));
+	    	userRepeository2.save(new JunTestUser2("" + rand.nextInt(age), name, "tttt", age));
 	    }
 	}

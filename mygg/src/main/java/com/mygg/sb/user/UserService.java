@@ -69,6 +69,24 @@ public class UserService {
   // ===========================================================================
 
   // ################################### API ###################################
+  @Transactional
+  public UserDTO searchUser(String gameName, String tagLine) throws Exception {
+    // DB에 저장된 유저 정보를 받아오기
+    UserDTO user = readOne(gameName, tagLine);
+    if (user == null) {
+      // DB에 유저 정보가 없으면 API로부터 유저 정보를 받아와 DB에 저장
+      user = getUserInfo(gameName, tagLine);
+      create(user);
+      return user;
+    }
+    // 유저 검색 횟수 증가
+    user.setSearchCount(user.getSearchCount() + 1);
+    update(user);
+    // DB에 저장된 유저 정보를 반환
+    return user;
+  }
+
+
   // 이름과 태그를 통해 소환사 정보를 불러올 때 사용하는 생성자
   public UserDTO getUserInfo(String gameName, String tagLine) throws Exception {
 
@@ -87,11 +105,11 @@ public class UserService {
     user.setGameName(nametag[0]);
     user.setTagLine(nametag[1]);
     init();
-
     return this.user;
   }
 
   // 인스턴스 초기화 구문
+  // 3개의 api 정보를 이용해서 1개의 유저정보로 초기화
   private void init() throws Exception {
     // 소환사 정보 JSON
     JSONObject jsonObject = RiotApiClient.getSummonerInfo(user.getPuuid()); // (JSONObject) parser.parse(summoJSON);

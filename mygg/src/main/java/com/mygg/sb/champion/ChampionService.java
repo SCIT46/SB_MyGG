@@ -1,43 +1,27 @@
 package com.mygg.sb.champion;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDTOMapper;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
-@Getter
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class ChampionService {
   // ############################ Field & Constructor ############################
   // JPA Repository
   private final ChampionRepository championRepository;
-  // 챔피언 맵
-  Map<String, ChampionDTO> champion;
-
-  // // 챔피언 맵 초기화/생성(lombok 자동 생성 불가)
-  @Autowired
-  public ChampionService(ChampionRepository championRepository) {
-    this.championRepository = championRepository;
-    this.champion = new TreeMap();
-  }
-
-  public ChampionService() {
-    this.championRepository = null;
-    this.champion = new TreeMap();
-  }
-  // ===========================================================================
 
   // ################################# JPA CRUD ################################
   public void create(ChampionDTO dto) {
@@ -77,80 +61,53 @@ public class ChampionService {
   // ===========================================================================
 
   // ################################### API ###################################
-  // 개별 챔피언 정보 조회
+  
+  // 챔피언 객체 생성/반환
   public Map<String, ChampionDTO> getChampion(String id) throws Exception {
-    // 챔피언 맵 초기화
-    champion.clear();
-
-    // 챔피언 정보 조회
-    ChampionDTO championObj = createChampionDto(id);
-
-    // 챔피언 맵에 챔피언 정보 저장
-    champion.put(id, championObj);
-
-    return this.champion;
-  }
-
-  // 전체 챔피언 정보 조회(렌더링 시간이 오래걸림)
-  public Map<String, ChampionDTO> getChampions() throws Exception {
-    // 챔피언 맵 초기화
-    champion.clear();
+    // 챔피언 맵 생성
+    Map<String, ChampionDTO> champion = new TreeMap<>();
 
     // 챔피언 아이디 리스트 조회
-    List<String> championIds = getChampionIds();
+    List<String> championIdList;
+
+    // 챔피언 전체 정보 조회
+    JSONObject jsonObject = RiotApiClient.getChampion("all");
+
+    // 전체 챔피언 아이디 조회
+    if(id.equals("all")) {
+      // 챔피언 아이디 리스트 조회
+      championIdList = new ArrayList<>(jsonObject.keySet());
+    }
+    // 지정 챔피언 아이디 조회
+    else {
+      // 챔피언 아이디 리스트 조회
+      championIdList = new ArrayList<>();
+      championIdList.add(id);
+    }
 
     // 챔피언 아이디 리스트 반복
-    for (String id : championIds) {
+    for (String id_tmp : championIdList) {
       // 챔피언 정보 조회
-      ChampionDTO championObj = createChampionDto(id);
-
-      // 챔피언 맵에 챔피언 정보 저장
-      champion.put(id, championObj);
+      ChampionDTO tmp = readOne(id_tmp);
+      // DB에 있으면 바로 챔피언 맵에 저장
+      if(tmp != null) {
+        champion.put(id_tmp, tmp);
+      }
+      // DB에 없으면 API로부터 챔피언 정보 받아와 DB 및 챔피언 맵에 저장
+      else {
+        // JSON으로 부터 받아온 정보를 champDto 객체에 설정
+        JsonToDTOMapper mapper = new JsonToDTOMapper();
+        tmp = mapper.mapToDto(RiotApiClient.getChampion(id_tmp), ChampionDTO.class);
+        tmp.setId(id_tmp); 
+        // 챔피언 맵에 저장
+        champion.put(id_tmp, tmp);
+        // DB에 챔피언 정보 저장
+        create(tmp);
+      }
     }
 
-    return this.champion;
-
-    // JSONObject resultChampion = new JSONObject();
-
-    // resultChampion.put("version", RiotApiClient.getLatestVersion());
-    // resultChampion.put("data", champion);
-
-    // return resultChampion;
-  }
-
-  // 챔피언 객체 생성/반환
-  public ChampionDTO createChampionDto(String id) throws Exception {
-    log.info("createChampionDto 호출 champion : {}", id);
-    ChampionDTO champion = new ChampionDTO();
-    // DB에서 챔피언 정보 조회
-    Optional<ChampionEntity> championEntity = championRepository.findById(id);
-    if (championEntity.isPresent()) {
-      champion = ChampionDTO.toDTO(championEntity.get());
-    }
-    // DB에 없는 챔피언일 경우
-    else {
-      // 챔피언 정보 조회
-      JSONObject jsonObject = RiotApiClient.getChampion(id);
-
-      // JSON으로 부터 받아온 정보를 champDto 객체에 설정
-      JsonToDTOMapper mapper = new JsonToDTOMapper();
-      champion = mapper.mapToDto(jsonObject, ChampionDTO.class);
-
-      // DB에 챔피언 정보 저장
-      championRepository.save(ChampionEntity.toEntity(champion));
-    }
-
+    // 챔피언 맵 반환
     return champion;
   }
 
-  // 챔피언 아이디 리스트 조회
-  public List<String> getChampionIds() throws Exception {
-    // 챔피언 정보 조회
-    JSONObject jsonObject = RiotApiClient.getChampion("all");
-
-    // 챔피언 아이디 리스트 조회
-    List<String> championIds = new ArrayList<>(jsonObject.keySet());
-
-    return championIds;
-  }
 }

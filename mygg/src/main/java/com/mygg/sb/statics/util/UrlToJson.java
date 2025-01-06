@@ -10,6 +10,7 @@ import java.util.HashMap;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.mygg.sb.exception.RiotApiNotFound;
 import com.mygg.sb.statics.api.RiotApiConstants;
 
 public class UrlToJson {
@@ -49,9 +50,9 @@ public class UrlToJson {
         // }
         switch (responseCode) {
             case 403:
-                throw new RuntimeException("HTTP 에러 코드: " + responseCode + ", 응답: " + "API 처리가 유효하지 않습니다.");
+                throw new RiotApiNotFound("HTTP 에러 코드: " + responseCode + ", 응답: " + "API 처리가 유효하지 않습니다.");
             case 404:
-                throw new RuntimeException("HTTP 에러 코드: " + responseCode + ", 응답: " + "존재하지 않는 데이터입니다.");
+                throw new RiotApiNotFound("HTTP 에러 코드: " + responseCode + ", 응답: " + "존재하지 않는 데이터입니다.");
             default:
                 return userJSON;
         }

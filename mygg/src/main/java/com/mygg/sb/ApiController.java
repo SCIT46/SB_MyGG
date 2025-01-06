@@ -5,14 +5,17 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.mygg.sb.champion.ChampionDTO;
 import com.mygg.sb.champion.ChampionService;
+import com.mygg.sb.exception.RiotApiNotFound;
 import com.mygg.sb.item.ItemDTO;
 import com.mygg.sb.item.ItemService;
 import com.mygg.sb.rune.RuneDTO;
@@ -55,65 +58,86 @@ public class ApiController {
 
     // Public Match(API로부터 받아온 결과) API
     @GetMapping(path = "/match/public/{matchId}")
-    public MatchDTO publicMatch(@PathVariable("matchId") String matchId) throws Exception {
-        return publicMatchService.getMatchInfo(matchId);
+    public MatchDTO publicMatch(@PathVariable("matchId") String matchId) {
+        try{
+            return publicMatchService.getMatchInfo(matchId);
+        } catch (RiotApiNotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());    //404
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());    //500
+        }
     }
 
     // User(유저 정보제공) API
     @GetMapping(path = "/user/{name}/{tag}")
     @Transactional
-    public UserDTO user(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception {
-        // DB에 저장된 유저 정보를 받아오기
-        UserDTO user = userService.readOne(name, tag);
-        if (user == null) {
-            // DB에 유저 정보가 없으면 API로부터 유저 정보를 받아와 DB에 저장
-            user = userService.getUserInfo(name, tag);
-            userService.create(user);
-
-            return user;
+    public UserDTO user(@PathVariable("name") String name, @PathVariable("tag") String tag) {
+        try{
+            return userService.searchUser(name, tag);
+        } catch (RiotApiNotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());    //404
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());    //500
         }
-        // 유저 검색 횟수 증가
-        user.setSearchCount(user.getSearchCount() + 1);
-        userService.update(user);
-        // DB에 저장된 유저 정보를 반환
-        return user;
     }
 
     // Item(아이템 전체 정보제공) API
     @GetMapping(path = "/item")
-    public Map<String, ItemDTO> items() throws Exception {
-        return itemService.getItems();
+    public Map<String, ItemDTO> item() {
+        try{
+            return itemService.getItem("all");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());    //500
+        }
     }
 
     // Item(아이템 정보제공) API
     @GetMapping(path = "/item/{id}")
-    public Map<String, ItemDTO> item(@PathVariable("id") String id) throws Exception {
-        // itemService = new ItemService(id);
-        return itemService.getItem(id);
+    public Map<String, ItemDTO> item(@PathVariable("id") String id) {
+        try{
+            return itemService.getItem(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());    //500
+        }
     }
 
     // Champion(챔피언 전체 정보제공) API
     @GetMapping(path = "/champion")
-    public Map<String, ChampionDTO> champions() throws Exception {
-        // championsService = new ChampionsService();
-        return championService.getChampions();
+    public Map<String, ChampionDTO> champion() {
+        try{
+            return championService.getChampion("all");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());    //500
+        }
     }
 
     // Champion(챔피언 정보제공) API
     @GetMapping(path = "/champion/{id}")
-    public Map<String, ChampionDTO> champion(@PathVariable("id") String id) throws Exception {
-        // championService = new ChampionService(id);
-        return championService.getChampion(id);
+    public Map<String, ChampionDTO> champion(@PathVariable("id") String id) {
+        try{
+            return championService.getChampion(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());    //500
+        }
     }
 
+    // Rune(룬 전체 정보제공) API
     @GetMapping(path = "/runesReforged")
-    public JSONObject runes() throws Exception {
-        return runeService.getRuneDto();
+    public JSONObject rune() {
+        try{
+            return runeService.getRuneDto();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());    //500
+        }
     }
-    // Search(검색 정보제공) API
 
+    // Search(검색 정보제공) API
     @GetMapping(path = "/search/{keyword}")
-    public Map<String, List<? extends BaseDTO>> search(@PathVariable("keyword") String keyword) throws Exception {
-        return searchService.search(keyword);
+    public Map<String, List<? extends BaseDTO>> search(@PathVariable("keyword") String keyword) {
+        try{
+            return searchService.search(keyword);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());    //500
+        }
     }
 }

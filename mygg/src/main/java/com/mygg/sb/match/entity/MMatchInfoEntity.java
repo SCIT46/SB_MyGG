@@ -6,7 +6,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.mygg.sb.match.TeamDTO;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Document
+@Getter
+@Setter
+@NoArgsConstructor
 public class MMatchInfoEntity
 	{
 		String endOfGameResult; // 게임 정상적으로 끝났는지

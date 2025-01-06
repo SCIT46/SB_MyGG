@@ -19,36 +19,3 @@ public class MTeamEntity
 		int teamId;				// 팀ID
 		boolean win;			// 승리여부
 	}
-
-// 밴픽
-@Getter
-@NoArgsConstructor
-@Document
-class MBanEntity
-	{
-		int championId;
-		int pickTurn;
-	}
-
-@Getter
-@NoArgsConstructor
-@Document
-class MObjectEntity
-{
-	MObjectiveEntity baron;		
-	MObjectiveEntity champion;		
-	MObjectiveEntity dragon;
-	MObjectiveEntity horde;		
-	MObjectiveEntity inhibitor;		
-	MObjectiveEntity riftHerald;		
-	MObjectiveEntity tower;	
-}
-
-@Getter
-@NoArgsConstructor
-@Document
-class MObjectiveEntity
-{
-	boolean first;		
-	int kills;	
-}

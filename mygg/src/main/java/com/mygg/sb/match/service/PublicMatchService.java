@@ -1,19 +1,24 @@
 package com.mygg.sb.match.service;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.json.simple.JSONObject;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.match.MatchInfoDTO;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.MetadataDTO;
+import com.mygg.sb.match.entity.MMatchEntity;
+import com.mygg.sb.match.entity.MMatchInfoEntity;
+import com.mygg.sb.match.entity.MMetadataEntity;
+import com.mygg.sb.match.repository.MMatchesRepository;
 import com.mygg.sb.match.repository.UserMatchesRepository;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.api.RiotSeasonConstants;
 import com.mygg.sb.statics.util.JsonToDTOMapper;
-import com.mygg.sb.statics.util.DateTimeUtils;
 
 import com.mygg.sb.user.UserRepository;
 
@@ -27,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Service
 @Slf4j
+
 public class PublicMatchService
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
@@ -36,19 +42,21 @@ public class PublicMatchService
 		
 		private final UserMatchesRepository userMatchesRepo;
 		private final UserRepository userRepository;
+		private final MMatchesRepository mMatchesRepository;
+		private final ModelMapper modelMapper;
 		
-		private final int count = 20;					// api에 요청할 찾을 데이터 수
+		private final int count = 2;					// api에 요청할 찾을 데이터 수
 		private final int limitRequestForSecond = 20;	// 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100;	// 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		
-		public List<MatchDTO> run(String name, String tag) throws Exception
+		public List<MMatchEntity> run(String name, String tag) throws Exception
 			{
 				// 테스트 코드
 				return indexingData(name, tag);
 			}
 
 		
-		private List<MatchDTO> indexingData(String _name, String _tag) throws Exception
+		private List<MMatchEntity> indexingData(String _name, String _tag) throws Exception
 		{
 			//1. DB내의 마지막 매치 데이터를 조회한다.
 			//2. api에게 매치데이터 100개를 받아온다.
@@ -64,6 +72,7 @@ public class PublicMatchService
 			int indexInList = -1;			// 리스트 내에서 DB에 있는 마지막 DB
 			int currentRequestCnt = 0;		// 
 
+			// --------------------- api로부터 데이터 탐색 --------------------------------------------------------------
 			// 종료조건:
 			// 		- 매치 데이터에 기간을 두고, 그 기간 안의 데이터가 100개가 아닌 경우 혹은
 			// 		  인덱스가 발견된 경우에는 루프를 종료한다
@@ -86,6 +95,8 @@ public class PublicMatchService
 						listUserMatches.add(arrStr[i]);
 					}
 			}
+			
+			// -------------------------- 데이터 가공 ---------------------------------------------------------------------
 			for(int i = 0; i < ((nullIdx < 0)? listUserMatches.size(): nullIdx); i++)
 				{
 					currentRequestCnt++;
@@ -106,8 +117,22 @@ public class PublicMatchService
 						};
 				}
 
-			return listMatchDto;
-		}
+			// ------------------------- Entity로 변환 --------------------------------------------------
+			List<MMatchEntity> mMatchList = new ArrayList<>();
+			
+			for(int i = 0; i < listMatchDto.size(); i++)
+			{
+				 MMatchEntity _entity = new MMatchEntity();
+				 //_entity = modelMapper.map(listMatchDto.get(i), MMatchEntity.class);
+				 _entity.setInfo(modelMapper.map(listMatchDto.get(i).getInfo(), MMatchInfoEntity.class));
+				 _entity.setMetadata(modelMapper.map(listMatchDto.get(i).getMetadata(), MMetadataEntity.class));
+				 _entity.setMatchId(listMatchDto.get(i).getMetadata().getMatchId());
+				 mMatchList.add(_entity);
+			}
+			
+			//return listMatchDto;
+			return mMatchList;
+		} 
 		
 		public MatchDTO getMatchInfo(String matchId) throws Exception
 			{

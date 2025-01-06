@@ -3,15 +3,23 @@ package com.mygg.sb.statics.api;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.annotation.PostConstruct;
 
 @Configuration
 public class RiotApiConstants {
-    public static Dotenv dotenv = Dotenv.load();
-    public static final String API_KEY = "RGAPI-d9facde2-e92d-4059-b90f-16163e1c722f";
-
+	@Value("${api_key}")
+	private String apikey;
+	public static String API_KEY;
+	
+	@PostConstruct
+	public void init()
+	{
+		API_KEY = apikey;
+	}
     // https://developer.riotgames.com/docs/lol
     public static final String LANGUAGE = CountryType.Korea.getCountry(); // RiotApiClient.getLanguage();
     public static final String LATEST_VERSION;

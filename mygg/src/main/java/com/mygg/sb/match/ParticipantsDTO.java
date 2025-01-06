@@ -2,8 +2,19 @@ package com.mygg.sb.match;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.mygg.sb.match.entity.MParticipantsEntity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 @Document
-class ParticipantsDto
+@Builder
+@AllArgsConstructor
+@Getter
+@Setter
+public class ParticipantsDTO
 {
 	// 플레이어 정보
 	String riotIdGameName;	// 라이엇 이름
@@ -74,9 +85,53 @@ class ParticipantsDto
 //			this.goldPerMin = goldPerMin;
 //		}
 
-	public ParticipantsDto()
+	public ParticipantsDTO()
 		{
 			// TODO Auto-generated constructor stub
 		}
+
+//	public static ParticipantsDTO toDTO(MParticipantsEntity participants)
+//		{
+//		    return ParticipantsDTO.builder()
+//		            .riotIdGameName(participants.getRiotIdGameName())          // 라이엇 이름
+//		            .riotIdTagline(participants.getRiotIdTagline())            // 라이엇 태그
+//		            .championName(participants.getChampionName())              // 사용한 챔피언
+//		            .lane(participants.getLane())                              // 라인
+//		            .role(participants.getRole())                              // 역할
+//		            .summonerLevel(participants.getSummonerLevel())            // 소환사 레벨
+//		            .puuid(participants.getPuuid())                            // PUUID
+//		            .championId(participants.getChampionId())                  // 챔피언 ID
+//		            .champLevel(participants.getChampLevel())                  // 챔피언 레벨
+//		            .item0(participants.getItem0())                            // 아이템 0
+//		            .item1(participants.getItem1())                            // 아이템 1
+//		            .item2(participants.getItem2())                            // 아이템 2
+//		            .item3(participants.getItem3())                            // 아이템 3
+//		            .item4(participants.getItem4())                            // 아이템 4
+//		            .item5(participants.getItem5())                            // 아이템 5
+//		            .item6(participants.getItem6())                            // 아이템 6
+//		            .teamId(participants.getTeamId())                          // 팀 ID
+//		            .win(participants.isWin())                                 // 승리 여부
+//		            .kills(participants.getKills())                            // 킬
+//		            .deaths(participants.getDeaths())                          // 데스
+//		            .assists(participants.getAssists())                        // 어시스트
+//		            .visionScore(participants.getVisionScore())                // 시야 점수
+//		            .visionWardsBoughtInGame(participants.getVisionWardsBoughtInGame()) // 와드 구매 수
+//		            .wardsPlaced(participants.getWardsPlaced())                // 설치한 와드 수
+//		            .wardsKilled(participants.getWardsKilled())                // 부순 와드 수
+//		            .detectorWardsPlaced(participants.getDetectorWardsPlaced()) // 감지 와드 수
+//		            .totalMinionsKilled(participants.getTotalMinionsKilled())  // 총 미니언 킬
+//		            .neutralMinionsKilled(participants.getNeutralMinionsKilled()) // 정글몹 킬
+//		            .totalDamageDealtToChampions(participants.getTotalDamageDealtToChampions()) // 챔피언에게 가한 피해량
+//		            .totalDamageTaken(participants.getTotalDamageTaken())      // 받은 피해량
+//		            .summoner1Id(participants.getSummoner1Id())                // 서머너 스펠 1
+//		            .summoner2Id(participants.getSummoner2Id())                // 서머너 스펠 2
+//		            .dangerPings(participants.getDangerPings())                // 위험 핑
+//		            .getBackPings(participants.getGetBackPings())              // 백 핑
+//		            .holdPings(participants.getHoldPings())                    // 홀드 핑
+//		            .needVisionPings(participants.getNeedVisionPings())        // 시야 핑
+//		            .perks(PerksDTO.toDTO(participants.getPerks()))            // 룬
+//		            .challenges(ChallengesDTO.toDTO(participants.getChallenges())) // 챌린지
+//		            .build();
+//		}
 }
 

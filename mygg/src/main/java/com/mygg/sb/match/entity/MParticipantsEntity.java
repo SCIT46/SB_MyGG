@@ -1,15 +1,16 @@
 package com.mygg.sb.match.entity;
 
-import java.util.List;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Document
-class MParticipantsEntity
+@Getter
+@Setter
+@NoArgsConstructor
+public class MParticipantsEntity
 {
 	// 플레이어 정보
 	String riotIdGameName;	// 라이엇 이름

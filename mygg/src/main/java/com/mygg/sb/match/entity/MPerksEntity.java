@@ -65,35 +65,3 @@ public class MPerksEntity
 				}
 		}
 	}
-
-@Getter
-@Setter
-@Document
-class MPerkStyleEntity
-{
-	String description;	// 설명
-	List<MPerkStyleSelectionEntity> selections = new ArrayList<>();
-	int style;
-}
-
-@Setter
-@Getter
-@Document
-class MPerkStatsEntity 
-{
-	// Name	Data Type	Description
-	int defense;		
-	int	flex;	
-	int offense;	
-}
-
-@Getter
-@Setter
-@Document
-class MPerkStyleSelectionEntity 
-{
-	int perk;		
-	int var1;		
-	int var2;		
-	int var3;	
-}

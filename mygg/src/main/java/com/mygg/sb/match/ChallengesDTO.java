@@ -1,5 +1,6 @@
 package com.mygg.sb.match;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ChallengesDTO
 	{
 		float controlWardTimeCoverageInRiverOrEnemyHalf; // 강가 또는 적 지역에서의 제어 와드 지속 시간.		
@@ -162,4 +165,22 @@ public class ChallengesDTO
 //		wardsGuarded	int	
 //		wardTakedowns	int	
 //		wardTakedownsBefore20M	int	
+//		public static ChallengesDTO toDTO(MChallengesEntity challengesEntity) {
+//		    return ChallengesDTO.builder()
+//		            .controlWardTimeCoverageInRiverOrEnemyHalf(challengesEntity.getControlWardTimeCoverageInRiverOrEnemyHalf()) // 강가 또는 적 지역에서의 제어 와드 지속 시간
+//		            .kda(challengesEntity.getKda())                                                                           // KDA
+//		            .controlWardsPlaced(challengesEntity.getControlWardsPlaced())                                             // 배치한 제어 와드 수
+//		            .damagePerMinute(challengesEntity.getDamagePerMinute())                                                  // 분당 DPS
+//		            .gameLength(challengesEntity.getGameLength())                                                            // 게임 시간
+//		            .skillshotsDodged(challengesEntity.getSkillshotsDodged())                                                // 회피한 스킬샷 수
+//		            .skillshotsHit(challengesEntity.getSkillshotsHit())                                                      // 적중한 스킬샷 수
+//		            .teamBaronKills(challengesEntity.getTeamBaronKills())                                                    // 팀 바론 킬 수
+//		            .teamElderDragonKills(challengesEntity.getTeamElderDragonKills())                                        // 팀 엘더 드래곤 킬 수
+//		            .teamRiftHeraldKills(challengesEntity.getTeamRiftHeraldKills())                                          // 팀 전령 킬 수
+//		            .visionScorePerMinute(challengesEntity.getVisionScorePerMinute())                                        // 분당 시야 점수
+//		            .goldPerMinute(challengesEntity.getGoldPerMinute())                                                      // 분당 골드
+//		            .build();
+//		}
+
+		
 	}

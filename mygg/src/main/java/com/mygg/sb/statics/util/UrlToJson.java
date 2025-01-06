@@ -10,6 +10,8 @@ import java.util.HashMap;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.mygg.sb.exception.RiotApiBadRequest;
+import com.mygg.sb.exception.RiotApiForbidden;
 import com.mygg.sb.exception.RiotApiNotFound;
 import com.mygg.sb.statics.api.RiotApiConstants;
 
@@ -44,17 +46,17 @@ public class UrlToJson {
         connection.disconnect();
 
         // 에러 응답인 경우 예외 발생
-        // if (responseCode >= 400) {
-        // throw new RuntimeException("HTTP 에러 코드: " + responseCode + ", 응답: " +
-        // userJSON);
-        // }
         switch (responseCode) {
-            case 403:
-                throw new RiotApiNotFound("HTTP 에러 코드: " + responseCode + ", 응답: " + "API 처리가 유효하지 않습니다.");
-            case 404:
-                throw new RiotApiNotFound("HTTP 에러 코드: " + responseCode + ", 응답: " + "존재하지 않는 데이터입니다.");
-            default:
+            case 200:
                 return userJSON;
+            case 403:
+                throw new RiotApiForbidden("Riot API 응답이 유효하지 않습니다.");
+            case 404:
+                throw new RiotApiNotFound("Riot API 응답이 올바르지 않습니다.");
+            case 400:
+                throw new RiotApiBadRequest("Riot API 요청이 올바르지 않습니다.");
+            default:    //unexpected exception
+                throw new RuntimeException("Riot API Error 코드: " + responseCode + ", 응답: " + userJSON);
         }
     }
 

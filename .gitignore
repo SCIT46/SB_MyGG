@@ -23,6 +23,5 @@
 hs_err_pid*
 replay_pid*
 
-# Ignore .env Files
-.env
-src/main/resources/.env
+# properties secret file
+mygg/src/main/resources/application.properties

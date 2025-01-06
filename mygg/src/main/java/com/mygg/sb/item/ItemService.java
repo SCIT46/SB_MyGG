@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
+import com.mygg.sb.exception.DataNotFoundException;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDTOMapper;
 
@@ -93,7 +94,12 @@ public class ItemService {
       else {
         // JSON으로 부터 받아온 정보를 itemDto 객체에 설정
         JsonToDTOMapper mapper = new JsonToDTOMapper();
-        tmp = mapper.mapToDto(RiotApiClient.getItem(id_tmp), ItemDTO.class);
+        try{
+          tmp = mapper.mapToDto(RiotApiClient.getItem(id_tmp), ItemDTO.class);
+        }
+        catch(NullPointerException e){
+          throw new DataNotFoundException("존재하지 않는 아이템입니다.");
+        }
         tmp.setId(id_tmp); 
         // 아이템 맵에 저장
         item.put(id_tmp, tmp);

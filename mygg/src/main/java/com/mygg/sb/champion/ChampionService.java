@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 
 import org.springframework.stereotype.Service;
 
+import com.mygg.sb.exception.DataNotFoundException;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDTOMapper;
 
@@ -97,7 +98,12 @@ public class ChampionService {
       else {
         // JSON으로 부터 받아온 정보를 champDto 객체에 설정
         JsonToDTOMapper mapper = new JsonToDTOMapper();
-        tmp = mapper.mapToDto(RiotApiClient.getChampion(id_tmp), ChampionDTO.class);
+        try{
+          tmp = mapper.mapToDto(RiotApiClient.getChampion(id_tmp), ChampionDTO.class);
+        }
+        catch(NullPointerException e){
+          throw new DataNotFoundException("존재하지 않는 챔피언입니다.");
+        }
         tmp.setId(id_tmp); 
         // 챔피언 맵에 저장
         champion.put(id_tmp, tmp);

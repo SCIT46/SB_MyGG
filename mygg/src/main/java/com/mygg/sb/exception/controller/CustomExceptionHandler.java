@@ -5,10 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.mygg.sb.exception.DataNotFoundException;
-import com.mygg.sb.exception.RiotApiBadRequest;
-import com.mygg.sb.exception.RiotApiForbidden;
-import com.mygg.sb.exception.RiotApiNotFound;
+import com.mygg.sb.exception.custom.DataNotFoundException;
+import com.mygg.sb.exception.custom.RiotApiBadRequest;
+import com.mygg.sb.exception.custom.RiotApiForbidden;
+import com.mygg.sb.exception.custom.RiotApiNotFound;
 import com.mygg.sb.exception.dto.ErrorDTO;
 
 @RestControllerAdvice

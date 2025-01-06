@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mygg.sb.BaseDTO;
 import com.mygg.sb.champion.ChampionDTO;
 import com.mygg.sb.champion.ChampionService;
 import com.mygg.sb.item.ItemDTO;
 import com.mygg.sb.item.ItemService;
 import com.mygg.sb.rune.RuneDTO;
 import com.mygg.sb.rune.RuneService;
+import com.mygg.sb.search.SearchBaseDTO;
 import com.mygg.sb.search.SearchService;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.service.PublicMatchService;
@@ -101,7 +101,7 @@ public class ApiController {
 
     // Search(검색 정보제공) API
     @GetMapping(path = "/search/{keyword}")
-    public ResponseEntity<Map<String, List<? extends BaseDTO>>> search(@PathVariable("keyword") String keyword) throws Exception {
+    public ResponseEntity<Map<String, List<? extends SearchBaseDTO>>> search(@PathVariable("keyword") String keyword) throws Exception {
         return ResponseEntity.ok(searchService.search(keyword));
     }
 }

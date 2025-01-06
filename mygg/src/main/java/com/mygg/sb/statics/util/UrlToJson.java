@@ -10,9 +10,9 @@ import java.util.HashMap;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.mygg.sb.exception.RiotApiBadRequest;
-import com.mygg.sb.exception.RiotApiForbidden;
-import com.mygg.sb.exception.RiotApiNotFound;
+import com.mygg.sb.exception.custom.RiotApiBadRequest;
+import com.mygg.sb.exception.custom.RiotApiForbidden;
+import com.mygg.sb.exception.custom.RiotApiNotFound;
 import com.mygg.sb.statics.api.RiotApiConstants;
 
 public class UrlToJson {

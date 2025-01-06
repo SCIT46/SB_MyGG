@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 
 import org.springframework.stereotype.Service;
 
-import com.mygg.sb.exception.DataNotFoundException;
+import com.mygg.sb.exception.custom.DataNotFoundException;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDTOMapper;
 

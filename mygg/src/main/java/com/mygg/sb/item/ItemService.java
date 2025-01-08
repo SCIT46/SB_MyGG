@@ -9,27 +9,18 @@ import java.util.TreeMap;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
+import com.mygg.sb.exception.custom.DataNotFoundException;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.JsonToDTOMapper;
 
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Getter
 @Service
+@RequiredArgsConstructor
 public class ItemService {
   // ############################ Field & Constructor ############################
   // JPA Repository
   private final ItemRepository itemRepository;
-
-  // 아이템 맵
-  Map<String, ItemDTO> item;
-
-  // 아이템 맵 초기화/생성(lombok 자동 생성 불가)
-  public ItemService(ItemRepository itemRepository) {
-    this.itemRepository = itemRepository;
-    this.item = new TreeMap<>();
-  }
-  // ===========================================================================
 
   // ################################# JPA CRUD ################################
   public void create(ItemDTO dto) {
@@ -70,76 +61,54 @@ public class ItemService {
 
   // ################################### API ###################################
   // 아이템 아이디로 아이템 정보 받아오기
-  public Map<String, ItemDTO> getItem(String id) throws Exception {
-    // 아이템 맵 초기화
-    item.clear();
-
-    // 아이디로 아이템 정보 추출/저장하여 객체화 시켜주는 메서드 호출
-    item.put(id, createItemDto(id));
-
-    return this.item;
-  }
-
-  // 전체 아이템 정보 받아오기
-  public Map<String, ItemDTO> getItems() throws Exception {
-    // 아이템 맵 초기화
-    item.clear();
-
-    // itemRepository.findAll().forEach(itemEntity -> {
-    // item.put(itemEntity.getId(), ItemDTO.toDTO(itemEntity));
-    // });
-
-    // 아이템 아이디 리스트 조회
-    List<String> itemIdList = getItemIds();
-
-    // ID 리스트로 전체 정보 받아와 아이템 맵에 저장
-    for (String id : itemIdList) {
-      item.put(id, createItemDto(id));
-    }
-
-    return this.item;
-
-    // JSONObject resultItem = new JSONObject();
-
-    // resultItem.put("version", RiotApiClient.getLatestVersion());
-    // resultItem.put("data", item);
-
-    // return resultItem;
-  }
-
   // 아이디로 아이템 정보 추출/저장하여 객체화 시켜주는 메서드
-  public ItemDTO createItemDto(String id) throws Exception {
-    // 아이템 정보 초기화
-    ItemDTO item = new ItemDTO();
+  public Map<String, ItemDTO> getItem(String id) throws Exception {
+    // 아이템 맵
+    Map<String, ItemDTO> item = new TreeMap<>();
 
-    // DB에서 아이템 정보 조회
-    Optional<ItemEntity> itemEntity = itemRepository.findById(id);
-    if (itemEntity.isPresent()) {
-      item = ItemDTO.toDTO(itemEntity.get());
-    }
-    // DB에 없는 아이템일 경우
-    else {
-      // 아이템 정보 조회
-      JSONObject jsonObject = RiotApiClient.getItem(id);
-
-      // JSON으로 부터 받아온 정보를 itemDto 객체에 설정
-      JsonToDTOMapper mapper = new JsonToDTOMapper();
-      item = mapper.mapToDto(jsonObject, ItemDTO.class);
-      item.setId(id);
-
-      // DB에 아이템 정보 저장
-      itemRepository.save(ItemEntity.toEntity(item));
-    }
-    return item;
-  }
-
-  public List<String> getItemIds() throws Exception {
     // 아이템의 전체 정보 받아오기
     JSONObject jsonObject = RiotApiClient.getItem("all");
+    // 아이템 아이디 리스트
+    List<String> itemIdList;
+    // 전체 아이템 정보 받아오기
+    if(id.equals("all")) {
+      // 아이템의 전체 아이디 받아오기/저장
+      itemIdList = new ArrayList<>(jsonObject.keySet());
+    }
+    // 지정 아이템 정보 받아오기
+    else{
+      // 지정해준 아이템 아이디만 리스트에 저장
+      itemIdList = new ArrayList<>();
+      itemIdList.add(id);
+    }
 
-    // 아이템의 전체 아이디 받아오기/저장
-    List<String> itemIdList = new ArrayList<>(jsonObject.keySet());
+    // ID 리스트로 전체 정보 받아와 아이템 맵에 저장
+    for (String id_tmp : itemIdList) {
+      // DB에서 아이템 정보 조회
+      ItemDTO tmp = readOne(id_tmp);
+      // DB에 있으면 바로 아이템 맵에 저장
+      if(tmp != null) {
+        item.put(id_tmp, tmp);
+      }
+      // DB에 없으면 API로부터 아이템 정보 받아와 DB 및 아이템 맵에 저장
+      else {
+        // JSON으로 부터 받아온 정보를 itemDto 객체에 설정
+        JsonToDTOMapper mapper = new JsonToDTOMapper();
+        try{
+          tmp = mapper.mapToDto(RiotApiClient.getItem(id_tmp), ItemDTO.class);
+        }
+        catch(NullPointerException e){
+          throw new DataNotFoundException("존재하지 않는 아이템입니다.");
+        }
+        tmp.setId(id_tmp); 
+        // 아이템 맵에 저장
+        item.put(id_tmp, tmp);
+        // DB에 아이템 정보 저장
+        create(tmp);
+      }
+    }
 
-    return itemIdList;
+    // 아이템 맵 반환
+    return item;
   }
 }

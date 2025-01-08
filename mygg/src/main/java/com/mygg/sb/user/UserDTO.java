@@ -2,7 +2,7 @@ package com.mygg.sb.user;
 
 import java.time.LocalDateTime;
 
-import com.mygg.sb.BaseDTO;
+import com.mygg.sb.search.SearchBaseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder
-public class UserDTO extends BaseDTO {
+public class UserDTO extends SearchBaseDTO {
     private Long id;
 
     private String leagueId;

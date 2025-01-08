@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.mygg.sb.BaseDTO;
 import com.mygg.sb.champion.ChampionDTO;
 import com.mygg.sb.champion.ChampionEntity;
 import com.mygg.sb.champion.ChampionRepository;
@@ -37,10 +36,10 @@ public class SearchService {
     private final ChampionRepository champRepo;
     private final UserRepository userRepo;
 
-    public Map<String, List<? extends BaseDTO>> search(String query) {
+    public Map<String, List<? extends SearchBaseDTO>> search(String query) {
         // log.info("query: {}", KoreanInputSupport.toKorean(query));
         // 검색어 결과 JSON으로 반환해줄 객체
-        Map<String, List<? extends BaseDTO>> result = new HashMap<>();
+        Map<String, List<? extends SearchBaseDTO>> result = new HashMap<>();
         // 아이템, 챔피언, 유저 정보를 각각 찾아서 넣음
         result.put("item", itemFind(query));
         result.put("champion", champFind(query));

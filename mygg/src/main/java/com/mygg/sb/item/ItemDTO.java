@@ -3,7 +3,7 @@ package com.mygg.sb.item;
 import java.util.List;
 import java.util.Map;
 
-import com.mygg.sb.BaseDTO;
+import com.mygg.sb.search.SearchBaseDTO;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ItemDTO extends BaseDTO {
+public class ItemDTO extends SearchBaseDTO {
     // field
     // 아이템 아이디
     private String id;

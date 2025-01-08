@@ -1,10 +1,11 @@
-package com.mygg.sb;
+package com.mygg.sb.controller;
 
 import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import com.mygg.sb.item.ItemDTO;
 import com.mygg.sb.item.ItemService;
 import com.mygg.sb.rune.RuneDTO;
 import com.mygg.sb.rune.RuneService;
+import com.mygg.sb.search.SearchBaseDTO;
 import com.mygg.sb.search.SearchService;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.service.PublicMatchService;
@@ -55,65 +57,51 @@ public class ApiController {
 
     // Public Match(API로부터 받아온 결과) API
     @GetMapping(path = "/match/public/{matchId}")
-    public MatchDTO publicMatch(@PathVariable("matchId") String matchId) throws Exception {
-        return publicMatchService.getMatchInfo(matchId);
+    public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception {
+        return ResponseEntity.ok(publicMatchService.getMatchInfo(matchId));
+
     }
 
     // User(유저 정보제공) API
     @GetMapping(path = "/user/{name}/{tag}")
     @Transactional
-    public UserDTO user(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception {
-        // DB에 저장된 유저 정보를 받아오기
-        UserDTO user = userService.readOne(name, tag);
-        if (user == null) {
-            // DB에 유저 정보가 없으면 API로부터 유저 정보를 받아와 DB에 저장
-            user = userService.getUserInfo(name, tag);
-            userService.create(user);
-
-            return user;
-        }
-        // 유저 검색 횟수 증가
-        user.setSearchCount(user.getSearchCount() + 1);
-        userService.update(user);
-        // DB에 저장된 유저 정보를 반환
-        return user;
+    public ResponseEntity<UserDTO> user(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception {
+        return ResponseEntity.ok(userService.searchUser(name, tag));
     }
 
     // Item(아이템 전체 정보제공) API
     @GetMapping(path = "/item")
-    public Map<String, ItemDTO> items() throws Exception {
-        return itemService.getItems();
+    public ResponseEntity<Map<String, ItemDTO>> item() throws Exception {
+        return ResponseEntity.ok(itemService.getItem("all"));
     }
 
     // Item(아이템 정보제공) API
     @GetMapping(path = "/item/{id}")
-    public Map<String, ItemDTO> item(@PathVariable("id") String id) throws Exception {
-        // itemService = new ItemService(id);
-        return itemService.getItem(id);
+    public ResponseEntity<Map<String, ItemDTO>> item(@PathVariable("id") String id) throws Exception {
+        return ResponseEntity.ok(itemService.getItem(id));
     }
 
     // Champion(챔피언 전체 정보제공) API
     @GetMapping(path = "/champion")
-    public Map<String, ChampionDTO> champions() throws Exception {
-        // championsService = new ChampionsService();
-        return championService.getChampions();
+    public ResponseEntity<Map<String, ChampionDTO>> champion() throws Exception {
+        return ResponseEntity.ok(championService.getChampion("all"));
     }
-
+    
     // Champion(챔피언 정보제공) API
     @GetMapping(path = "/champion/{id}")
-    public Map<String, ChampionDTO> champion(@PathVariable("id") String id) throws Exception {
-        // championService = new ChampionService(id);
-        return championService.getChampion(id);
+    public ResponseEntity<Map<String, ChampionDTO>> champion(@PathVariable("id") String id) throws Exception {
+        return ResponseEntity.ok(championService.getChampion(id));
     }
 
+    // Rune(룬 전체 정보제공) API
     @GetMapping(path = "/runesReforged")
-    public JSONObject runes() throws Exception {
-        return runeService.getRuneDto();
+    public ResponseEntity<JSONObject> rune() throws Exception {
+        return ResponseEntity.ok(runeService.getRuneDto());
     }
-    // Search(검색 정보제공) API
 
+    // Search(검색 정보제공) API
     @GetMapping(path = "/search/{keyword}")
-    public Map<String, List<? extends BaseDTO>> search(@PathVariable("keyword") String keyword) throws Exception {
-        return searchService.search(keyword);
+    public ResponseEntity<Map<String, List<? extends SearchBaseDTO>>> search(@PathVariable("keyword") String keyword) throws Exception {
+        return ResponseEntity.ok(searchService.search(keyword));
     }
 }

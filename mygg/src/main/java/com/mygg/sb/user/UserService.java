@@ -6,28 +6,22 @@ import java.util.Optional;
 
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.util.DateTimeUtils;
 
-import jakarta.transaction.Transactional;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 @Getter
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class UserService {
   // ############################ Field & Constructor ############################
   private final UserRepository userRepository;
-  // 유저 정보
-  private UserDTO user;
 
-  // // 유저 정보 초기화/생성(lombok 자동 생성 불가)
-  public UserService(UserRepository userRepository) throws Exception {
-    this.user = new UserDTO();
-    this.userRepository = userRepository;
-  }
   // ===========================================================================
 
   // ################################# JPA CRUD ################################
@@ -68,31 +62,60 @@ public class UserService {
   }
   // ===========================================================================
 
+  public UserDTO searchCountUp(UserDTO dto) {
+    Optional<UserEntity> tmp = userRepository.findById(dto.getId());
+    if (tmp.isPresent()) {
+      UserEntity entity = tmp.get();
+      entity.setSearchCount(entity.getSearchCount() + 1);
+      return UserDTO.toDTO(entity);
+    }
+    return null;
+  }
   // ################################### API ###################################
+  @Transactional(noRollbackFor = {Exception.class})
+  public UserDTO searchUser(String gameName, String tagLine) throws Exception {
+    // DB에 저장된 유저 정보를 받아오기
+    UserDTO user = readOne(gameName, tagLine);
+    if (user != null) {
+      // 유저 검색 횟수 증가/유저 정보를 반환
+      return searchCountUp(user);
+    }
+    // DB에 유저 정보가 없으면 API로부터 유저 정보를 받아와 DB에 저장
+    user = getUserInfo(gameName, tagLine);
+    log.info("user : {}", user);
+    create(user);
+    return user;
+  }
+
+
   // 이름과 태그를 통해 소환사 정보를 불러올 때 사용하는 생성자
   public UserDTO getUserInfo(String gameName, String tagLine) throws Exception {
-
+    UserDTO user = new UserDTO();
     // 이름과 태그를 puuid로 변환
     user.setGameName(gameName);
     user.setTagLine(tagLine);
+
     user.setPuuid(RiotApiClient.getPuuidNameAndTag(gameName, tagLine));
-    init();
-    return this.user;
+
+    init(user);
+    return user;
   }
 
   // puuid를 통해 소환사 정보를 불러올 때 사용하는 생성자 (미사용)
   public UserDTO getUserInfo(String puuid) throws Exception {
+    UserDTO user = new UserDTO();
+
     user.setPuuid(puuid);
     String[] nametag = RiotApiClient.getNametag(puuid);
     user.setGameName(nametag[0]);
     user.setTagLine(nametag[1]);
-    init();
-
-    return this.user;
+    init(user);
+    return user;
   }
 
   // 인스턴스 초기화 구문
-  private void init() throws Exception {
+  // 3개의 api 정보를 이용해서 1개의 유저정보로 초기화
+  private void init(UserDTO user) throws Exception {
     // 소환사 정보 JSON
     JSONObject jsonObject = RiotApiClient.getSummonerInfo(user.getPuuid()); // (JSONObject) parser.parse(summoJSON);
     user.setSummonerId((String) jsonObject.get("id"));

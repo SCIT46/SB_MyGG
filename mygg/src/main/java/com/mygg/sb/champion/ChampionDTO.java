@@ -3,7 +3,7 @@ package com.mygg.sb.champion;
 import java.util.List;
 import java.util.Map;
 
-import com.mygg.sb.BaseDTO;
+import com.mygg.sb.search.SearchBaseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder
-public class ChampionDTO extends BaseDTO {
+public class ChampionDTO extends SearchBaseDTO {
     // field
     private String id;
     private String key;

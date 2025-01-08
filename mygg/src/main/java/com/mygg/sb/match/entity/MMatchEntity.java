@@ -22,6 +22,7 @@ public class MMatchEntity
 	{
 		@Id
 		private String matchId;
+		private String matchOnerPuuid;
 		
 		private MMatchInfoEntity info;
 		private MMetadataEntity metadata;

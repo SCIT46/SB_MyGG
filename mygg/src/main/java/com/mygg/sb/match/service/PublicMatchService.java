@@ -128,6 +128,7 @@ public class PublicMatchService
 				 _entity.setMetadata(modelMapper.map(listMatchDto.get(i).getMetadata(), MMetadataEntity.class));
 				 _entity.setMatchId(listMatchDto.get(i).getMetadata().getMatchId());
 				 mMatchList.add(_entity);
+				 mMatchesRepository.save(_entity);
 			}
 			
 			//return listMatchDto;

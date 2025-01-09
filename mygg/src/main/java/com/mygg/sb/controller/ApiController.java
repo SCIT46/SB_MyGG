@@ -62,12 +62,27 @@ public class ApiController {
 
     }
 
+    // 유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)
+    @GetMapping(path = "/match/public/{puuid}")
+    public ResponseEntity<List<MatchDTO>> userMatch(@PathVariable("puuid") String puuid) throws Exception {
+        // TODO: 유저 전적 조회 로직 추가
+        return ResponseEntity.ok(List.of(publicMatchService.getMatchInfo(puuid)));
+    }
+
     // User(유저 정보제공) API
     @GetMapping(path = "/user/{name}/{tag}")
     @Transactional
     public ResponseEntity<UserDTO> user(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception {
         return ResponseEntity.ok(userService.searchUser(name, tag));
     }
+
+    // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2)
+    // @GetMapping(path = "/user/update/{puuid}")
+    // @Transactional
+    // public ResponseEntity<UserDTO> userUpdate(@PathVariable("puuid") String puuid) throws Exception {
+    //     // TODO: 유저 최신 데이터 조회/저장 로직 추가
+    //     return ResponseEntity.ok(userService.searchUser(puuid));
+    // }
 
     // Item(아이템 전체 정보제공) API
     @GetMapping(path = "/item")

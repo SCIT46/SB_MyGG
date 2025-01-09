@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -76,6 +77,10 @@ public class UserEntity {
     @ColumnDefault("0")
     private long searchCount;
 
+    @Column(name = "last_update_date")
+    //@UpdateTimestamp
+    private LocalDateTime lastUpdateDate;
+
     public static UserEntity toEntity(UserDTO dto) {
         return UserEntity.builder()
                 .id(dto.getId())
@@ -93,6 +98,7 @@ public class UserEntity {
                 .losses(dto.getLosses())
                 .revisionDate(dto.getRevisionDate())
                 .searchCount(dto.getSearchCount())
+                .lastUpdateDate(dto.getLastUpdateDate())
                 .build();
     }
 }

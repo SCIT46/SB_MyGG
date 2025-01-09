@@ -3,6 +3,7 @@ package com.mygg.sb.match.service;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -19,20 +20,20 @@ import com.mygg.sb.match.repository.UserMatchesRepository;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.api.RiotSeasonConstants;
 import com.mygg.sb.statics.util.JsonToDTOMapper;
-
+import com.mygg.sb.user.UserDTO;
+import com.mygg.sb.user.UserEntity;
 import com.mygg.sb.user.UserRepository;
+import com.mygg.sb.user.UserService;
 
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-// riot api로 부터 받아온 match JSON 파일을 DB에 저장(matchId / match.JSON)
-// /api/user/{userId} -> DB에 userId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return 
-// /api/match/public/{matchId} -> DB에 matchId.JSON이 있는가? DB에서 JSON 불러오기 : riot API에서 JSON 불러오기 / DB에 기록 -> JSON parsing / return
+
 @Getter
 @RequiredArgsConstructor
 @Service
 @Slf4j
-
 public class PublicMatchService
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
@@ -43,9 +44,10 @@ public class PublicMatchService
 		private final UserMatchesRepository userMatchesRepo;
 		private final UserRepository userRepository;
 		private final MMatchesRepository mMatchesRepository;
+		private final UserService	userService;
 		private final ModelMapper modelMapper;
 		
-		private final int count = 2;					// api에 요청할 찾을 데이터 수
+		private final int count = 5;					// api에 요청할 찾을 데이터 수
 		private final int limitRequestForSecond = 20;	// 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100;	// 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		
@@ -54,10 +56,10 @@ public class PublicMatchService
 				// 테스트 코드
 				return indexingData(name, tag);
 			}
-
-		
+	
 		private List<MMatchEntity> indexingData(String _name, String _tag) throws Exception
 		{
+			clickRefreshBtn(_name, _tag);
 			//1. DB내의 마지막 매치 데이터를 조회한다.
 			//2. api에게 매치데이터 100개를 받아온다.
 			//3. 마지막 매치데이터 ~ api의 매치데이터의 데이터를 받아온다.
@@ -137,7 +139,7 @@ public class PublicMatchService
 		
 		public MatchDTO getMatchInfo(String matchId) throws Exception
 			{
-				// matchid를 받아서 그 매치의 정보를 받아오는 함수
+				// matchid를 api에게 요청해서 받아오고 MatchDTO를 반환하는 함수
 				
 //				MatchDTO result = new MatchDTO();				
 				MetadataDTO metadata = new MetadataDTO();
@@ -146,7 +148,6 @@ public class PublicMatchService
 				// matchId로 매치 정보(JSONObject) 변환							// String 형태의 JSON 데이터를 JSONObject(HashMap)형 jsonObject로 변환
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId);	//(JSONObject) parser.parse(matchJSON);
 				JsonToDTOMapper mapper = new JsonToDTOMapper();
-				
 				
 //				result = mapper.mapToDto(jsonObject, MatchDTO.class);
 				// jsonObject의 JSON Key값으로 모든 데이터 조회
@@ -170,22 +171,76 @@ public class PublicMatchService
 				return result;
 			}
 		
-		private int indexOf(String[] array, String keyword) {
-			// Index Of: 필요: 유저 데이터가 이미 조회가 된 상태에서
-			// 일정 데이터 ~ 마지막 로딩 데이터 사이를 조회하기 위해 만든 함수
-		    for (int i = 0; i < array.length; i++) 
-		    {
-		        if (array[i] != null && array[i].equals(keyword)) {
-		            return i; // 단어를 찾으면 인덱스 반환
-		        }
-		    }
-		    return -1; // 찾지 못한 경우 -1 반환
+		@Transactional
+		public void clickRefreshBtn(String _name, String _tag) throws Exception
+		{
+			// 전적갱신 버튼을 눌렀을 때 일어날 메소드
+			// 1. User가 DB에 없다면 이 유저의 이번 시즌 모든 데이터를 갖고온다.
+			UserDTO user = userService.searchUser(_name, _tag);
+			
+			// 2. User가 있다면 DB에서 제일 마지막 매치 데이터의 타임스탬프를 갖고온다.
+			List<Optional<MMatchEntity>> matchData = mMatchesRepository.findByInfoParticipantsPuuidOrderByInfoGameEndTimestamp(user.getPuuid());
+			
+			long endTimeStamp = matchData.get(matchData.size()-1).get().getInfo().getGameEndTimestamp();
+			String matchId = matchData.get(matchData.size()-1).get().getMatchId();
+			
+			String[] arrStr = new String[100];
+			List<String> listWillFindMatchIds = new ArrayList<>();
+			int start = 0;					// 찾기 시작하는 위치 
+			int indexInList = -1;			// 리스트 내에서 DB에 있는 마지막 DB
+			int currentRequestCnt = 0;		// 
+			int nullIdx = -1;
+			
+			while(arrStr.length > 99 && nullIdx == -1)
+			{
+				currentRequestCnt++;
+				
+				// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
+				arrStr = RiotApiClient.getMatchList(user.getPuuid(), start, count,
+						RiotSeasonConstants.getCurrentYearSeasonStartTimeStamp(), RiotSeasonConstants.getNowEndSeasonTimeStamp());
+				
+				start += count;
+				
+				for(int i = 0; i < arrStr.length; i++)
+					{
+						 try
+							{
+								if(!mMatchesRepository.existsById(arrStr[i])) 
+										listWillFindMatchIds.add(arrStr[i]);
+							} 
+						 catch (Exception e)
+							{
+								log.info("matchID 존재하는지 여부 검사 중 에러 발생 {}", e.getMessage());
+							}
+					}
+			}
 		}
 		
-		private boolean checkTimeStamp(long time, long seasonStart)
+		private List<MatchDTO> requestMatchIDToAPI(List<String> _matchIds)
 		{
-			// 일정 기간 안쪽인지 true | false를 반환하는 함수이다
-			return time > seasonStart;
+			// matchId를 넣어주면 DB에 없는 것들만 조회해서 List로 Data를 반환한다.
+			int nullIdx = -1;
+			String[] arrStr = new String[100];	
+			
+//			while(arrStr.length > 99 && nullIdx == -1)
+//			{
+//				currentRequestCnt++;
+//				
+//				// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
+//				arrStr = RiotApiClient.getMatchList(puuid, start, count,
+//						RiotSeasonConstants.getCurrentYearSeasonStartTimeStamp(), RiotSeasonConstants.getNowEndSeasonTimeStamp());
+//
+//				// DB에 접근해서 lastMatchId를 갖고 온다. 없다면 pass
+//				// indexInList = indexOf(arrStr, lastMatchId);
+//				start += count;
+//				
+//				//  3-4) List에 [index]부터 [0]까지 저장(list가 최근 - 오래된)
+//				for(int i = 0; i < arrStr.length; i++)
+//					{
+//						listUserMatches.add(arrStr[i]);
+//					}
+//			}
+			return null;
 		}
 		
 		private boolean checkRequestSecondLimit(int curRequest) throws InterruptedException

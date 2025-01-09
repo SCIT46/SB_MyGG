@@ -1,43 +1,26 @@
 package com.mygg.sb.statics.api;
 
-<<<<<<< HEAD
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-=======
->>>>>>> branch 'master' of https://github.com/SCIT46/SB_MyGG.git
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-<<<<<<< HEAD
 import io.github.cdimascio.dotenv.Dotenv;
-=======
->>>>>>> branch 'master' of https://github.com/SCIT46/SB_MyGG.git
 import jakarta.annotation.PostConstruct;
 
 @Configuration
-public class RiotApiConstants {
-<<<<<<< HEAD
-	@Value("${api_key}")
-	private String apikey;
-	public static String API_KEY;
-	
-	@PostConstruct
-	public void init()
-	{
-		API_KEY = apikey;
-	}
-=======
+public class RiotApiConstants 
+{
     @Value("${api_key}")
     private String apiKey;
     public static String API_KEY;
 
     @PostConstruct
-    public void init() {
+    public void init() 
+    {
         API_KEY = apiKey;
     }
-
->>>>>>> branch 'master' of https://github.com/SCIT46/SB_MyGG.git
     // https://developer.riotgames.com/docs/lol
     public static final String LANGUAGE = CountryType.Korea.getCountry(); // RiotApiClient.getLanguage();
     public static final String LATEST_VERSION;

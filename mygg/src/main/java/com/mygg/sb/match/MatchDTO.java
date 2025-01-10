@@ -15,6 +15,8 @@ import lombok.ToString;
 @Builder
 public class MatchDTO
 	{
+		private String matchId;
+		
 		private MatchInfoDTO Info;
 		private MetadataDTO metadata;
 

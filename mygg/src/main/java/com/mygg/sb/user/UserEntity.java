@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -78,7 +77,6 @@ public class UserEntity {
     private long searchCount;
 
     @Column(name = "last_update_date")
-    //@UpdateTimestamp
     private LocalDateTime lastUpdateDate;
 
     public static UserEntity toEntity(UserDTO dto) {

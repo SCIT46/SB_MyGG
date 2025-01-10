@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.mygg.sb.search.SearchBaseDTO;
 import com.mygg.sb.search.SearchService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -22,8 +23,9 @@ import lombok.RequiredArgsConstructor;
 public class SearchController {
 
     private final SearchService searchService;
-
+    
     // Search(검색 정보제공) API
+    @Operation(summary = "Search(검색 정보제공) API", description = "Search(검색 정보제공) API")
     @GetMapping(path = "/{keyword}")
     public ResponseEntity<Map<String, List<? extends SearchBaseDTO>>> search(@PathVariable("keyword") String keyword) throws Exception {
         return ResponseEntity.ok(searchService.search(keyword));

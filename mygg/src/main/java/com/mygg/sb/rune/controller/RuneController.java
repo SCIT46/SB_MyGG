@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mygg.sb.rune.RuneService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +21,7 @@ public class RuneController {
     private final RuneService runeService;
 
     // Rune(룬 전체 정보제공) API
+    @Operation(summary = "Rune(룬 전체 정보제공) API", description = "Rune(룬 전체 정보제공) API")
     @GetMapping(path ="/runesReforged")
     public ResponseEntity<JSONObject> rune() throws Exception {
         return ResponseEntity.ok(runeService.getRuneDto());

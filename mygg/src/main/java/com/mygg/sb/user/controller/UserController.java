@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.mygg.sb.user.UserDTO;
 import com.mygg.sb.user.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +23,7 @@ public class UserController {
     private final UserService userService;
 
     // User(유저 정보제공) API
+    @Operation(summary = "User(유저 정보제공) API", description = "User(유저 정보제공) API")
     @GetMapping(path = "/{name}/{tag}")
     @Transactional
     public ResponseEntity<UserDTO> user(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception {

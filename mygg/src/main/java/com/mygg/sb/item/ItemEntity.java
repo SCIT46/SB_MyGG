@@ -64,7 +64,7 @@ public class ItemEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "item_maps", joinColumns = @JoinColumn(name = "item_id"))
     @Column(name = "maps")
-    private Map<String, String> maps;
+    private Map<String, Boolean> maps;
 
     // 아이템 성능(효과) 정보
     @ElementCollection

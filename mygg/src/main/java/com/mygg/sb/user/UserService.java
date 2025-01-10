@@ -87,6 +87,13 @@ public class UserService {
     return user;
   }
 
+  public UserDTO updateUser(String puuid) throws Exception {
+    //TODO: Riot 유저 갱신에 90일 제한 등이 있다면 API 호출 안하도록 로직
+    UserDTO user = getUserInfo(puuid);
+    update(user);
+    return user;
+  }
+
 
   // 이름과 태그를 통해 소환사 정보를 불러올 때 사용하는 생성자
   public UserDTO getUserInfo(String gameName, String tagLine) throws Exception {

@@ -31,15 +31,14 @@ public class UserController {
     }
 
     // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2)
-    // @GetMapping(path = "/update/{puuid}")
-    // @Transactional
-    // public ResponseEntity<UserDTO> userUpdate(@PathVariable("puuid") String puuid) throws Exception {
-    //     // TODO: 유저 최신 데이터 조회/저장 로직 추가
-    //     return ResponseEntity.ok(userService.searchUser(puuid));
-    // }
+    @GetMapping(path = "/update/{puuid}")
+    @Transactional
+    public ResponseEntity<UserDTO> userUpdate(@PathVariable("puuid") String puuid) throws Exception {
+        return ResponseEntity.ok(userService.updateUser(puuid));
+    }
 
 
-    //User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2)
+    // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2)
     // @GetMapping(path = "/update/{puuid}")
     // public ResponseEntity userUpdate(@PathVariable("puuid") String puuid) throws Exception {
     // // TODO: 유저 최신 데이터 조회/저장 로직 추가

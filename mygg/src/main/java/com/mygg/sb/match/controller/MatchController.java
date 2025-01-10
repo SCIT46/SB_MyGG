@@ -14,6 +14,7 @@ import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.entity.MMatchEntity;
 import com.mygg.sb.match.service.PublicMatchService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -26,15 +27,15 @@ public class MatchController
 		private final PublicMatchService publicService;
 		//private final PrivateMatchService privateMatchService;
 		
+		@Operation(summary = "Public Match List (API로부터 받아온 결과) API", description = "Public Match List(API로부터 받아온 결과) API")
 		@GetMapping("/test/{name}/{tag}")
 		@ResponseBody
-		public List<MatchDTO> getMethodName(@PathVariable(name="name") String name,
-										  @PathVariable(name="tag") String tag) throws Exception 
-		{
-			//List<MatchDTO> matchesIds = publicService.run(name, tag);
+		public ResponseEntity<List<MatchDTO>> getMethodName(@PathVariable(name = "name") String name,
+				@PathVariable(name = "tag") String tag) throws Exception {
+			// List<MatchDTO> matchesIds = publicService.run(name, tag);
 			// matchesIdes[0]: 제일최근, amtchesides[..]: 제일 나중
-			
-			return publicService.run(name, tag);
+
+			return ResponseEntity.ok(publicService.run(name, tag));
 		}
 		
 
@@ -47,16 +48,26 @@ public class MatchController
 		// }
 
 		// Public Match(API로부터 받아온 결과) API
+		@Operation(summary = "Public Match(API로부터 받아온 결과) API", description = "Public Match(API로부터 받아온 결과) API")
 		@GetMapping(path = "/public/{matchId}")
 		public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception {
+<<<<<<< HEAD
 			return ResponseEntity.ok(publicService.changeJSONToDTOMatchData(matchId));
+=======
+			return ResponseEntity.ok(publicService.getMatchInfo(matchId));
+>>>>>>> branch 'IncludeMongoDB' of https://github.com/SCIT46/SB_MyGG.git
 		}
 
 		// 유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)
+		@Operation(summary = "유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)", description = "유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)")
 		@GetMapping(path = "/public/{puuid}")
 		public ResponseEntity<List<MatchDTO>> userMatch(@PathVariable("puuid") String puuid) throws Exception {
 			// TODO: 유저 전적 조회 로직 추가
+<<<<<<< HEAD
 			return ResponseEntity.ok(List.of(publicService.changeJSONToDTOMatchData(puuid)));
+=======
+			return ResponseEntity.ok(List.of(publicService.getMatchInfo(puuid)));
+>>>>>>> branch 'IncludeMongoDB' of https://github.com/SCIT46/SB_MyGG.git
 		}
 		
 	}

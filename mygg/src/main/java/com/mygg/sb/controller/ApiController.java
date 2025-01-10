@@ -56,18 +56,18 @@ public class ApiController {
     // }
 
     // Public Match(API로부터 받아온 결과) API
-    @GetMapping(path = "/match/public/{matchId}")
-    public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception {
-        return ResponseEntity.ok(publicMatchService.getMatchInfo(matchId));
-
-    }
+//    @GetMapping(path = "/match/public/{matchId}")
+//    public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception {
+//        return ResponseEntity.ok(publicMatchService.getMatchInfo(matchId));
+//
+//    }
 
     // 유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)
-    @GetMapping(path = "/match/public/{puuid}")
-    public ResponseEntity<List<MatchDTO>> userMatch(@PathVariable("puuid") String puuid) throws Exception {
-        // TODO: 유저 전적 조회 로직 추가
-        return ResponseEntity.ok(List.of(publicMatchService.getMatchInfo(puuid)));
-    }
+//    @GetMapping(path = "/match/public/{puuid}")
+//    public ResponseEntity<List<MatchDTO>> userMatch(@PathVariable("puuid") String puuid) throws Exception {
+//        // TODO: 유저 전적 조회 로직 추가
+//        return ResponseEntity.ok(List.of(publicMatchService.getMatchInfo(puuid)));
+//    }
 
     // User(유저 정보제공) API
     @GetMapping(path = "/user/{name}/{tag}")

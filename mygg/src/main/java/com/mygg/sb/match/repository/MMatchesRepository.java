@@ -3,6 +3,8 @@ package com.mygg.sb.match.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -15,7 +17,7 @@ public interface MMatchesRepository extends MongoRepository<MMatchEntity, String
 		public Optional<MMatchEntity> findByInfoParticipantsPuuid(String puuid);
 
 		//@Query(value = "{ 'info.participants.puuid': ?0 }", sort = "{ 'info.gameEndTimestamp': 1 }")
-		public List	<Optional<MMatchEntity>> findByInfoParticipantsPuuidOrderByInfoGameEndTimestamp(String puuid);
+		public Page<MMatchEntity> findByInfoParticipantsPuuidOrderByInfoGameEndTimestamp(String puuid, Pageable pageable);
 
 		public Optional<MMatchEntity> findByInfoParticipantsPuuid(String puuid, Sort by);
 	}

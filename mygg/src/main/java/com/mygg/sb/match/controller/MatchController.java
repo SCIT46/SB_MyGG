@@ -51,11 +51,7 @@ public class MatchController
 		@Operation(summary = "Public Match(API로부터 받아온 결과) API", description = "Public Match(API로부터 받아온 결과) API")
 		@GetMapping(path = "/public/{matchId}")
 		public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception {
-<<<<<<< HEAD
 			return ResponseEntity.ok(publicService.changeJSONToDTOMatchData(matchId));
-=======
-			return ResponseEntity.ok(publicService.getMatchInfo(matchId));
->>>>>>> branch 'IncludeMongoDB' of https://github.com/SCIT46/SB_MyGG.git
 		}
 
 		// 유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)
@@ -63,11 +59,8 @@ public class MatchController
 		@GetMapping(path = "/public/{puuid}")
 		public ResponseEntity<List<MatchDTO>> userMatch(@PathVariable("puuid") String puuid) throws Exception {
 			// TODO: 유저 전적 조회 로직 추가
-<<<<<<< HEAD
+			
 			return ResponseEntity.ok(List.of(publicService.changeJSONToDTOMatchData(puuid)));
-=======
-			return ResponseEntity.ok(List.of(publicService.getMatchInfo(puuid)));
->>>>>>> branch 'IncludeMongoDB' of https://github.com/SCIT46/SB_MyGG.git
 		}
 		
 	}

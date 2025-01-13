@@ -19,7 +19,11 @@ public class MatchDTO
 		
 		private MatchInfoDTO Info;
 		private MetadataDTO metadata;
-
+		
+		public MatchDTO(String str)
+		{
+			matchId = str;
+		}
 //		public static MatchDTO toDTO(MMatchEntity mMatchEntity)
 //			{
 //				return MatchDTO.builder()

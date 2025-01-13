@@ -11,9 +11,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.match.MatchInfoDTO;
+import com.mygg.sb.exception.dto.ErrorDTO;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.MetadataDTO;
 import com.mygg.sb.match.entity.MMatchEntity;
@@ -51,35 +55,45 @@ public class PublicMatchService
 		private final MMatchesRepository mMatchesRepository;
 		private final UserService userService;
 		private final ModelMapper modelMapper;
-
 		private final int count = 5; // api에 요청할 찾을 데이터 수
 		private final int limitRequestForSecond = 20; // 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100; // 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 
-		public List<MatchDTO> run(String name, String tag) throws Exception
+		public ResponseEntity<List<MatchDTO>> run(String name, String tag) throws Exception
 			{
 				// 테스트 코드
+				updateMatchDataForAPI(name, tag);
 				return findMatchDataInDB(name, tag);
 			}
 
 		// DB에서 count 개수만큼 DB에서 꺼내서 데이터를 보여준다.
 		@Transactional
-		private List<MatchDTO> findMatchDataInDB(String name, String tag) throws Exception
-		{
-			UserDTO user = userService.searchUser(name, tag);
-			
-			List<MMatchEntity> eety = getMatchDataInDB(0, 20, user.getPuuid()).getContent();
-			List<MatchDTO> __list = new ArrayList<MatchDTO>();
+		public ResponseEntity<List<MatchDTO>> findMatchDataInDB(String name, String tag) throws Exception
+			{
+				try
+					{
+						UserDTO user = userService.searchUser(name, tag);
 
-			// mapper를 사용해서 Entity -> DTO
-			for(int i = eety.size()-1; i >= 0; i--)
-				{
-					__list.add(getEntityToDto(eety.get(i)));						
-				}
-			
-			return __list;
-		}
-		
+						List<MMatchEntity> eety = getMatchDataInDB(0, 20, user.getPuuid()).getContent();
+						List<MatchDTO> __list = new ArrayList<MatchDTO>();
+
+						// mapper를 사용해서 Entity -> DTO
+						for (int i = eety.size() - 1; i >= 0; i--)
+						{
+							__list.add(getEntityToDto(eety.get(i)));
+						}
+
+						return ResponseEntity.status(HttpStatus.OK).body(__list);
+					} catch (Exception e)
+					{
+						List<MatchDTO> err = new ArrayList<>();
+						err.add(new MatchDTO("err: " + e.getMessage()));
+						
+						return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err); 
+					}
+
+			}
+
 		private List<MMatchEntity> indexingData(String _name, String _tag) throws Exception
 			{
 				// 1. DB내의 마지막 매치 데이터를 조회한다.
@@ -149,49 +163,57 @@ public class PublicMatchService
 				return null;
 			}
 
-		// 전적갱신 버튼을 눌렀을 때 최신화하는 Riot API에서 데이터를 갖고 와서 최신화하는 메소드
+		// 전적갱신 버튼을 눌렀을 때 Riot API에서 데이터를 갖고 와서 최신화하는 메소드
 		@Transactional
-		public List<MatchDTO> matchDataUpdateForAPI(String _name, String _tag) throws Exception
+		public ResponseEntity<String> updateMatchDataForAPI(String _name, String _tag) throws Exception
 			{
 				// Todo) DB에 있는 User 전적버튼 시간 갱신
-				//		DB에 있는 매치ID면 API에 요청 안 보내기.
-				
+				// DB에 있는 매치ID면 API에 요청 안 보내기.
+
 				// 1. user의 전적갱신 타임스탬프를 갖고 온다.
 				UserDTO user = userService.searchUser(_name, _tag);
 
 				if (user == null)
 					{
-						log.info("===== err: matchDataUpdateForAPI에서 DB에서 user를 못 찾았습니다.");
-						return null;
+						return ResponseEntity.status(HttpStatus.NOT_FOUND)
+								.body("err: matchDataUpdateForAPI에서 DB에서 user를 못 찾았습니다.");
 					}
 
 				// 예외처리) 전적갱신 버튼누른 시간이 null이라면, 시즌 초기값을 준다.
 				if (user.getLastUpdateDate() == null)
 					user.setLastUpdateDate(
-							DateTimeUtils.epochToSecondLocalDateTime(RiotSeasonConstants.getNowStartSeasonTimeStamp()));
+							DateTimeUtils.epochToSecondLocalDateTime(RiotSeasonConstants.getNowStartSeasonTimeStamp())
+							);
 
 				LocalDateTime dateLastUpdatTime = user.getLastUpdateDate();
 				long stampLastUpdateTime = DateTimeUtils.localDateTimeToSeconsEpoch(dateLastUpdatTime);
 
-				// 2. 타임 스탬프 값을 기준으로 api에 요청해서 matchID들을 갖고 온다.
-				List<String> matchIds = getMatchIDsForAPI(user.getPuuid(), stampLastUpdateTime);
-
-				// 3. ID값들을 DTO로 변환하고 저장한다.
-				for (int i = 0; i < matchIds.size(); i++)
+				try
 					{
-						MatchDTO dto = changeJSONToDTOMatchData(matchIds.get(i));
+						// 2. 타임 스탬프 값을 기준으로 api에 요청해서 matchID들을 갖고 온다.
+						List<String> matchIds = getMatchIDsForAPI(user.getPuuid(), stampLastUpdateTime);
 
-						if(dto != null)
+						// 3. ID값들을 DTO로 변환하고 저장한다.
+						for (int i = 0; i < matchIds.size(); i++)
 							{
-								mMatchesRepository.save(getDTOToEntity(dto));
+								// api에 ID의 데이터 요청
+								MatchDTO dto = changeJSONToDTOMatchData(matchIds.get(i));
+
+								if (dto != null)
+									{
+										mMatchesRepository.save(getDTOToEntity(dto));
+									}
 							}
+							
+						return ResponseEntity.status(HttpStatus.NO_CONTENT).body("good succeced");
+					} catch (Exception e)
+					{
+						return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("DTO Entity 변환 과정 중 에러가 발생했습니다");
 					}
-				
-				return null;
+
 			}
 
-		// ----------------------------- 함수에서 쓰일 함수들
-		// ------------------------------------------
+		// ----------------------------- 함수에서 쓰일 함수들 ---------------------------------
 
 		private List<MatchDTO> requestMatchIDToAPI(List<String> _matchIds)
 			{
@@ -287,6 +309,12 @@ public class PublicMatchService
 
 				// matchId로 매치 정보(JSONObject) 변환 // String 형태의 JSON 데이터를 JSONObject(HashMap)형
 				// jsonObject로 변환
+				// 예외처리) 이미 DB내에 해당 매치 정보가 있으면 api에 데이터를 요청하지 않음
+				if(mMatchesRepository.existsById(matchId))
+				{
+					return null;
+				}
+				
 				JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId); // (JSONObject) parser.parse(matchJSON);
 				JsonToDTOMapper mapper = new JsonToDTOMapper();
 
@@ -327,14 +355,15 @@ public class PublicMatchService
 
 				return _entity;
 			}
-		
+
 		public MatchDTO getEntityToDto(MMatchEntity _entity)
-		{
-			MatchDTO _dto = new MatchDTO();
-			
-			_dto.setInfo(modelMapper.map(_entity.getInfo(), MatchInfoDTO.class));
-			_dto.setMetadata(modelMapper.map(_entity.getMetadata(), MetadataDTO.class));
-			_dto.setMatchId(_entity.getMetadata().getMatchId());
-			return _dto;
-		}
+			{
+				MatchDTO _dto = new MatchDTO();
+
+				_dto.setInfo(modelMapper.map(_entity.getInfo(), MatchInfoDTO.class));
+				_dto.setMetadata(modelMapper.map(_entity.getMetadata(), MetadataDTO.class));
+				_dto.setMatchId(_entity.getMetadata().getMatchId());
+				return _dto;
+			}
+
 	}

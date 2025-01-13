@@ -1,6 +1,5 @@
 package com.mygg.sb.match.controller;
 
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -25,19 +24,25 @@ import lombok.RequiredArgsConstructor;
 public class MatchController
 	{
 		private final PublicMatchService publicService;
-		//private final PrivateMatchService privateMatchService;
-		
-		@Operation(summary = "Public Match List (API로부터 받아온 결과) API", description = "Public Match List(API로부터 받아온 결과) API")
+		// private final PrivateMatchService privateMatchService;
+
+		@Operation(summary = "DB에서 데이터 꺼내서 보여주는 URL", description = "DB에서 데이터 꺼내서 보여주는 URL")
 		@GetMapping("/test/{name}/{tag}")
 		@ResponseBody
 		public ResponseEntity<List<MatchDTO>> getMethodName(@PathVariable(name = "name") String name,
-				@PathVariable(name = "tag") String tag) throws Exception {
-			// List<MatchDTO> matchesIds = publicService.run(name, tag);
-			// matchesIdes[0]: 제일최근, amtchesides[..]: 제일 나중
-
-			return ResponseEntity.ok(publicService.run(name, tag));
-		}
+				@PathVariable(name = "tag") String tag) throws Exception
+			{
+				return publicService.findMatchDataInDB(name, tag);
+			}
 		
+		@Operation(summary = "API를 통한 match DB 최신화", description = "API를 통한 match DB 최신화")
+		@GetMapping("/test/updateMatch/{name}/{tag}")
+		@ResponseBody
+		public ResponseEntity<String> updateMatchDataForAPI(@PathVariable(name = "name") String name,
+				@PathVariable(name = "tag") String tag) throws Exception
+			{
+				return publicService.updateMatchDataForAPI(name, tag);
+			}
 
 		// Private Match(사진에서 추출한 결과) 정보 호출 API
 		// @GetMapping(path="/private/{matchId}")
@@ -50,17 +55,19 @@ public class MatchController
 		// Public Match(API로부터 받아온 결과) API
 		@Operation(summary = "Public Match(API로부터 받아온 결과) API", description = "Public Match(API로부터 받아온 결과) API")
 		@GetMapping(path = "/public/{matchId}")
-		public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception {
-			return ResponseEntity.ok(publicService.changeJSONToDTOMatchData(matchId));
-		}
+		public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception
+			{
+				return ResponseEntity.ok(publicService.changeJSONToDTOMatchData(matchId));
+			}
 
 		// 유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)
 		@Operation(summary = "유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)", description = "유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)")
 		@GetMapping(path = "/public/{puuid}")
-		public ResponseEntity<List<MatchDTO>> userMatch(@PathVariable("puuid") String puuid) throws Exception {
-			// TODO: 유저 전적 조회 로직 추가
-			
-			return ResponseEntity.ok(List.of(publicService.changeJSONToDTOMatchData(puuid)));
-		}
-		
+		public ResponseEntity<List<MatchDTO>> userMatch(@PathVariable("puuid") String puuid) throws Exception
+			{
+				// TODO: 유저 전적 조회 로직 추가
+
+				return ResponseEntity.ok(List.of(publicService.changeJSONToDTOMatchData(puuid)));
+			}
+
 	}

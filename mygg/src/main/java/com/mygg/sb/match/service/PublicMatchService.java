@@ -55,7 +55,8 @@ public class PublicMatchService
 		private final MMatchesRepository mMatchesRepository;
 		private final UserService userService;
 		private final ModelMapper modelMapper;
-		private final int count = 5; // api에 요청할 찾을 데이터 수
+		private final int count = 5; 		// api에 요청할 찾을 데이터 수
+		private final int renderCnt = 20; 	// 화면상 전적 데이터 보여줄 개수
 		private final int limitRequestForSecond = 20; // 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100; // 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 
@@ -74,7 +75,7 @@ public class PublicMatchService
 					{
 						UserDTO user = userService.searchUser(name, tag);
 
-						List<MMatchEntity> eety = getMatchDataInDB(0, count, user.getPuuid()).getContent();
+						List<MMatchEntity> eety = getMatchDataInDB(0, renderCnt, user.getPuuid()).getContent();
 						List<MatchDTO> __list = new ArrayList<MatchDTO>();
 
 						// mapper를 사용해서 Entity -> DTO

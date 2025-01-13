@@ -74,7 +74,7 @@ public class PublicMatchService
 					{
 						UserDTO user = userService.searchUser(name, tag);
 
-						List<MMatchEntity> eety = getMatchDataInDB(0, 20, user.getPuuid()).getContent();
+						List<MMatchEntity> eety = getMatchDataInDB(0, count, user.getPuuid()).getContent();
 						List<MatchDTO> __list = new ArrayList<MatchDTO>();
 
 						// mapper를 사용해서 Entity -> DTO

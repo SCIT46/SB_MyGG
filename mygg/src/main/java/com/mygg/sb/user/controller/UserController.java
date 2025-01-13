@@ -30,9 +30,9 @@ public class UserController {
     public ResponseEntity<UserDTO> user(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception {
         UserDTO dto = userService.searchUser(name, tag);
         // 민감정보 제외
-        // dto.setLeagueId(null);
-        // dto.setPuuid(null);
-        // dto.setSummonerId(null);
+        //dto.setLeagueId(null);
+        //dto.setPuuid(null);
+        //dto.setSummonerId(null);
         return ResponseEntity.ok(dto);
     }
 

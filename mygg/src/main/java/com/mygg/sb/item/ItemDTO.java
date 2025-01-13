@@ -34,8 +34,8 @@ public class ItemDTO extends BaseDTO {
     private GoldDTO gold;
     // 아이템 태그
     // private ArrayList<String> tags;
-    // 아이템 사용되는 맵
-    // private String[] maps;
+    //아이템 사용되는 맵
+    private Map<String, Boolean> maps;
     // 아이템 특수 레시피
     // private String[] specialRecipe;
     // 아이템 성능(효과) 정보
@@ -50,6 +50,7 @@ public class ItemDTO extends BaseDTO {
                 .from(entity.getFrom())
                 .into(entity.getInto())
                 .gold(entity.getGold()) // GoldDTO도 적절히 변환
+                .maps(entity.getMaps())
                 .stats(entity.getStats())
                 .build();
     }

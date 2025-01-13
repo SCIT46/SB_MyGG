@@ -342,10 +342,11 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       }
     } else if (event.key === "Enter") {
       event.preventDefault();
-      if (activeSuggestionIndex >= 0) {
-        handleSearch();
-      } else if (activeRecentIndex >= 0) {
+      //to-do 검색 결과 없는 아이디를 검색할때 엔터 오류 해결
+      if (activeRecentIndex >= 0) {
         handleSuggestionClick("user", recentSearch[activeRecentIndex]);
+      } else {
+        handleSearch();
       }
     }
   };

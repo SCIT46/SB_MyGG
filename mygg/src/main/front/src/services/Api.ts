@@ -50,6 +50,16 @@ export const getChamps = async (version: string): Promise<any> => {
   }
 };
 
+export const getChampionDetail = async (championId: string): Promise<any> => {
+  try {
+    const championDetailResponse = await apiClient.get(`/champion/${championId}`);
+    return championDetailResponse.data;
+  } catch (error: any) {
+    console.error("Champion detail fetch error: ", error);
+    throw error;
+  }
+};
+
 export const getSummoner = async (version: string): Promise<any> => {
   try {
     const summonerResponse = await ddragonClient.get(

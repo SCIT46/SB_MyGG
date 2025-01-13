@@ -60,6 +60,12 @@ public class ItemEntity {
     @Embedded
     private GoldDTO gold;
 
+    // 아이템이 사용되는 맵
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "item_maps", joinColumns = @JoinColumn(name = "item_id"))
+    @Column(name = "maps")
+    private Map<String, Boolean> maps;
+
     // 아이템 성능(효과) 정보
     @ElementCollection
     @CollectionTable(name = "item_stats", joinColumns = @JoinColumn(name = "item_id"))
@@ -75,6 +81,7 @@ public class ItemEntity {
                 .from(dto.getFrom())
                 .into(dto.getInto())
                 .gold(dto.getGold()) // GoldDTO도 적절히 변환
+                .maps(dto.getMaps())
                 .stats(dto.getStats())
                 .build();
     }

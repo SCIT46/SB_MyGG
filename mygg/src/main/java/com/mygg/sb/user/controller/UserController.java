@@ -1,5 +1,6 @@
 package com.mygg.sb.user.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,22 +28,32 @@ public class UserController {
     @GetMapping(path = "/{name}/{tag}")
     @Transactional
     public ResponseEntity<UserDTO> user(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception {
-        return ResponseEntity.ok(userService.searchUser(name, tag));
+        UserDTO dto = userService.searchUser(name, tag);
+        // 민감정보 제외
+        // dto.setLeagueId(null);
+        // dto.setPuuid(null);
+        // dto.setSummonerId(null);
+        return ResponseEntity.ok(dto);
     }
 
-    // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2)
-    @GetMapping(path = "/update/{puuid}")
-    @Transactional
-    public ResponseEntity<UserDTO> userUpdate(@PathVariable("puuid") String puuid) throws Exception {
-        return ResponseEntity.ok(userService.updateUser(puuid));
+    // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2) DB Index로 조회
+    @Operation(summary = "User(유저 정보 업데이트) API", description = "User(유저 정보 업데이트) API")
+    @GetMapping(path = "/update/{index}")
+    public ResponseEntity<?> userUpdate(@PathVariable("index") Long id) throws Exception {
+        // TODO: 유저 최신 데이터 조회/저장 로직 추가
+        userService.updateUser(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
-
-    // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2)
+    //User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2) Puuid로 조회
+    // @Operation(summary = "User(유저 정보 업데이트) API", description = "User(유저 정보 업데이트) API")
     // @GetMapping(path = "/update/{puuid}")
-    // public ResponseEntity userUpdate(@PathVariable("puuid") String puuid) throws Exception {
-    // // TODO: 유저 최신 데이터 조회/저장 로직 추가
-    // return ResponseEntity.status(HttpStatus.CREATED);
+    // public ResponseEntity<?> userUpdate(@PathVariable("puuid") String puuid) throws Exception {
+    //     // TODO: 유저 최신 데이터 조회/저장 로직 추가
+    //     userService.updateUserByPuuid(puuid);
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(null);
     // }
+
+    
 
 }

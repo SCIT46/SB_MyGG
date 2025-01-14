@@ -4,10 +4,15 @@ import parse, {
   Element,
   domToReact,
   DOMNode,
-  Text as DomText,
-  
 } from "html-react-parser";
-import { MainText, Stats, Attention, Passive, Speed, CustomLi } from "./CustomHtmlRenderer.styles";
+import {
+  MainText,
+  Stats,
+  Attention,
+  Passive,
+  Speed,
+  CustomLi,
+} from "./CustomHtmlRenderer.styles";
 
 interface CustomHtmlRendererProps {
   htmlString: string;
@@ -38,7 +43,7 @@ const CustomHtmlRenderer: React.FC<CustomHtmlRendererProps> = ({
         switch (name) {
           case "mainText":
             return <MainText>{domToReact(filteredChildren, options)}</MainText>;
-          
+
           case "li":
             return <CustomLi>{domToReact(filteredChildren, options)}</CustomLi>;
 

@@ -1,16 +1,16 @@
 import { useParams } from "react-router-dom";
-import { getChampionDetail } from "../../services/Api";
+import { getChampionDetail } from "../../services/riotDateService";
 import { useEffect, useState } from "react";
 import { IChampionDetail } from "../../interfaces/championType";
-
 
 // '/champion/:id' 라우트 이동시 랜더링 되는 컴포넌트
 export default function ChampionDetailPage() {
   const { id } = useParams();
   console.log(id);
 
-  const [championDetail, setChampionDetail] = useState<IChampionDetail | null>(null);
-
+  const [championDetail, setChampionDetail] = useState<IChampionDetail | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchChampionDetail = async () => {
@@ -21,7 +21,6 @@ export default function ChampionDetailPage() {
     };
     fetchChampionDetail();
   }, [id]);
-
 
   console.log(championDetail);
   return (

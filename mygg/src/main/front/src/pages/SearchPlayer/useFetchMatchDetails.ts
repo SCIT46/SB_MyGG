@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getMatch } from "../../services/Api";
+import { getMatch } from "../../services/riotDateService";
 import { IMatchDetail } from "./type";
 
 export function useFetchMatchDetails(userName: string, tagLine: string) {

@@ -8,6 +8,9 @@ import org.json.simple.parser.JSONParser;
 
 import com.mygg.sb.statics.util.UrlToJson;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class RiotApiClient {
     // API : 최신 데이터 버전 조회(Array로 이루어진 JSON 데이터에서 첫번째(최신) 값 반환);
     public static String getLatestVersion() throws Exception {
@@ -24,11 +27,13 @@ public class RiotApiClient {
     // API : gameName(String)과 tagLine(String)를 주면 puuid(String)로 변환
     public static String getPuuidNameAndTag(String gameName, String tagLine) throws Exception {
         // 이름을 URL인코딩하여 처리(영어 외에 처리 안되는 문제 해결)
-        gameName = URLEncoder.encode(gameName, "UTF-8");
-        tagLine = URLEncoder.encode(tagLine, "UTF-8");
+        gameName = URLEncoder.encode(gameName, "UTF-8").replace("+", "%20");
+        tagLine = URLEncoder.encode(tagLine, "UTF-8").replace("+", "%20");
 
         // url을 json으로 변환
-        String userJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("nameTag", gameName, tagLine));
+        String url = UrlToJson.urlConvertor("nameTag", gameName, tagLine);
+        log.info("url : {}", url);
+        String userJSON = UrlToJson.urlToJson(url);
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
@@ -220,8 +225,10 @@ public class RiotApiClient {
         JSONParser parser = new JSONParser();
 
         // 아이템 정보 JSON
-        JSONObject jsonObject = (JSONObject) parser.parse(itemJSON);
-
+        JSONObject jsonObject;
+        
+        jsonObject = (JSONObject) parser.parse(itemJSON);
+        
         // id를 지정해주지 않았을 때 전체 정보 반환
         if (itemId.equals("all"))
             return (JSONObject) jsonObject.get("data");

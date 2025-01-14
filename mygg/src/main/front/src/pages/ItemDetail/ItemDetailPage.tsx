@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { getItemDetail } from "../../services/Api";
+import { getItemDetail } from "../../services/riotDateService";
 import { useEffect, useState } from "react";
 import { IItemDetail } from "../../interfaces/itemType";
 import styled from "styled-components";
@@ -92,7 +92,12 @@ export default function ItemDetailPage() {
         {itemDetail?.from && itemDetail.from.length > 0 && (
           <>
             {itemDetail.from.map((itemId) => (
-              <ItemImage key={itemId} itemId={Number(itemId)} width={50} height={50} />
+              <ItemImage
+                key={itemId}
+                itemId={Number(itemId)}
+                width={50}
+                height={50}
+              />
             ))}
             <ItemTreeArrow>→</ItemTreeArrow>
           </>
@@ -102,7 +107,12 @@ export default function ItemDetailPage() {
           <>
             <ItemTreeArrow>→</ItemTreeArrow>
             {itemDetail.into.map((itemId) => (
-              <ItemImage key={itemId} itemId={Number(itemId)} width={50} height={50} />
+              <ItemImage
+                key={itemId}
+                itemId={Number(itemId)}
+                width={50}
+                height={50}
+              />
             ))}
           </>
         )}

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
-import { getSearchedResult } from "../../services/Api";
+import { getSearchedResult } from "../../services/riotDateService";
 import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -248,7 +248,9 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   const [activeRecentIndex, setActiveRecentIndex] = useState<number>(-1);
 
   const recentSearch = useRecentSearchStore((state) => state.recentSearch);
-  const setRecentSearch = useRecentSearchStore((state) => state.setRecentSearch);
+  const setRecentSearch = useRecentSearchStore(
+    (state) => state.setRecentSearch
+  );
   const debouncedQuery = useDebounce(searchQuery, 300);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -258,8 +260,6 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
   const totalLength = totalUser + totalChampion + totalItem;
 
   const suggestionRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-
 
   useEffect(() => {
     if (inputRef.current) {
@@ -327,7 +327,9 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
       if (totalLength > 0) {
         setActiveSuggestionIndex((prevIndex) => (prevIndex + 1) % totalLength);
       } else if (recentSearch.length > 0) {
-        setActiveRecentIndex((prevIndex) => (prevIndex + 1) % recentSearch.length);
+        setActiveRecentIndex(
+          (prevIndex) => (prevIndex + 1) % recentSearch.length
+        );
       }
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
@@ -337,7 +339,8 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
         );
       } else if (recentSearch.length > 0) {
         setActiveRecentIndex(
-          (prevIndex) => (prevIndex - 1 + recentSearch.length) % recentSearch.length
+          (prevIndex) =>
+            (prevIndex - 1 + recentSearch.length) % recentSearch.length
         );
       }
     } else if (event.key === "Enter") {
@@ -365,7 +368,11 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
 
       const recentSearchArr = [
         ...recentSearch,
-        { gameName: suggestion.gameName, tagLine: suggestion.tagLine, profileIconId: suggestion.profileIconId },
+        {
+          gameName: suggestion.gameName,
+          tagLine: suggestion.tagLine,
+          profileIconId: suggestion.profileIconId,
+        },
       ];
       setRecentSearch(recentSearchArr);
       navigate(`/search/${suggestion.gameName}-${suggestion.tagLine}`);
@@ -389,9 +396,13 @@ export default function SearchDetail({ onClose }: ISearchDeailProps) {
         const user = suggestions.user[activeSuggestionIndex];
         const recentSearchArr = [
           ...recentSearch,
-          { gameName: user.gameName, tagLine: user.tagLine, profileIconId: user.profileIconId },
+          {
+            gameName: user.gameName,
+            tagLine: user.tagLine,
+            profileIconId: user.profileIconId,
+          },
         ];
-        
+
         setRecentSearch(recentSearchArr);
         navigate(`/search/${user.gameName}-${user.tagLine}`);
       } else if (activeSuggestionIndex < totalUser + totalChampion) {

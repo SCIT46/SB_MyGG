@@ -6,7 +6,7 @@ import {
   getRunes,
   getSummoner,
   getVersions,
-} from "../services/Api";
+} from "../services/riotDateService";
 import useItemStore from "../stores/useItemStore";
 import useCurrentVersionStore from "../stores/useCurrentVersionStore";
 import useSummonerStore from "../stores/useSummonerStore";

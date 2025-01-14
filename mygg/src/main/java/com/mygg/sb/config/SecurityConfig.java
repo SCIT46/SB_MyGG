@@ -1,4 +1,4 @@
-package com.mygg.sb;
+package com.mygg.sb.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +18,6 @@ public class SecurityConfig {
         http
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/static/**").permitAll()
-                .requestMatchers("/api/**").permitAll()
-                .requestMatchers("/manifest.json").permitAll()
-                .requestMatchers("/favicon.ico").permitAll()
-                .requestMatchers("/logo192.png").permitAll()
                 .requestMatchers("/**").permitAll()  // 모든 정적 리소스 허용
             )
             .formLogin().disable()

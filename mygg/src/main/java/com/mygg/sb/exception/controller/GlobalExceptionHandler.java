@@ -44,5 +44,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDTO> handleUnexpectedException(UnexpectedException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDTO(418,HttpStatus.I_AM_A_TEAPOT, "알 수 없는 오류가 발생했습니다.", e.getMessage()));
     }
+    
+    // 표준 예외 처리
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDTO> handleException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorDTO(500,HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.", e.getMessage()));
+    }
+    
 }
 

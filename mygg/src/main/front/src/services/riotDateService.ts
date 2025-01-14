@@ -17,6 +17,7 @@ export const getItems = async (version: string): Promise<any> => {
 // (3) 개별 아이템 상세 가져오기
 export const getItemDetail = async (itemId: string): Promise<any> => {
   const { data } = await apiClient.get(`/item/${itemId}`);
+  console.log(data);
   return data;
 };
 

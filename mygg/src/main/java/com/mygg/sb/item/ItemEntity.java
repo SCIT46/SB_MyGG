@@ -60,7 +60,8 @@ public class ItemEntity {
     @Embedded
     private GoldDTO gold;
 
-    // 아이템이 사용되는 맵
+
+    // 아이템 사용되는 맵
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "item_maps", joinColumns = @JoinColumn(name = "item_id"))
     @Column(name = "maps")

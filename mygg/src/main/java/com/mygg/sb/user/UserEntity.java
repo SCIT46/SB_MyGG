@@ -76,6 +76,9 @@ public class UserEntity {
     @ColumnDefault("0")
     private long searchCount;
 
+    @Column(name = "last_update_date")
+    private LocalDateTime lastUpdateDate;
+
     public static UserEntity toEntity(UserDTO dto) {
         return UserEntity.builder()
                 .id(dto.getId())
@@ -93,6 +96,7 @@ public class UserEntity {
                 .losses(dto.getLosses())
                 .revisionDate(dto.getRevisionDate())
                 .searchCount(dto.getSearchCount())
+                .lastUpdateDate(dto.getLastUpdateDate())
                 .build();
     }
 }

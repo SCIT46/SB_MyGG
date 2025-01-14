@@ -50,6 +50,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
 	runtimeOnly 'com.mysql:mysql-connector-j:8.3.0'
 
+	// MongoDB
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	
 	//JSON Parser
 	implementation 'com.googlecode.json-simple:json-simple:1.1'
 
@@ -57,7 +60,11 @@ dependencies {
 	implementation 'com.google.code.gson:gson:+'
 	
 	//Swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.1'
+	
+	//Mapper
+	implementation 'org.modelmapper:modelmapper:3.1.0'
+	
 	
 }
 

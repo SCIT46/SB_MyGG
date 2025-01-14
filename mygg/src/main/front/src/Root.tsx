@@ -3,6 +3,7 @@ import { GlobalStyle } from "./styles/GlobalStyle";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import InitLoader from "./components/InitLoader";
+import styled from "styled-components";
 
 function Root() {
   return (

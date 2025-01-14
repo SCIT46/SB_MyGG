@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.mygg.sb.champion.ChampionDTO;
 import com.mygg.sb.champion.ChampionService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -21,14 +22,14 @@ import lombok.RequiredArgsConstructor;
 public class ChampionController {
 
     private final ChampionService championService;
-    
-     // Champion(챔피언 전체 정보제공) API
+
+    @Operation(summary = "Champion(챔피언 전체 정보제공) API", description = "Champion(챔피언 전체 정보제공) API")
     @GetMapping(path = {"", "/","/all"})
     public ResponseEntity<Map<String, ChampionDTO>> champion() throws Exception {
         return ResponseEntity.ok(championService.getChampion("all"));
     }
     
-    // Champion(챔피언 정보제공) API
+    @Operation(summary = "Champion(챔피언 정보제공) API", description = "Champion(챔피언 정보제공) API")
     @GetMapping(path = "/{id}")
     public ResponseEntity<Map<String, ChampionDTO>> champion(@PathVariable("id") String id) throws Exception {
         return ResponseEntity.ok(championService.getChampion(id));

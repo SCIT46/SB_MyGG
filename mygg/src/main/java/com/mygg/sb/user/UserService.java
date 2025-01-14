@@ -84,7 +84,6 @@ public class UserService {
     }
     // DB에 유저 정보가 없으면 API로부터 유저 정보를 받아와 DB에 저장
     user = getUserInfo(gameName, tagLine);
-    log.info("user : {}", user);
     create(user);
     return user;
   }

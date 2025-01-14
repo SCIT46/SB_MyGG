@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -12,12 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.match.MatchInfoDTO;
-import com.mygg.sb.exception.dto.ErrorDTO;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.MetadataDTO;
 import com.mygg.sb.match.entity.MMatchEntity;
@@ -30,7 +27,6 @@ import com.mygg.sb.statics.api.RiotSeasonConstants;
 import com.mygg.sb.statics.util.DateTimeUtils;
 import com.mygg.sb.statics.util.JsonToDTOMapper;
 import com.mygg.sb.user.UserDTO;
-import com.mygg.sb.user.UserEntity;
 import com.mygg.sb.user.UserRepository;
 import com.mygg.sb.user.UserService;
 
@@ -38,6 +34,7 @@ import jakarta.transaction.Transactional;
 import javassist.NotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Getter
@@ -137,7 +134,7 @@ public class PublicMatchService
 						return ResponseEntity.status(HttpStatus.NO_CONTENT).body("good succeced");
 					} catch (Exception e)
 					{
-						return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("DTO Entity 변환 과정 중 에러가 발생했습니다");
+						throw new Exception("DTO Entity 변환 과정 중 에러가 발생했습니다");
 					}
 
 			}

@@ -14,7 +14,10 @@ import lombok.Setter;
 public class ChampionAnalysis {
     // 챔피언 아이디
     private String championId;
-    
+
+    // 플레이 횟수
+    private int playCount;  
+
     // 승패수
     private int win;
     private int lose;

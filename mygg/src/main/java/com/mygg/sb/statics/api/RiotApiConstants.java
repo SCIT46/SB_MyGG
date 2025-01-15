@@ -1,21 +1,25 @@
 package com.mygg.sb.statics.api;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PostConstruct;
 
 @Configuration
-public class RiotApiConstants {
+public class RiotApiConstants 
+{
     @Value("${api_key}")
     private String apiKey;
     public static String API_KEY;
 
     @PostConstruct
-    public void init() {
+    public void init() 
+    {
         API_KEY = apiKey;
     }
-
     // https://developer.riotgames.com/docs/lol
     public static final String LANGUAGE = CountryType.Korea.getCountry(); // RiotApiClient.getLanguage();
     public static final String LATEST_VERSION;

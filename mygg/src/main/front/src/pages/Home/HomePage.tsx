@@ -17,7 +17,7 @@ const TitleBox = styled.div`
 `;
 
 const Title = styled.div`
-  color: ${({ theme }) => theme.colors.brand.sky.main};
+  color: ${({ theme }) => theme.colors.brand.sky.dark};
   font-size: 4rem;
   font-weight: 700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);

@@ -2,9 +2,7 @@ import styled from "styled-components";
 import useItemStore from "../../stores/useItemStore";
 import ItemImage from "../../components/ImageUI/ItemImage";
 
-const LoadingContainer = styled.div`
-  margin-top: 300px;
-`;
+
 
 const TitleBox = styled.div`
   margin-top: 50px;
@@ -52,9 +50,18 @@ export default function ItemPage() {
       <TitleLine />
       <ItemContainer>
         {items &&
-          Object.entries(items).map(([key, value]) => (
-            <ItemImage itemId={Number(key)} key={key} width={50} height={50} />
-          ))}
+          Object.entries(items).map(
+            ([key, value]) =>
+              value.maps["11"] &&
+              value.gold.purchasable === true && (
+                <ItemImage
+                  itemId={Number(key)}
+                  key={key}
+                  width={50}
+                  height={50}
+                />
+              )
+          )}
       </ItemContainer>
     </ItemsContainer>
   );

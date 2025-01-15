@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.match.MatchInfoDTO;
+import com.mygg.sb.exception.custom.DataNotFoundException;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.MetadataDTO;
 import com.mygg.sb.match.entity.MMatchEntity;
@@ -31,7 +32,6 @@ import com.mygg.sb.user.UserRepository;
 import com.mygg.sb.user.UserService;
 
 import jakarta.transaction.Transactional;
-import javassist.NotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -102,7 +102,7 @@ public class PublicMatchService
 
 				if (user == null)
 					{
-						throw new NotFoundException("err: matchDataUpdateForAPI에서 DB에서 user를 못 찾았습니다.");
+						throw new DataNotFoundException("err: matchDataUpdateForAPI에서 DB에서 user를 못 찾았습니다.");
 					}
 
 				// 예외처리) 전적갱신 버튼누른 시간이 null이라면, 시즌 초기값을 준다.

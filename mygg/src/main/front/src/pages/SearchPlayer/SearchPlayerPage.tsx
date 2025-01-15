@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import Profile from "./ProfileInfo/Profile";
 import { useEffect, useState } from "react";
-import { getUser } from "../../services/Api";
 import { IUser } from "./type";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Match from "./MatchInfo/Match";
 import ChampInfo from "./ChampionInfo/ChampInfo";
 import Rank from "./RankInfo/Rank";
 import { Link } from "react-router-dom";
+import { getUser } from "../../services/riotDateService";
 
 const SearchPlayerContainer = styled.div`
   width: 100vw;

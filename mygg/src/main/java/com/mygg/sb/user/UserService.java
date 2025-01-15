@@ -1,5 +1,6 @@
 package com.mygg.sb.user;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -84,6 +85,58 @@ public class UserService {
     return UserDTO.toDTO(user);
   }
 
+  public void updateUser(Long id) throws Exception {
+    //TODO: Riot 유저 갱신에 90일 제한 등이 있다면 API 호출 안하도록 로직
+    Optional<UserEntity> tmp = userRepository.findById(id);
+    if (tmp.isEmpty()) {
+      throw new DataNotFoundException("갱신할 유저를 찾을 수 없습니다");
+    }
+    UserEntity user = tmp.get();
+    UserDTO dto = getUserInfo(user.getPuuid());
+
+    // puuid의 uk 속성으로 인해 전체저장(업데이트) 불가
+    // 따라서 각 속성별로 업데이트
+    user.setLastUpdateDate(LocalDateTime.now());
+    user.setLeagueId(dto.getLeagueId());
+    user.setProfileIconId(dto.getProfileIconId());
+    user.setRevisionDate(dto.getRevisionDate());
+    user.setSummonerLevel(dto.getSummonerLevel());
+    user.setTier(dto.getTier());
+    user.setRank(dto.getRank());
+    user.setLeaguePoints(dto.getLeaguePoints());
+    user.setWins(dto.getWins());
+    user.setLosses(dto.getLosses());
+    user.setGameName(dto.getGameName());
+    user.setTagLine(dto.getTagLine());
+    userRepository.save(user);
+  }
+
+  // public void updateUserByPuuid(String puuid) throws Exception {
+  //   // TODO: Riot 유저 갱신에 90일 제한 등이 있다면 API 호출 안하도록 로직
+  //   Optional<UserEntity> tmp = userRepository.findByPuuid(puuid);
+  //   if (tmp.isEmpty()) {
+  //     throw new DataNotFoundException("갱신할 유저를 찾을 수 없습니다");
+  //   }
+  //   UserEntity user = tmp.get();
+  //   UserDTO dto = getUserInfo(puuid);
+
+  //   // puuid의 uk 속성으로 인해 전체저장(업데이트) 불가
+  //   // 따라서 각 속성별로 업데이트
+  //   user.setLastUpdateDate(LocalDateTime.now());
+  //   user.setLeagueId(dto.getLeagueId());
+  //   user.setProfileIconId(dto.getProfileIconId());
+  //   user.setRevisionDate(dto.getRevisionDate());
+  //   user.setSummonerLevel(dto.getSummonerLevel());
+  //   user.setTier(dto.getTier());
+  //   user.setRank(dto.getRank());
+  //   user.setLeaguePoints(dto.getLeaguePoints());
+  //   user.setWins(dto.getWins());
+  //   user.setLosses(dto.getLosses());
+  //   user.setGameName(dto.getGameName());
+  //   user.setTagLine(dto.getTagLine());
+  //   userRepository.save(user);
+  // }
+
 
   // 이름과 태그를 통해 소환사 정보를 불러올 때 사용하는 생성자
   public UserDTO getUserInfo(String gameName, String tagLine) throws Exception {
@@ -129,6 +182,6 @@ public class UserService {
     user.setWins(((Long) jsonObject2.get("wins")).intValue());
     user.setLosses(((Long) jsonObject2.get("losses")).intValue());
     // 최근 매치 목록
-    user.setMatchList(RiotApiClient.getMatchList(user.getPuuid()));
+    //user.setMatchList(RiotApiClient.getMatchList(user.getPuuid()));
   }
 }

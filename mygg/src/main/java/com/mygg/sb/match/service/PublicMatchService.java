@@ -10,11 +10,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.match.MatchInfoDTO;
+import com.mygg.sb.exception.custom.DataNotFoundException;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.MetadataDTO;
 import com.mygg.sb.match.entity.MMatchEntity;
@@ -31,7 +33,6 @@ import com.mygg.sb.user.UserRepository;
 import com.mygg.sb.user.UserService;
 
 import jakarta.transaction.Transactional;
-import javassist.NotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -53,31 +54,26 @@ public class PublicMatchService
 		private final MMatchesRepository mMatchesRepository;
 		private final UserService userService;
 		private final ModelMapper modelMapper;
-		private final int count = 5; 		// api에 요청할 찾을 데이터 수
+		private final int count = 99; 		// api에 요청할 찾을 데이터 수
 		private final int pageSize = 20; 	// 화면상 전적 데이터 보여줄 개수
 		private final int limitRequestForSecond = 20; // 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100; // 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 
-		public ResponseEntity<List<MatchDTO>> run(String name, String tag) throws Exception
-			{
-				// 테스트 코드
-				updateMatchDataForAPI(name, tag);
-				return findMatchDataInDB(name, tag, 1);
-			}
-
-		// DB에서 count 개수만큼 DB에서 꺼내서 데이터를 보여준다.
+		// DB에서 꺼내서 데이터를 보여준다.
 		@Transactional
-		public ResponseEntity<List<MatchDTO>> findMatchDataInDB(String name, String tag, int page) throws Exception
+		public ResponseEntity<List<MatchDTO>> findMatchDataInDB(String name, String tag, Pageable page) throws Exception
 			{
 				try
 					{
 						UserDTO user = userService.searchUser(name, tag);
 
-						List<MMatchEntity> eety = getMatchDataInDB(page, user.getPuuid()).getContent();
+						// DB에서 매치데이터를 받아온다.
+						List<MMatchEntity> eety = getMatchDataInDB(user.getPuuid(), page).getContent();
+						
 						List<MatchDTO> __list = new ArrayList<MatchDTO>();
 
-						// mapper를 사용해서 Entity -> DTO
-						for (int i = eety.size() - 1; i >= 0; i--)
+						// Entity에서 DTO로 변환한다(mapper사용)
+						for(int i = 0; i < eety.size(); i++)
 						{
 							__list.add(getEntityToDto(eety.get(i)));
 						}
@@ -102,7 +98,7 @@ public class PublicMatchService
 
 				if (user == null)
 					{
-						throw new NotFoundException("err: matchDataUpdateForAPI에서 DB에서 user를 못 찾았습니다.");
+						throw new DataNotFoundException("err: matchDataUpdateForAPI에서 DB에서 user를 못 찾았습니다.");
 					}
 
 				// 예외처리) 전적갱신 버튼누른 시간이 null이라면, 시즌 초기값을 준다.
@@ -110,19 +106,20 @@ public class PublicMatchService
 					user.setLastUpdateDate(
 							DateTimeUtils.epochToSecondLocalDateTime(RiotSeasonConstants.getNowStartSeasonTimeStamp())
 							);
-
 				LocalDateTime dateLastUpdatTime = user.getLastUpdateDate();
+
 				long stampLastUpdateTime = DateTimeUtils.localDateTimeToSeconsEpoch(dateLastUpdatTime);
 
 				try
 					{
 						// 2. 타임 스탬프 값을 기준으로 api에 요청해서 matchID들을 갖고 온다.
 						List<String> matchIds = getMatchIDsForAPI(user.getPuuid(), stampLastUpdateTime);
-
+						System.out.println("=== size: " + matchIds.size());
 						// 3. ID값들을 DTO로 변환하고 저장한다.
 						for (int i = 0; i < matchIds.size(); i++)
 							{
 								// api에 ID의 데이터 요청
+								System.out.println("=== matchIds.get(i) : " + matchIds.get(i));
 								MatchDTO dto = changeJSONToDTOMatchData(matchIds.get(i));
 
 								if (dto != null)
@@ -134,26 +131,25 @@ public class PublicMatchService
 						return ResponseEntity.status(HttpStatus.NO_CONTENT).body("good succeced");
 					} catch (Exception e)
 					{
-						throw new Exception("DTO Entity 변환 과정 중 에러가 발생했습니다");
+						throw new Exception("DTO Entity 변환 과정 중 에러가 발생했습니다" + e.getMessage());
 					}
 
 			}
 
 		// ----------------------------- 함수에서 쓰일 함수들 ---------------------------------
-		private Page<MMatchEntity> getMatchDataInDB(int _page, String puuid)
+		private Page<MMatchEntity> getMatchDataInDB(String puuid, Pageable page)
 			{
 				// DB에서 matchEntity 20개 받아오는 함수
 				// page 번호, size
-				Pageable pageable = PageRequest.of(_page, pageSize);
-
-				return mMatchesRepository.findByInfoParticipantsPuuidOrderByInfoGameEndTimestamp(puuid, pageable);
+				//Pageable pageable = PageRequest.of(_page, pageSize);
+				
+				return mMatchesRepository.findByInfoParticipantsPuuid(puuid, page);
 			}
 
 		// api에 요청하여 match id들을 갖고오는 함수
 		private List<String> getMatchIDsForAPI(String puuid, long startTime) throws Exception
 			{
-				// API에 요청해서 전적갱신 시간 ~ 현재까지의 데이터를 조회한다.
-				// 예외처리) 만약 전적갱신 버튼 누른 날짜가 이번 시즌 시작일 보다 오래됐다면? 이번 시즌부터 조회하도록 하도록 한다.
+				// API에 요청해서 전적갱신 시간 ~ 현재까지의 데이터를 조회한다
 				startTime = (startTime < RiotSeasonConstants.getNowStartSeasonTimeStamp())
 						? RiotSeasonConstants.getNowStartSeasonTimeStamp()
 						: startTime;
@@ -179,7 +175,9 @@ public class PublicMatchService
 						// list에 [0]최근 ~ [size()-1]오래된 순으로 저장한다.
 						for (int i = 0; i < arrStr.length; i++)
 							{
-								listUserMatches.add(arrStr[i]);
+								System.out.println("=== arrStr " + i + " " + arrStr[i] + " "+ mMatchesRepository.existsById(arrStr[i]));
+								if(!mMatchesRepository.existsById(arrStr[i]))
+									listUserMatches.add(arrStr[i]);
 							}
 					}
 
@@ -228,6 +226,9 @@ public class PublicMatchService
 				result.setMetadata(metadata);
 				result.setInfo(info);
 
+				System.out.println("result: " + result +
+								   "\n matchId: " + result.getMatchId()
+								   + "\n match: " + result.getMetadata().getParticipants().get(0));
 				return result;
 			}
 

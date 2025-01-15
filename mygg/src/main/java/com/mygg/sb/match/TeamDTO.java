@@ -2,7 +2,7 @@ package com.mygg.sb.match;
 
 import java.util.List;
 
-public class TeamDto
+public class TeamDTO
 	{
 		List<BanDto> bans;
 		ObjectDto objectives;

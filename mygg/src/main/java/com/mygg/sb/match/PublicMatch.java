@@ -17,7 +17,7 @@ public class PublicMatch
 	{
 		// 매치 내 플레이어 식별자(participants) 를 저장해줄 List
 		ArrayList<String> player;
-		List<ParticipantsDto> playerDto;
+		List<ParticipantsDTO> playerDto;
 		
 		public PublicMatch(String matchId) throws Exception
 			{
@@ -34,7 +34,7 @@ public class PublicMatch
 				// player의 식별코드(playerId)를 저장할 List
 				player = new ArrayList<String>();
 
-				playerDto = new ArrayList<ParticipantsDto>();
+				playerDto = new ArrayList<ParticipantsDTO>();
 				// // JSON 데이터를 분석해주는 JSONParser 객체 생성
 				// JSONParser parser = new JSONParser();
 
@@ -115,7 +115,7 @@ public class PublicMatch
 		
 		private void insertParticipantsDto(JSONObject _partPlayer)
 		{
-			ParticipantsDto _participantsDto = new ParticipantsDto();
+			ParticipantsDTO _participantsDto = new ParticipantsDTO();
 			
 			_participantsDto.setLane		 	((String) _partPlayer.get("lane")); // lane
 			_participantsDto.setUserName	    ((String) _partPlayer.get("riotIdGameName"));
@@ -148,7 +148,7 @@ public class PublicMatch
 			_participantsDto.setSummoner1Id					(((Long)_partPlayer.get("summoner1Id")).intValue());
 			_participantsDto.setSummoner2Id					(((Long)_partPlayer.get("summoner2Id")).intValue());
 			
-			PerksDto perksDto = new PerksDto();
+			PerksDTO perksDto = new PerksDTO();
 			perksDto.insertIntoPerksDto((JSONObject)_partPlayer.get("perks"));
 			_participantsDto.setPerkDto(perksDto);
 			

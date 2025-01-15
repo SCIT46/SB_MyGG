@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-class ParticipantsDto
+class ParticipantsDTO
 {
 	// 플레이어 정보
 	// to do: 2024-11-21
@@ -48,7 +48,7 @@ class ParticipantsDto
 	int summoner1Id;				// 서머너 스펠1	 12(Teleport), 4(Flaxsh)
 	int summoner2Id;				// 서머너 스펠2
 	
-	PerksDto perkDto;				// 룬
+	PerksDTO perkDto;				// 룬
 	// PerksDto perks;
 //	서브룬 ("description": "subStyle",
 //		  "styles"."selections"."perk": 8429,
@@ -65,7 +65,7 @@ class ParticipantsDto
 //			this.goldPerMin = goldPerMin;
 //		}
 
-	public ParticipantsDto()
+	public ParticipantsDTO()
 		{
 			// TODO Auto-generated constructor stub
 		}

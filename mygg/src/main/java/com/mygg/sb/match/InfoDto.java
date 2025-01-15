@@ -12,6 +12,6 @@ public class InfoDto
 		String gameVersion;
 		String gameType;
 		int mapId;
-		List<ParticipantsDto> participants;
-		List<TeamDto> teams; 
+		List<ParticipantsDTO> participants;
+		List<TeamDTO> teams; 
 	}

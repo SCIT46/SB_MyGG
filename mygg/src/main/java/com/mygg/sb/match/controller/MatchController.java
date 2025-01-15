@@ -2,17 +2,17 @@ package com.mygg.sb.match.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mygg.sb.match.MatchDTO;
-import com.mygg.sb.match.entity.MMatchEntity;
 import com.mygg.sb.match.service.PublicMatchService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,19 +29,18 @@ public class MatchController
 		// private final PrivateMatchService privateMatchService;
 
 		@Operation(summary = "DB에서 match Data 꺼내서 보여준다", description = "name: 유저이름, tag: 유저태그, page: 몇 번째 페이지 데이터")
-		@GetMapping("/test/{name}/{tag}")
+		@GetMapping("/{name}/{tag}")
 		public ResponseEntity<List<MatchDTO>> getMethodName(@PathVariable(name = "name") String name,
-				@PathVariable(name = "tag") String tag,
-				@RequestParam(name = "page", defaultValue = "0") int page)
-						throws Exception
+															@PathVariable(name = "tag") String tag, 
+															@PageableDefault(page = 0, size = 20, sort = {"matchId"}, direction = Sort.Direction.DESC) Pageable page) throws Exception
 			{
 				return publicService.findMatchDataInDB(name, tag, page);
 			}
-		
+
 		@Operation(summary = "Riot Api에 요청하여 match DB를 최신화한다", description = "name: 유저이름, tag: 유저태그")
-		@GetMapping("/test/updateMatch/{name}/{tag}")
+		@GetMapping("/updateMatch/{name}/{tag}")
 		public ResponseEntity<String> updateMatchDataForAPI(@PathVariable(name = "name") String name,
-				@PathVariable(name = "tag") String tag) throws Exception
+															@PathVariable(name = "tag") String tag) throws Exception
 			{
 				return publicService.updateMatchDataForAPI(name, tag);
 			}

@@ -1,11 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import PatchNote from "./PatchNote";
 import { useState } from "react";
-import SearchForm from "../../pages/Home/SearchForm";
 import SearchDetail from "../../pages/Home/SearchDetail";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 const HeaderContainer = styled.nav`
   display: flex;

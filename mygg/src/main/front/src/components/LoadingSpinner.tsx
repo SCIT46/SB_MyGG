@@ -19,18 +19,19 @@ const rotation = keyframes`
 `;
 
 const Spinner = styled.div`
-  height: 20px;
-  width: 20px;
-  border: 2px solid ${({ theme }) => theme.colors.brand.sky.dark};
-  border-radius: 50%;
-  border-top: 2px solid transparent;
-  border-right: 2px solid transparent;
-  margin-left: 20px;
-  margin-right: 10.9px;
-  margin-bottom: 2px;
+  height: 1.25em;
+  width: 1.25em;
+  border: 0.16em solid ${({ theme }) => theme.colors.brand.sky.main};
+  border-radius: 100%;
+  border-top: 0.125em solid transparent;
+  border-right: 0.125em solid transparent;
+  margin-left: 1.14em;
+  margin-right: 0.68em;
+  margin-bottom: 0.125em;
 
   animation: ${rotation} 1s linear infinite;
   box-sizing: border-box;
+  aspect-ratio: 1 / 1;
 `;
 
 //loading 스피너 컴포넌트

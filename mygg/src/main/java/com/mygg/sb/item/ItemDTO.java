@@ -34,6 +34,7 @@ public class ItemDTO extends SearchBaseDTO {
     private GoldDTO gold;
     // 아이템 태그
     // private ArrayList<String> tags;
+
     // 아이템 사용되는 맵
     private Map<String, Boolean> maps;
     // 아이템 특수 레시피

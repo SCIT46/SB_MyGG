@@ -36,16 +36,23 @@ public class UserController {
         return ResponseEntity.ok(dto);
     }
 
-    // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2) DB Index로 조회
+    // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2)
     @Operation(summary = "User(유저 정보 업데이트) API", description = "User(유저 정보 업데이트) API")
-    @GetMapping(path = "/update/{index}")
-    public ResponseEntity<?> userUpdate(@PathVariable("index") Long id) throws Exception {
+    @GetMapping(path = "/update/{name}/{tag}")
+    public ResponseEntity<?> userUpdate(@PathVariable("name") String name, @PathVariable("tag") String tag) throws Exception {
         // TODO: 유저 최신 데이터 조회/저장 로직 추가
-        userService.updateUser(id);
+        userService.updateUser(name, tag);
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
-
-    //User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2) Puuid로 조회
+    // // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2) DB Index로 조회
+    // @Operation(summary = "User(유저 정보 업데이트) API", description = "User(유저 정보 업데이트) API")
+    // @GetMapping(path = "/update/{index}")
+    // public ResponseEntity<?> userUpdate(@PathVariable("index") Long id) throws Exception {
+    //     // TODO: 유저 최신 데이터 조회/저장 로직 추가
+    //     userService.updateUser(id);
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    // }
+    // // User 최신화 API (전적갱신 버튼이 눌렸을 때 동작 2) Puuid로 조회
     // @Operation(summary = "User(유저 정보 업데이트) API", description = "User(유저 정보 업데이트) API")
     // @GetMapping(path = "/update/{puuid}")
     // public ResponseEntity<?> userUpdate(@PathVariable("puuid") String puuid) throws Exception {

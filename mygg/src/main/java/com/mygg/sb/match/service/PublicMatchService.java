@@ -53,7 +53,8 @@ public class PublicMatchService
 		private final MMatchesRepository mMatchesRepository;
 		private final UserService userService;
 		private final ModelMapper modelMapper;
-		private final int count = 5; // api에 요청할 찾을 데이터 수
+		private final int count = 5; 		// api에 요청할 찾을 데이터 수
+		private final int pageSize = 20; 	// 화면상 전적 데이터 보여줄 개수
 		private final int limitRequestForSecond = 20; // 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100; // 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 
@@ -61,18 +62,18 @@ public class PublicMatchService
 			{
 				// 테스트 코드
 				updateMatchDataForAPI(name, tag);
-				return findMatchDataInDB(name, tag);
+				return findMatchDataInDB(name, tag, 1);
 			}
 
 		// DB에서 count 개수만큼 DB에서 꺼내서 데이터를 보여준다.
 		@Transactional
-		public ResponseEntity<List<MatchDTO>> findMatchDataInDB(String name, String tag) throws Exception
+		public ResponseEntity<List<MatchDTO>> findMatchDataInDB(String name, String tag, int page) throws Exception
 			{
 				try
 					{
 						UserDTO user = userService.searchUser(name, tag);
 
-						List<MMatchEntity> eety = getMatchDataInDB(0, count, user.getPuuid()).getContent();
+						List<MMatchEntity> eety = getMatchDataInDB(page, user.getPuuid()).getContent();
 						List<MatchDTO> __list = new ArrayList<MatchDTO>();
 
 						// mapper를 사용해서 Entity -> DTO
@@ -84,82 +85,9 @@ public class PublicMatchService
 						return ResponseEntity.status(HttpStatus.OK).body(__list);
 					} catch (Exception e)
 					{
-						// List<MatchDTO> err = new ArrayList<>();
-						// err.add(new MatchDTO("err: " + e.getMessage()));
-						
-						//return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err); 
-						throw new Exception(e.getMessage());
+						throw new Exception("matchData DB err: " + e.getMessage());
 					}
 
-			}
-
-		private List<MMatchEntity> indexingData(String _name, String _tag) throws Exception
-			{
-				// 1. DB내의 마지막 매치 데이터를 조회한다.
-				// 2. api에게 매치데이터 100개를 받아온다.
-				// 3. 마지막 매치데이터 ~ api의 매치데이터의 데이터를 받아온다.
-				// - DB내의 매치데이터가 없다면 전부 조회한다.
-				List<String> listUserMatches = new ArrayList<>(); // matchId들이 저장된 곳
-				List<MatchDTO> listMatchDto = new ArrayList<>(); // 매치 아이디로 DTO들 저장하는 곳
-				String[] arrStr = new String[100]; // 매치 ID 저장할 곳(KR_...)
-
-				String puuid = RiotApiClient.getPuuidNameAndTag(_name, _tag);
-				String lastMatchId = ""; // 마지막 matchID
-				int start = 0; // 찾기 시작하는 위치
-				int indexInList = -1; // 리스트 내에서 DB에 있는 마지막 DB
-				int currentRequestCnt = 0; //
-
-				// --------------------- api로부터 데이터 탐색
-				// --------------------------------------------------------------
-				// 종료조건:
-				// - 매치 데이터에 기간을 두고, 그 기간 안의 데이터가 100개가 아닌 경우 혹은
-				// 인덱스가 발견된 경우에는 루프를 종료한다
-				int nullIdx = -1;
-				while (arrStr.length > 99 && nullIdx == -1)
-					{
-						currentRequestCnt++;
-
-						// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
-						arrStr = RiotApiClient.getMatchList(puuid, start, count,
-								RiotSeasonConstants.getCurrentYearSeasonStartTimeStamp(),
-								RiotSeasonConstants.getNowEndSeasonTimeStamp());
-
-						// DB에 접근해서 lastMatchId를 갖고 온다. 없다면 pass
-						// indexInList = indexOf(arrStr, lastMatchId);
-						start += count;
-
-						// 3-4) List에 [index]부터 [0]까지 저장(list가 최근 - 오래된)
-						for (int i = 0; i < arrStr.length; i++)
-							{
-								listUserMatches.add(arrStr[i]);
-							}
-					}
-
-				// -------------------------- 데이터 가공
-				// ---------------------------------------------------------------------
-//			for(int i = 0; i < ((nullIdx < 0)? listUserMatches.size(): nullIdx); i++)
-//				{
-//					currentRequestCnt++;
-//					MatchDTO dto = getMatchInfo(listUserMatches.get(i));
-//					if(dto.getInfo().getMapId() == 0) continue;	// 데이터 못 받아오는 것들 거르기
-//					
-//					if(dto != null)
-//						{
-//							listMatchDto.add(dto);
-//						}
-//					
-//					// 예외처리: 요청 19개 되면 1초 종료(위에서 한 번 요청 보내는 거 포함해서 20개임)
-//					if(checkRequestSecondLimit(currentRequestCnt)) 
-//						{
-//							log.info("요청제한으로 1초 sleep 합니다.");
-//							Thread.sleep(1000l);
-//							currentRequestCnt = 0;
-//						};
-//				}
-
-				// return listMatchDto;
-				// return mMatchList;
-				return null;
 			}
 
 		// 전적갱신 버튼을 눌렀을 때 Riot API에서 데이터를 갖고 와서 최신화하는 메소드
@@ -212,48 +140,11 @@ public class PublicMatchService
 			}
 
 		// ----------------------------- 함수에서 쓰일 함수들 ---------------------------------
-
-		private List<MatchDTO> requestMatchIDToAPI(List<String> _matchIds)
-			{
-				// matchId를 넣어주면 DB에 없는 것들만 조회해서 List로 Data를 반환한다.
-				int nullIdx = -1;
-				String[] arrStr = new String[100];
-
-//			while(arrStr.length > 99 && nullIdx == -1)
-//			{
-//				currentRequestCnt++;
-//				
-//				// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
-//				arrStr = RiotApiClient.getMatchList(puuid, start, count,
-//						RiotSeasonConstants.getCurrentYearSeasonStartTimeStamp(), RiotSeasonConstants.getNowEndSeasonTimeStamp());
-//
-//				// DB에 접근해서 lastMatchId를 갖고 온다. 없다면 pass
-//				// indexInList = indexOf(arrStr, lastMatchId);
-//				start += count;
-//				
-//				//  3-4) List에 [index]부터 [0]까지 저장(list가 최근 - 오래된)
-//				for(int i = 0; i < arrStr.length; i++)
-//					{
-//						listUserMatches.add(arrStr[i]);
-//					}
-//			}
-				return null;
-			}
-
-		private boolean checkRequestSecondLimit(int curRequest) throws InterruptedException
-			{
-				// Request 요청제한을 넘었는지 체크한다.
-				// 넘었으면 True, 아니라면 false
-				if (limitRequestForSecond - 1 <= curRequest)
-					return true;
-
-				return false;
-			}
-
-		private Page<MMatchEntity> getMatchDataInDB(int startPoint, int count, String puuid)
+		private Page<MMatchEntity> getMatchDataInDB(int _page, String puuid)
 			{
 				// DB에서 matchEntity 20개 받아오는 함수
-				Pageable pageable = PageRequest.of(startPoint, count);
+				// page 번호, size
+				Pageable pageable = PageRequest.of(_page, pageSize);
 
 				return mMatchesRepository.findByInfoParticipantsPuuidOrderByInfoGameEndTimestamp(puuid, pageable);
 			}
@@ -343,8 +234,7 @@ public class PublicMatchService
 		// matchDTO를 Entity로 바꾸기
 		public MMatchEntity getDTOToEntity(MatchDTO dto)
 			{
-				// ------------------------- Entity로 변환
-				// --------------------------------------------------
+				// ------------------------- Entity로 변환 --------------------------------------------------
 				MMatchEntity _entity = new MMatchEntity();
 				// _entity = modelMapper.map(listMatchDto.get(i), MMatchEntity.class);
 				_entity.setInfo(modelMapper.map(dto.getInfo(), MMatchInfoEntity.class));

@@ -1,6 +1,5 @@
 package com.mygg.sb.match.dto;
 
-
 import com.mygg.sb.match.MatchDTO;
 
 import com.mygg.sb.user.UserDTO;

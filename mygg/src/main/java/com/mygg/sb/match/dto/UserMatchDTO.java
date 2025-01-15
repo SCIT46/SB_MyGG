@@ -2,10 +2,9 @@ package com.mygg.sb.match.dto;
 
 
 import com.mygg.sb.match.MatchDTO;
-import com.mygg.sb.match.entity.MatchEntity;
-import com.mygg.sb.match.entity.UserMatchEntity;
+
 import com.mygg.sb.user.UserDTO;
-import com.mygg.sb.user.UserEntity;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

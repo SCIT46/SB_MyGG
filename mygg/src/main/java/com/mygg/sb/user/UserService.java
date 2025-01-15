@@ -64,28 +64,25 @@ public class UserService {
   }
   // ===========================================================================
 
-  public UserDTO searchCountUp(UserDTO dto) {
-    Optional<UserEntity> tmp = userRepository.findById(dto.getId());
-    if (tmp.isPresent()) {
-      UserEntity entity = tmp.get();
-      entity.setSearchCount(entity.getSearchCount() + 1);
-      return UserDTO.toDTO(entity);
-    }
-    return null;
-  }
+
   // ################################### API ###################################
   @Transactional(noRollbackFor = {Exception.class})
   public UserDTO searchUser(String gameName, String tagLine) throws Exception {
     // DB에 저장된 유저 정보를 받아오기
-    UserDTO user = readOne(gameName, tagLine);
-    if (user != null) {
-      // 유저 검색 횟수 증가/유저 정보를 반환
-      return searchCountUp(user);
+    Optional<UserEntity> tmp = userRepository.findByGameNameAndTagLine(gameName, tagLine);
+    if (tmp.isEmpty()) {
+      // DB에 유저 정보가 없으면 API로부터 유저 정보를 받아와 DB에 저장
+      UserDTO user = getUserInfo(gameName, tagLine);
+      // throw new DataNotFoundException("유저를 찾을 수 없습니다");
+      create(user);
+      return user;
+      
     }
-    // DB에 유저 정보가 없으면 API로부터 유저 정보를 받아와 DB에 저장
-    user = getUserInfo(gameName, tagLine);
-    create(user);
-    return user;
+    UserEntity user = tmp.get();
+
+    // 유저 검색 횟수 증가/유저 정보를 반환
+    user.setSearchCount(user.getSearchCount() + 1);
+    return UserDTO.toDTO(user);
   }
 
   public void updateUser(Long id) throws Exception {

@@ -1,3 +1,4 @@
+import { IUser } from "../pages/SearchPlayer/type";
 import { apiClient, ddragonClient } from "./apiClient";
 
 // (1) 버전 목록 가져오기
@@ -55,7 +56,7 @@ export const getRunes = async (version: string): Promise<any> => {
 export const getUser = async (
   gameName: string,
   tagLine: string
-): Promise<any> => {
+): Promise<IUser> => {
   const { data } = await apiClient.get(`/user/${gameName}/${tagLine}`, {
     headers: {
       "Cache-Control": "max-age=300",
@@ -67,18 +68,45 @@ export const getUser = async (
 // (9) 매치 정보 가져오기
 export const getMatch = async (
   userName: string,
-  tagLine: string
+  tagLine: string,
+  page: number = 0,
+  size: number = 20
 ): Promise<any> => {
-  const { data } = await apiClient.get(`/match/test/${userName}/${tagLine}`, {
-    headers: {
-      "Cache-Control": "max-age=300",
-    },
-  });
+  const { data } = await apiClient.get(
+    `/match/${userName}/${tagLine}?page=${page}&size=${size}`,
+    {
+      headers: {
+        "Cache-Control": "max-age=300",
+      },
+    }
+  );
   return data;
 };
 
 // (10) 검색 결과 가져오기
 export const getSearchedResult = async (query: string): Promise<any> => {
   const { data } = await apiClient.get(`/search/${query}`);
+  return data;
+};
+
+// (11) 전적 갱신
+export const updateMatch = async (
+  userName: string,
+  tagLine: string
+): Promise<any> => {
+  const data = await apiClient.get(`/match/updateMatch/${userName}/${tagLine}`);
+  if (data.status === 500) {
+    throw new Error("전적 갱신 실패");
+  }
+  return data;
+  //
+};
+
+// (12) 유저 정보 업데이트
+export const updateUser = async (
+  userName: string,
+  tagLine: string
+): Promise<any> => {
+  const data = await apiClient.get(`/user/update/${userName}/${tagLine}`);
   return data;
 };

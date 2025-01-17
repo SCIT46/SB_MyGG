@@ -8,7 +8,6 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -67,31 +66,24 @@ public class PublicMatchService
 				try
 					{
 						UserDTO user = userService.searchUser(name, tag);
-						
-						// DB에서 매치데이터를 받아온다.
-//						Page<MMatchEntity> _originPage = ; 
-						List<MMatchEntity> eety = getMatchDataInDB(user.getPuuid(), page).getContent();
 
-						List<MatchDTO> __list = new ArrayList<MatchDTO>();
+						// DB에서 매치데이터를 받아온다.
+						List<MMatchEntity> eety = getMatchDataInDB(user.getPuuid(), page).getContent();
 						
+						List<MatchDTO> __list = new ArrayList<MatchDTO>();
+
 						// Entity에서 DTO로 변환한다(mapper사용)
 						for(int i = 0; i < eety.size(); i++)
 						{
 							__list.add(getEntityToDto(eety.get(i)));
 						}
-						
-//						Page<MatchDTO> _page = new PageImpl<>(__list, _originPage.getPageable(), _originPage.getTotalElements());
-						
-//						System.out.println("\n\n\n----------------------------------------");
-//						System.out.println("=== originPage: " + _originPage);
-//						System.out.println("=== page: " + _page);
-//						System.out.println("----------------------------------------\n\n\n");
 
 						return ResponseEntity.status(HttpStatus.OK).body(__list);
 					} catch (Exception e)
 					{
 						throw new Exception("matchData DB err: " + e.getMessage());
 					}
+
 			}
 
 		// 전적갱신 버튼을 눌렀을 때 Riot API에서 데이터를 갖고 와서 최신화하는 메소드
@@ -124,10 +116,10 @@ public class PublicMatchService
 						List<String> matchIds = getMatchIDsForAPI(user.getPuuid(), stampLastUpdateTime);
 						System.out.println("=== size: " + matchIds.size());
 						// 3. ID값들을 DTO로 변환하고 저장한다.
-						//to-do 최대값 변경
 						for (int i = 0; i < matchIds.size(); i++)
 							{
 								// api에 ID의 데이터 요청
+								System.out.println("=== matchIds.get(i) : " + matchIds.get(i));
 								MatchDTO dto = changeJSONToDTOMatchData(matchIds.get(i));
 
 								if (dto != null)
@@ -139,30 +131,18 @@ public class PublicMatchService
 						return ResponseEntity.status(HttpStatus.NO_CONTENT).body("good succeced");
 					} catch (Exception e)
 					{
-						throw new Exception("DTO Entity 변환 과정 중 에러가 발생했습니다 ErrorMessage : " + e.getMessage());
+						throw new Exception("DTO Entity 변환 과정 중 에러가 발생했습니다" + e.getMessage());
 					}
 
 			}
 
-		// 유저 최근 20개 게임에서 랭크게임들에 대한 캐릭터 통계 넘겨주기
-		public void getLatestAnalist(String _name, String _tag, Pageable page) throws Exception
-		{
-			UserDTO user = userService.searchUser(_name, _tag);
-			
-			// 해당 유저의 전적 데이터를 갖고 온다
-			List<MMatchEntity> eety = getMatchDataInDB(user.getPuuid(), page).getContent();
-			
-			
-		}
 		// ----------------------------- 함수에서 쓰일 함수들 ---------------------------------
 		private Page<MMatchEntity> getMatchDataInDB(String puuid, Pageable page)
 			{
 				// DB에서 matchEntity 20개 받아오는 함수
 				// page 번호, size
 				//Pageable pageable = PageRequest.of(_page, pageSize);
-							
-						
-			
+				
 				return mMatchesRepository.findByInfoParticipantsPuuid(puuid, page);
 			}
 
@@ -245,7 +225,7 @@ public class PublicMatchService
 				MatchDTO result = new MatchDTO();
 				result.setMetadata(metadata);
 				result.setInfo(info);
-				result.setMatchId(result.getMetadata().getMatchId());
+
 				System.out.println("result: " + result +
 								   "\n matchId: " + result.getMatchId()
 								   + "\n match: " + result.getMetadata().getParticipants().get(0));

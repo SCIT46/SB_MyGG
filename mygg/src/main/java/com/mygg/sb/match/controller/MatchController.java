@@ -2,6 +2,7 @@ package com.mygg.sb.match.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -30,7 +31,7 @@ public class MatchController
 
 		@Operation(summary = "DB에서 match Data 꺼내서 보여준다", description = "name: 유저이름, tag: 유저태그, page: 몇 번째 페이지 데이터")
 		@GetMapping("/{name}/{tag}")
-		public ResponseEntity<List<MatchDTO>> getMethodName(@PathVariable(name = "name") String name,
+		public ResponseEntity<Page<MatchDTO>> getMethodName(@PathVariable(name = "name") String name,
 															@PathVariable(name = "tag") String tag, 
 															@PageableDefault(page = 0, size = 20, sort = {"matchId"}, direction = Sort.Direction.DESC) Pageable page) throws Exception
 			{

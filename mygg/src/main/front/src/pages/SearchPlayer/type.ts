@@ -13,6 +13,7 @@ export interface IUser {
   losses: number;
   revisionDate: string;
   matchList: string[];
+  lastUpdateDate: string;
 }
 
 export interface IMatchDetail {

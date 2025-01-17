@@ -37,8 +37,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    # 환경별 secrets로 부터 민감한 정보(.yml) 주입
-    - name: Create Secrets data (Generate application.yml)
+    # 환경별 secrets로 부터 민감한 정보(.properties) 주입
+    - name: Create Secrets data (Generate application.properties)
       working-directory: ./mygg
       run: |
         mkdir -p ./src/main/resources

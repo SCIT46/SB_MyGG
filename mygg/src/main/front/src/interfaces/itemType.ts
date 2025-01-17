@@ -24,6 +24,7 @@ export interface IItem {
     base: number;
     total: number;
     sell: number;
+    purchasable: boolean;
   };
 }
 
@@ -31,10 +32,16 @@ export interface IItemDetail {
   name: string;
   description: string;
   id: string;
+
+  from: string[];
+  into: string[];
   gold: {
     base: number;
     purchasable: boolean;
     total: number;
     sell: number;
+  };
+  stats: {
+    [key: string]: number;
   };
 }

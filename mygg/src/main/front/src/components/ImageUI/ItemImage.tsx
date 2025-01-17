@@ -1,8 +1,9 @@
 import styled, { keyframes } from "styled-components";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useItemStore from "../../stores/useItemStore"; // Assuming a similar store for items
 import useCurrentVersionStore from "../../stores/useCurrentVersionStore";
+import CustomHtmlRenderer from "../../components/CustomHtmlRenderer";
 
 interface ItemImgProps {
   loaded: string;
@@ -61,15 +62,15 @@ const Container = styled.div`
 `;
 
 const DetailBox = styled.div<{ positionabove: boolean; height: number }>`
-  width: 200px;
-  height: 90px;
+  width: 350px;
+  height: fit-content;
   padding: 15px 10px;
   border-radius: 7px;
   background-color: ${({ theme }) => theme.colors.background.dark};
   position: absolute;
   color: ${({ theme }) => theme.colors.text.primary};
   top: ${({ positionabove, height }) =>
-    positionabove ? `-123px` : `${height + 3}px`};
+  positionabove ? `-${height + 3}px` : `calc(100% + 3px)`};
   z-index: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 `;
@@ -88,8 +89,10 @@ const ItemName = styled.div`
 `;
 
 const ItemDescription = styled.div`
+  line-height: 1.2;
   font-size: 12px;
   margin-bottom: 10px;
+  font-weight: 400;
   color: ${({ theme }) => theme.colors.text.white};
 `;
 
@@ -117,11 +120,19 @@ export default function ItemImage({
   const [isHover, setIsHover] = useState<boolean>(false);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [positionAbove, setPositionAbove] = useState<boolean>(false);
+  const detailBoxRef = useRef<HTMLDivElement | null>(null);
+  const [detailBoxHeight, setDetailBoxHeight] = useState<number>(0);
+
+  useEffect(() => {
+    if (detailBoxRef.current) {
+      setDetailBoxHeight(detailBoxRef.current.offsetHeight);
+    }
+  }, [isHover]);
 
   const onMouseOver = (event: React.MouseEvent) => {
     setIsHover(true);
     const rect = event.currentTarget.getBoundingClientRect();
-    setPositionAbove(window.innerHeight - rect.bottom < 120);
+    setPositionAbove(window.innerHeight - rect.bottom < detailBoxHeight + 120);
   };
 
   const onMouseOut = () => {
@@ -151,12 +162,16 @@ export default function ItemImage({
         </ItemBox>
       </Link>
       {isHover && (
-        <DetailBox positionabove={positionAbove} height={height}>
+        <DetailBox
+          ref={detailBoxRef}
+          positionabove={positionAbove}
+          height={detailBoxHeight}
+        >
           <ItemName>
             {String(items?.[itemId as any]?.name || "Unknown Item")}
           </ItemName>
           <ItemDescription>
-            {String(items?.[itemId as any]?.plaintext || "")}
+            <CustomHtmlRenderer htmlString={items?.[itemId as any]?.description || ""} />
           </ItemDescription>
           <ItemGold>
             {String(items?.[itemId as any]?.gold.total || "")}

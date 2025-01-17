@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import Profile from "./ProfileInfo/Profile";
 import { useEffect, useState } from "react";
-import { getUser } from "../../services/Api";
 import { IUser } from "./type";
 import LoadingSpinner from "../../components/LoadingSpinner";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Match from "./MatchInfo/Match";
 import ChampInfo from "./ChampionInfo/ChampInfo";
 import Rank from "./RankInfo/Rank";
 import { Link } from "react-router-dom";
+import { getUser } from "../../services/riotDateService";
+import useMatchRefreshStore from "../../stores/useMatchRefreshStore";
 
 const SearchPlayerContainer = styled.div`
   width: 100vw;
@@ -80,6 +81,8 @@ export default function SearchPlayerPage() {
     tagLine: "",
   });
 
+  const refreshKey = useMatchRefreshStore((state) => state.refreshKey);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -99,7 +102,7 @@ export default function SearchPlayerPage() {
     };
 
     fetchData();
-  }, [id]);
+  }, [id, refreshKey]);
 
   if (isLoading)
     return (
@@ -132,6 +135,7 @@ export default function SearchPlayerPage() {
         profileIconId={user?.profileIconId}
         summonerLevel={user?.summonerLevel}
         tagLine={user?.tagLine}
+        lastUpdateDate={user?.lastUpdateDate}
       />
       <BottomContainer>
         <LeftContainer>

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,7 +27,8 @@ public class UrlToJson {
 
         // HTTP 응답 코드 확인
         int responseCode = connection.getResponseCode();
-
+        //Map<String, List<String>> test1	= connection.getHeaderFields();
+        
         // 응답 스트림 선택 (성공: InputStream, 실패: ErrorStream)
         InputStream stream = (responseCode >= 200 && responseCode < 300)
                 ? connection.getInputStream()

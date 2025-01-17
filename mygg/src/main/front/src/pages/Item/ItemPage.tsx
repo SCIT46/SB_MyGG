@@ -50,9 +50,18 @@ export default function ItemPage() {
       <TitleLine />
       <ItemContainer>
         {items &&
-          Object.entries(items).map(([key, value]) => (
-            <ItemImage itemId={Number(key)} key={key} width={50} height={50} />
-          ))}
+          Object.entries(items).map(
+            ([key, value]) =>
+              value.maps["11"] &&
+              value.gold.purchasable === true && (
+                <ItemImage
+                  itemId={Number(key)}
+                  key={key}
+                  width={50}
+                  height={50}
+                />
+              )
+          )}
       </ItemContainer>
     </ItemsContainer>
   );

@@ -19,7 +19,7 @@ import lombok.ToString;
 @Builder
 public class UserDTO extends SearchBaseDTO {
     private Long id;
-
+    // 보안을 위해 DTO에는 포함하지 않음
     private String leagueId;
     private String puuid;
     private String summonerId;
@@ -39,12 +39,14 @@ public class UserDTO extends SearchBaseDTO {
     // 유저 승패
     private int wins;
     private int losses;
-    // 최근 갱신 날짜
+    // Riot 유저정보 최근 갱신 날짜
     private LocalDateTime revisionDate;
     // 검색 횟수
     private long searchCount;
+    // 최근 전적갱신 날짜
+    private LocalDateTime lastUpdateDate;
     // 최근 매치 목록
-    private String[] matchList;
+    //private String[] matchList;
 
     public static UserDTO toDTO(UserEntity entity) {
         return UserDTO.builder()
@@ -63,6 +65,7 @@ public class UserDTO extends SearchBaseDTO {
                 .losses(entity.getLosses())
                 .revisionDate(entity.getRevisionDate())
                 .searchCount(entity.getSearchCount())
+                .lastUpdateDate(entity.getLastUpdateDate())
                 .build();
     }
 }

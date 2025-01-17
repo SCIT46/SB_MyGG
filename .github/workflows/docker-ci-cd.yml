@@ -7,8 +7,8 @@ on:
 permissions:
   contents: read
 
-#env:
-#  CI: false
+env:
+  CI: false
 
 jobs:
   CI-CD:

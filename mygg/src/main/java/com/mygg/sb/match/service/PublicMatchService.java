@@ -62,31 +62,32 @@ public class PublicMatchService
 
 		// DB에서 꺼내서 데이터를 보여준다.
 		@Transactional
-		public ResponseEntity<Page<MatchDTO>> findMatchDataInDB(String name, String tag, Pageable page) throws Exception
+		public ResponseEntity<List<MatchDTO>> findMatchDataInDB(String name, String tag, Pageable page) throws Exception
 			{
 				try
 					{
 						UserDTO user = userService.searchUser(name, tag);
 						
 						// DB에서 매치데이터를 받아온다.
-						Page<MMatchEntity> _originPage = getMatchDataInDB(user.getPuuid(), page); 
-						List<MMatchEntity> eety = _originPage.getContent();
-						
+//						Page<MMatchEntity> _originPage = ; 
+						List<MMatchEntity> eety = getMatchDataInDB(user.getPuuid(), page).getContent();
+
 						List<MatchDTO> __list = new ArrayList<MatchDTO>();
 						
 						// Entity에서 DTO로 변환한다(mapper사용)
 						for(int i = 0; i < eety.size(); i++)
 						{
 							__list.add(getEntityToDto(eety.get(i)));
-							
 						}
 						
-						Page<MatchDTO> _page = new PageImpl<>(__list, _originPage.getPageable(), _originPage.getTotalElements());
+//						Page<MatchDTO> _page = new PageImpl<>(__list, _originPage.getPageable(), _originPage.getTotalElements());
 						
-						System.out.println("originPage: " + _originPage);
-						System.out.println("page: " + _page);
+//						System.out.println("\n\n\n----------------------------------------");
+//						System.out.println("=== originPage: " + _originPage);
+//						System.out.println("=== page: " + _page);
+//						System.out.println("----------------------------------------\n\n\n");
 
-						return ResponseEntity.status(HttpStatus.OK).body(_page);
+						return ResponseEntity.status(HttpStatus.OK).body(__list);
 					} catch (Exception e)
 					{
 						throw new Exception("matchData DB err: " + e.getMessage());
@@ -144,8 +145,13 @@ public class PublicMatchService
 			}
 
 		// 유저 최근 20개 게임에서 랭크게임들에 대한 캐릭터 통계 넘겨주기
-		public void getLatestAnalist(String _name, String _tag)
+		public void getLatestAnalist(String _name, String _tag, Pageable page) throws Exception
 		{
+			UserDTO user = userService.searchUser(_name, _tag);
+			
+			// 해당 유저의 전적 데이터를 갖고 온다
+			List<MMatchEntity> eety = getMatchDataInDB(user.getPuuid(), page).getContent();
+			
 			
 		}
 		// ----------------------------- 함수에서 쓰일 함수들 ---------------------------------

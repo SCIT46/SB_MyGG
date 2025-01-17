@@ -44,7 +44,7 @@ public class RiotApiClient {
         // jsonObject의 JSON Key값으로 모든 데이터 조회
         String puuid = (String) jsonObject.get("puuid");
 
-        return puuid; // size : 78
+        return puuid;
     }
 
     // API : puuid(String)를 주면 gameName, tagLine(String[])으로 변환
@@ -127,7 +127,7 @@ public class RiotApiClient {
 
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
-
+        
         return (JSONObject) parser.parse(matchJSON);
     }
 

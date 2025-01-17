@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmy_app=self.webpackChunkmy_app||[]).push([[192],{1192:(n,s,a)=>{a.r(s),a.d(s,{default:()=>p});var e,i=a(7528),r=a(5464),t=a(579);const f=r.Ay.div(e||(e=(0,i.A)(["\n  margin: 0;\n  min-height: 100vh;\n  color: #333;\n  font-family: sans-serif;\n"])));function p(){return(0,t.jsx)(f,{})}}}]);
+//# sourceMappingURL=192.e72bb605.chunk.js.map

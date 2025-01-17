@@ -66,17 +66,25 @@ public class PublicMatchService
 				try
 					{
 						UserDTO user = userService.searchUser(name, tag);
+						
 
+						
 						// DB에서 매치데이터를 받아온다.
 						List<MMatchEntity> eety = getMatchDataInDB(user.getPuuid(), page).getContent();
 						
 						List<MatchDTO> __list = new ArrayList<MatchDTO>();
+						
+
 
 						// Entity에서 DTO로 변환한다(mapper사용)
 						for(int i = 0; i < eety.size(); i++)
 						{
 							__list.add(getEntityToDto(eety.get(i)));
+							
 						}
+						
+					
+
 
 						return ResponseEntity.status(HttpStatus.OK).body(__list);
 					} catch (Exception e)
@@ -116,6 +124,7 @@ public class PublicMatchService
 						List<String> matchIds = getMatchIDsForAPI(user.getPuuid(), stampLastUpdateTime);
 						System.out.println("=== size: " + matchIds.size());
 						// 3. ID값들을 DTO로 변환하고 저장한다.
+						//to-do 최대값 변경
 						for (int i = 0; i < matchIds.size(); i++)
 							{
 								// api에 ID의 데이터 요청
@@ -131,7 +140,7 @@ public class PublicMatchService
 						return ResponseEntity.status(HttpStatus.NO_CONTENT).body("good succeced");
 					} catch (Exception e)
 					{
-						throw new Exception("DTO Entity 변환 과정 중 에러가 발생했습니다" + e.getMessage());
+						throw new Exception("DTO Entity 변환 과정 중 에러가 발생했습니다 ErrorMessage : " + e.getMessage());
 					}
 
 			}
@@ -142,7 +151,9 @@ public class PublicMatchService
 				// DB에서 matchEntity 20개 받아오는 함수
 				// page 번호, size
 				//Pageable pageable = PageRequest.of(_page, pageSize);
-				
+							
+						
+			
 				return mMatchesRepository.findByInfoParticipantsPuuid(puuid, page);
 			}
 

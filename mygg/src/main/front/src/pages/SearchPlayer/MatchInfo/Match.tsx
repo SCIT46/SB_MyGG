@@ -60,7 +60,6 @@ interface IMatchProps {
 export default function Match({ userName, tagLine, puuid }: IMatchProps) {
   const { matchDetails, isLoading } = useFetchMatchDetails(userName, tagLine);
 
-
   if (isLoading) {
     return (
       <MacthContainer>

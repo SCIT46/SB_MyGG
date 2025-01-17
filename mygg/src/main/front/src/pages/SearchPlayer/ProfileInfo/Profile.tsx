@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import useCurrentVersionStore from "../../../stores/useCurrentVersionStore";
+import { updateMatch, updateUser } from "../../../services/riotDateService";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import useMatchRefreshStore from "../../../stores/useMatchRefreshStore";
 
 const ProfileContainer = styled.div`
   margin-top: 30px;
@@ -21,8 +25,8 @@ const ProfileImg = styled.img`
   border-radius: 10px;
 `;
 
-const DetailContainer = styled.div`
-  height: 90px;
+const UserInfoContainer = styled.div`
+  height: 60px;
   display: flex;
   align-items: center;
   margin-bottom: auto;
@@ -59,11 +63,53 @@ const ProfileImgBox = styled.div`
   margin-bottom: -10px;
 `;
 
+const DetailContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+`;
+
+const RefreshButton = styled.div`
+  cursor: pointer;
+  width: 80px;
+  height: 30px;
+  background-color: ${({ theme }) => theme.colors.brand.sky.main};
+  color: ${({ theme }) => theme.colors.text.white};
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.brand.sky.dark};
+  }
+`;
+
+const LoadingButton = styled(RefreshButton)`
+  cursor: not-allowed;
+  background-color: ${({ theme }) => theme.colors.text.disabled};
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.text.disabled};
+  }
+`;
+
+const LastUpdateDateSpan = styled.div`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.text.light};
+`;
+
 interface IProfileProps {
-  profileIconId?: number;
-  gameName?: string;
-  tagLine?: string;
-  summonerLevel?: number;
+  profileIconId: number;
+  gameName: string;
+  tagLine: string;
+  summonerLevel: number;
+  lastUpdateDate: string;
 }
 
 export default function Profile({
@@ -71,8 +117,26 @@ export default function Profile({
   gameName,
   tagLine,
   summonerLevel,
+  lastUpdateDate,
 }: IProfileProps) {
   const version = useCurrentVersionStore((state) => state.version);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRecentRenewed, setIsRecentRenewed] = useState(false);
+  const { setRefreshKey } = useMatchRefreshStore();
+  const navigate = useNavigate();
+
+  const handleUpdateMatch = () => {
+    setIsLoading(true);
+
+    updateMatch(gameName, tagLine).then((data) => {
+      data.status === 500 && navigate("/");
+      updateUser(gameName, tagLine).then((data) => {
+        setRefreshKey();
+        setIsLoading(false);
+      });
+    });
+  };
+  // 유저 정보 업데이트
   return (
     <ProfileContainer>
       <ProfileImgBox>
@@ -82,8 +146,34 @@ export default function Profile({
         <LevelBox>{summonerLevel}</LevelBox>
       </ProfileImgBox>
       <DetailContainer>
-        <NameSpan>{gameName}</NameSpan>
-        <TagSpan>#{tagLine}</TagSpan>
+        <UserInfoContainer>
+          <NameSpan>{gameName}</NameSpan>
+          <TagSpan>#{tagLine}</TagSpan>
+        </UserInfoContainer>
+        <ButtonContainer>
+          {isLoading ? (
+            <LoadingButton>로딩중...</LoadingButton>
+          ) : (
+            <RefreshButton onClick={handleUpdateMatch}>전적 갱신</RefreshButton>
+          )}
+          <LastUpdateDateSpan>
+            {(() => {
+              if (!lastUpdateDate) return "버튼을 눌러, 전적을 갱신해보세요!";
+              const now = new Date();
+              const lastUpdate = new Date(lastUpdateDate);
+              const diffInMinutes = Math.floor(
+                (now.getTime() - lastUpdate.getTime()) / (1000 * 60)
+              );
+              if (diffInMinutes < 2) return "방금 전 갱신되었습니다!";
+              if (diffInMinutes < 60) return `${diffInMinutes}분 전 갱신`;
+              const diffInHours = Math.floor(diffInMinutes / 60);
+              if (diffInHours < 24) return `${diffInHours}시간 전 갱신`;
+
+              const diffInDays = Math.floor(diffInHours / 24);
+              return `${diffInDays}일 전 갱신`;
+            })()}
+          </LastUpdateDateSpan>
+        </ButtonContainer>
       </DetailContainer>
     </ProfileContainer>
   );

@@ -84,6 +84,8 @@ export default function Header() {
       <LinkBox>
         <LinkBtn to={"item"}>아이템</LinkBtn>
         <LinkBtn to={"champion"}>챔피언</LinkBtn>
+        <LinkBtn to={"board"}>익명게시판</LinkBtn>
+        <LinkBtn to={"login"}>로그인</LinkBtn>
         <SearchBtn onClick={() => setIsModalOpen(true)}>검색</SearchBtn>
       </LinkBox>
       {/* 패치노트 컴포넌트 */}

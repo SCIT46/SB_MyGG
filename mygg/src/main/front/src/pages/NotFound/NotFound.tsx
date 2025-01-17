@@ -12,7 +12,7 @@ const NotFoundContainer = styled.div`
 export default function NotFound() {
   return (
     <NotFoundContainer>
-      <div>404 Not Found! 유저 정보를 찾을 수 없습니다.</div>
+      <div>404 Not Found! 페이지를 찾을 수 없습니다!.</div>
       <Link to={"/"}> {"=>"}홈페이지로 돌아가기</Link>
     </NotFoundContainer>
   );

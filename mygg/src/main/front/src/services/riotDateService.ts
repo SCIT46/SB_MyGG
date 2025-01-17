@@ -69,11 +69,14 @@ export const getMatch = async (
   userName: string,
   tagLine: string
 ): Promise<any> => {
-  const { data } = await apiClient.get(`/match/test/${userName}/${tagLine}`, {
-    headers: {
-      "Cache-Control": "max-age=300",
-    },
-  });
+  const { data } = await apiClient.get(
+    `/match/updateMatch/${userName}/${tagLine}`,
+    {
+      headers: {
+        "Cache-Control": "max-age=300",
+      },
+    }
+  );
   return data;
 };
 

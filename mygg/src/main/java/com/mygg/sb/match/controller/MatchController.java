@@ -45,14 +45,14 @@ public class MatchController
 				return publicService.updateMatchDataForAPI(name, tag);
 			}
 
-//		// Public Match(API로부터 받아온 결과) API(안 씀)
-//		@Operation(summary = "Public Match(API로부터 받아온 결과) API", description = "Public Match(API로부터 받아온 결과) API")
-//		@GetMapping(path = "/public/matchId/{matchId}")
-//		public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception
-//			{
-//				return ResponseEntity.ok(publicService.changeJSONToDTOMatchData(matchId));
-//			}
-//
+		// Public Match(API로부터 받아온 결과) API(안 씀)
+		@Operation(summary = "Public Match(API로부터 받아온 결과) API", description = "Public Match(API로부터 받아온 결과) API")
+		@GetMapping(path = "/public/matchId/{matchId}")
+		public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception
+			{
+				return ResponseEntity.ok(publicService.changeJSONToDTOMatchData(matchId));
+			}
+			
 //		// 유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)(안씀)
 //		@Operation(summary = "유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)(안 씀)", description = "유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)")
 //		@GetMapping(path = "/public/puuid/{puuid}")

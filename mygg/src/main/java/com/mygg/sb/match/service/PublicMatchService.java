@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -145,6 +146,21 @@ public class PublicMatchService
 				
 				return mMatchesRepository.findByInfoParticipantsPuuid(puuid, page);
 			}
+
+		public List<MatchDTO> getMatchDataInDB(String puuid) throws Exception{
+			// puuid를 통해 MongoDB에 저장되어있는 소환사의 매치데이터 list 받아옴
+			List<MMatchEntity> tmp = mMatchesRepository.findByInfoParticipantsPuuid(puuid);
+			// 받아온 데이터를 반환해 줄 list<DTO> 생성
+			List<MatchDTO> list = new ArrayList<>();
+			// 검색한 유저의 매치데이터가 없으면(개수가 1보다 작으면) null 반환
+			if(tmp.size() < 1){
+				throw new DataNotFoundException("해당하는 유저가 없거나 매치데이터가 존재하지 않습니다.");
+			}
+			// 받아온 데이터를 DTO로 변환하여 list에 저장
+			tmp.forEach(entity -> list.add(getEntityToDto(entity)));
+			// 변환된 list 반환
+			return list;
+		}
 
 		// api에 요청하여 match id들을 갖고오는 함수
 		private List<String> getMatchIDsForAPI(String puuid, long startTime) throws Exception

@@ -2,16 +2,21 @@ package com.mygg.sb.match.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,10 +25,15 @@ import com.mygg.sb.match.MatchInfoDTO;
 import com.mygg.sb.exception.custom.DataNotFoundException;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.MetadataDTO;
+import com.mygg.sb.match.analist.dto.MRecentMatchDTO;
+import com.mygg.sb.match.analist.entity.MRecentMatchEntity;
+import com.mygg.sb.match.analist.entity.RecenetMatchDataEntity;
 import com.mygg.sb.match.entity.MMatchEntity;
 import com.mygg.sb.match.entity.MMatchInfoEntity;
 import com.mygg.sb.match.entity.MMetadataEntity;
+import com.mygg.sb.match.entity.MParticipantsEntity;
 import com.mygg.sb.match.repository.MMatchesRepository;
+import com.mygg.sb.match.repository.MMatchesRepositoryCustomImpl;
 import com.mygg.sb.match.repository.UserMatchesRepository;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.api.RiotSeasonConstants;
@@ -53,6 +63,7 @@ public class PublicMatchService
 		private final UserMatchesRepository userMatchesRepo;
 		private final UserRepository userRepository;
 		private final MMatchesRepository mMatchesRepository;
+		private final MMatchesRepositoryCustomImpl mMatchesRepositoryCustomImpl;
 		private final UserService userService;
 		private final ModelMapper modelMapper;
 		private final int count = 99; 		// api에 요청할 찾을 데이터 수
@@ -120,7 +131,6 @@ public class PublicMatchService
 						for (int i = 0; i < matchIds.size(); i++)
 							{
 								// api에 ID의 데이터 요청
-								System.out.println("=== matchIds.get(i) : " + matchIds.get(i));
 								MatchDTO dto = changeJSONToDTOMatchData(matchIds.get(i));
 
 								if (dto != null)
@@ -137,7 +147,26 @@ public class PublicMatchService
 
 			}
 
+		// 통계) DB에서 최근 전적 20개 보여주는 메소드
+		public ResponseEntity<List<RecenetMatchDataEntity>> getRecentData(String _name, String _tag) throws Exception
+			{
+				UserDTO user = userService.searchUser(_name, _tag);
+				
+				if(user == null)
+					{
+						// user 에 대한 정보 받아오지 못하면 error 출력
+						throw new Exception("getRecentData 메소드에서 user 데이터를 받아오지 못했습니다.");
+					}
+				
+			    // MongoDB Aggregation Pipeline
+				List<RecenetMatchDataEntity> result
+				 = mMatchesRepositoryCustomImpl.getRecentMatchStatsForUser(user.getPuuid());
+
+			    // 결과 반환
+			    return ResponseEntity.status(HttpStatus.OK).body(result);
+			}
 		// ----------------------------- 함수에서 쓰일 함수들 ---------------------------------
+		// 매치데이터를 DB에서 페이징해서 갖고 온다
 		private Page<MMatchEntity> getMatchDataInDB(String puuid, Pageable page)
 			{
 				// DB에서 matchEntity 20개 받아오는 함수
@@ -191,7 +220,6 @@ public class PublicMatchService
 						// list에 [0]최근 ~ [size()-1]오래된 순으로 저장한다.
 						for (int i = 0; i < arrStr.length; i++)
 							{
-								System.out.println("=== arrStr " + i + " " + arrStr[i] + " "+ mMatchesRepository.existsById(arrStr[i]));
 								if(!mMatchesRepository.existsById(arrStr[i]))
 									listUserMatches.add(arrStr[i]);
 							}
@@ -242,9 +270,9 @@ public class PublicMatchService
 				result.setMetadata(metadata);
 				result.setInfo(info);
 
-				System.out.println("result: " + result +
-								   "\n matchId: " + result.getMatchId()
-								   + "\n match: " + result.getMetadata().getParticipants().get(0));
+//				System.out.println("result: " + result +
+//								   "\n matchId: " + result.getMatchId()
+//								   + "\n match: " + result.getMetadata().getParticipants().get(0));
 				return result;
 			}
 

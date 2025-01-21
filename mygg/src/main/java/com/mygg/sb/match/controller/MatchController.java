@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mygg.sb.match.MatchDTO;
+import com.mygg.sb.match.analist.entity.MRecentMatchEntity;
+import com.mygg.sb.match.analist.entity.RecenetMatchDataEntity;
 import com.mygg.sb.match.service.PublicMatchService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,14 +48,26 @@ public class MatchController
 				return publicService.updateMatchDataForAPI(name, tag);
 			}
 
-		// Public Match(API로부터 받아온 결과) API(안 씀)
-		@Operation(summary = "Public Match(API로부터 받아온 결과) API", description = "Public Match(API로부터 받아온 결과) API")
-		@GetMapping(path = "/public/matchId/{matchId}")
-		public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception
-			{
-				return ResponseEntity.ok(publicService.changeJSONToDTOMatchData(matchId));
-			}
+		// 최근 20개 랭크데이터 조회한다
+		@Operation(summary = "최근 전적 20개, DB에서 조회", description = "최근 전적 20개(랭크게임) 통계")
+		@GetMapping("/recentData/{name}/{tag}")
+		public ResponseEntity<List<RecenetMatchDataEntity>> getRecentData(
+												@PathVariable(name = "name") String name,
+												@PathVariable(name = "tag") String tag) throws Exception
+		{
 			
+			return publicService.getRecentData(name, tag);
+		}
+		
+		
+//		// Public Match(API로부터 받아온 결과) API(안 씀)
+//		@Operation(summary = "Public Match(API로부터 받아온 결과) API", description = "Public Match(API로부터 받아온 결과) API")
+//		@GetMapping(path = "/public/matchId/{matchId}")
+//		public ResponseEntity<MatchDTO> publicMatch(@PathVariable("matchId") String matchId) throws Exception
+//			{
+//				return ResponseEntity.ok(publicService.changeJSONToDTOMatchData(matchId));
+//			}
+//
 //		// 유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)(안씀)
 //		@Operation(summary = "유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)(안 씀)", description = "유저 전적 조회 API (전적갱신 버튼이 눌렸을 때 동작 1)")
 //		@GetMapping(path = "/public/puuid/{puuid}")

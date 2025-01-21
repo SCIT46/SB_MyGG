@@ -19,6 +19,5 @@ public interface MMatchesRepository extends MongoRepository<MMatchEntity, String
 		//@Query(value = "{ 'info.participants.puuid': ?0 }", sort = "{ 'info.gameEndTimestamp': 1 }")
 		public Page<MMatchEntity> findByInfoParticipantsPuuidOrderByInfoGameEndTimestamp(String puuid, Pageable pageable);
 
-		public Page<MMatchEntity> findByInfoParticipantsPuuid(String puuid, Pageable page);	
-		
+		public Page<MMatchEntity> findByInfoParticipantsPuuid(String puuid, Pageable page);		
 	}

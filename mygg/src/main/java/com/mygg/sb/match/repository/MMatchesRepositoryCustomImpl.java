@@ -27,8 +27,8 @@ public class MMatchesRepositoryCustomImpl implements MMatchesRepositoryCustom
 					    Aggregation.match(Criteria.where("info.participants.puuid").is(puuid)),
 					    Aggregation.sort(Sort.by(Sort.Order.desc("info.gameEndTimestamp"))),
 //					    Aggregation.limit(20),
+					    Aggregation.match(Criteria.where("info.queueId").is(420)),	// 420: soloRank 440: FreeRank
 					    Aggregation.unwind("info.participants"),
-					    Aggregation.match(Criteria.where("info.queueId").is(440)),	// 420: soloRank 440: FreeRank
 					    Aggregation.match(Criteria.where("info.participants.puuid").is(puuid)),
 					    Aggregation.group("info.participants.championId")
 					        .avg("info.participants.kills").as("kill")
@@ -36,6 +36,7 @@ public class MMatchesRepositoryCustomImpl implements MMatchesRepositoryCustom
 					        .avg("info.participants.assists").as("assist")
 					        .avg("info.participants.totalMinionsKilled").as("minionKilled")
 					        .avg("info.participants.neutralMinionsKilled").as("neutralKilled")
+					        .avg("info.participants.challenges.kda").as("kda")
 					        .first("info.participants.championName").as("championName")
 					        .count().as("gameCnt"),
 					    Aggregation.sort(Sort.by(Sort.Order.desc("gameCnt"))), // gameCnt로 정렬
@@ -47,6 +48,7 @@ public class MMatchesRepositoryCustomImpl implements MMatchesRepositoryCustom
 					        .and("minionKilled").as("minionKilled")
 					        .and("neutralKilled").as("neutralKilled")
 					        .and("gameCnt").as("gameCnt")
+					        .and("kda").as("kda")
 					        .and("championName").as("championName")
 					);
 

@@ -24,7 +24,7 @@ public class UrlToJson {
         URL request_url = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) request_url.openConnection();
 
-        System.out.println("==== URL: " + url);
+        //System.out.println("==== UrloJson.java URL: " + url);
         // HTTP 응답 코드 확인
         int responseCode = connection.getResponseCode();
 

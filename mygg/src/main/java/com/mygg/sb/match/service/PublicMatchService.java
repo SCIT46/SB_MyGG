@@ -71,7 +71,7 @@ public class PublicMatchService
 		private final int limitRequestForSecond = 20; // 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100; // 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 
-		// DB에서 꺼내서 데이터를 보여준다.
+		// DB에서 꺼내기) DB에서 페이지만큼 데이터를 꺼내서 리턴한다
 		@Transactional
 		public ResponseEntity<List<MatchDTO>> findMatchDataInDB(String name, String tag, Pageable page) throws Exception
 			{
@@ -98,7 +98,7 @@ public class PublicMatchService
 
 			}
 
-		// 전적갱신 버튼을 눌렀을 때 Riot API에서 데이터를 갖고 와서 최신화하는 메소드
+		// RiotApi DB 최신화) 전적갱신 버튼을 눌렀을 때 Riot API에서 데이터를 갖고 와서 최신화하는 메소드
 		@Transactional
 		public ResponseEntity<String> updateMatchDataForAPI(String _name, String _tag) throws Exception
 			{
@@ -121,12 +121,14 @@ public class PublicMatchService
 				LocalDateTime dateLastUpdatTime = user.getLastUpdateDate();
 
 				long stampLastUpdateTime = DateTimeUtils.localDateTimeToSeconsEpoch(dateLastUpdatTime);
-
+				
+				System.out.println("=== test user.puuid: " + user.getPuuid());
+				System.out.println("=== test stampLastUpdateTime: " + stampLastUpdateTime);
 				try
 					{
 						// 2. 타임 스탬프 값을 기준으로 api에 요청해서 matchID들을 갖고 온다.
 						List<String> matchIds = getMatchIDsForAPI(user.getPuuid(), stampLastUpdateTime);
-						System.out.println("=== size: " + matchIds.size());
+						System.out.println("=== test size: " + matchIds.size());
 						// 3. ID값들을 DTO로 변환하고 저장한다.
 						for (int i = 0; i < matchIds.size(); i++)
 							{
@@ -147,7 +149,7 @@ public class PublicMatchService
 
 			}
 
-		// 통계) DB에서 최근 전적 20개 보여주는 메소드
+		// 통계) DB에서 최근 전적 통계를 보여주는 메소드
 		public ResponseEntity<List<RecenetMatchDataEntity>> getRecentData(String _name, String _tag) throws Exception
 			{
 				UserDTO user = userService.searchUser(_name, _tag);
@@ -195,6 +197,7 @@ public class PublicMatchService
 		private List<String> getMatchIDsForAPI(String puuid, long startTime) throws Exception
 			{
 				// API에 요청해서 전적갱신 시간 ~ 현재까지의 데이터를 조회한다
+				// 조회 시작시간이 시즌 시작일보다 과거라면, 시즌 시작일부터 조회한다.
 				startTime = (startTime < RiotSeasonConstants.getNowStartSeasonTimeStamp())
 						? RiotSeasonConstants.getNowStartSeasonTimeStamp()
 						: startTime;
@@ -211,6 +214,7 @@ public class PublicMatchService
 				// 인덱스가 발견된 경우에는 루프를 종료한다
 				while (arrStr.length >= count)
 					{
+						System.out.println("=== test start: " + start); 
 						// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
 						arrStr = RiotApiClient.getMatchList(puuid, start, count, startTime,
 								RiotSeasonConstants.getNowTimeStamp());
@@ -220,6 +224,8 @@ public class PublicMatchService
 						// list에 [0]최근 ~ [size()-1]오래된 순으로 저장한다.
 						for (int i = 0; i < arrStr.length; i++)
 							{
+								System.out.println("=== test arrStr[i]: " + arrStr[i]);
+								
 								if(!mMatchesRepository.existsById(arrStr[i]))
 									listUserMatches.add(arrStr[i]);
 							}

@@ -27,7 +27,10 @@ public class AnalysisController {
 
     // 개인 통계 조회
     @GetMapping("/personal/{puuid}")
-    public ResponseEntity<UserAnalysisDTO> personalAnalysis(@PathVariable(name="puuid") String puuid) throws Exception {
+    public ResponseEntity<UserAnalysisDTO> personalAnalysis(@PathVariable(name = "puuid") String puuid)
+            throws Exception {
+        System.out.println("puuid: " + puuid);
+        
         return ResponseEntity.ok(analysisService.getUserAnalysis(puuid));
     }
 

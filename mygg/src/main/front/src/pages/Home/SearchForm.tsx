@@ -17,8 +17,6 @@ const SearchFormContainer = styled.form`
   }
 `;
 
-
-
 const SearchInputBox = styled.div`
   background-color: ${({ theme }) => theme.colors.background.white};
   border: 1px solid ${({ theme }) => theme.colors.border.main};
@@ -31,8 +29,6 @@ const SearchInputBox = styled.div`
   cursor: pointer;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 `;
-
-
 
 const SearchInputSpan = styled.span`
   font-size: 0.9rem;

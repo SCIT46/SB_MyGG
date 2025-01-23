@@ -15,10 +15,15 @@ const useRecentSearchStore = create<IRecentSearchStore>((set) => ({
   recentSearch: JSON.parse(localStorage.getItem("recentSearch") || "[]"),
   setRecentSearch: (newData) => {
     // Remove duplicates
-    const uniqueData = newData.filter((item, index, self) =>
-      index === self.findIndex((t) => (
-        t.gameName === item.gameName && t.tagLine === item.tagLine && t.profileIconId === item.profileIconId
-      ))
+    const uniqueData = newData.filter(
+      (item, index, self) =>
+        index ===
+        self.findIndex(
+          (t) =>
+            t.gameName === item.gameName &&
+            t.tagLine === item.tagLine &&
+            t.profileIconId === item.profileIconId
+        )
     );
 
     // Limit to 10 items

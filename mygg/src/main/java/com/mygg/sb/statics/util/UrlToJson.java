@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,6 +13,7 @@ import org.json.simple.JSONObject;
 import com.mygg.sb.exception.custom.RiotApiBadRequest;
 import com.mygg.sb.exception.custom.RiotApiForbidden;
 import com.mygg.sb.exception.custom.RiotApiNotFound;
+import com.mygg.sb.exception.custom.RiotApiTooManyRequests;
 import com.mygg.sb.statics.api.RiotApiConstants;
 
 public class UrlToJson {
@@ -25,10 +25,10 @@ public class UrlToJson {
         URL request_url = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) request_url.openConnection();
 
+        //System.out.println("==== UrloJson.java URL: " + url);
         // HTTP 응답 코드 확인
         int responseCode = connection.getResponseCode();
-        //Map<String, List<String>> test1	= connection.getHeaderFields();
-        
+
         // 응답 스트림 선택 (성공: InputStream, 실패: ErrorStream)
         InputStream stream = (responseCode >= 200 && responseCode < 300)
                 ? connection.getInputStream()
@@ -57,6 +57,8 @@ public class UrlToJson {
                 throw new RiotApiNotFound("Riot API 응답이 올바르지 않습니다.");
             case 400:
                 throw new RiotApiBadRequest("Riot API 요청이 올바르지 않습니다.");
+            case 429:
+                throw new RiotApiTooManyRequests("Riot API의 요청 제한을 초과했습니다.");
             default:    //unexpected exception
                 throw new RuntimeException("Riot API Error 코드: " + responseCode + ", 응답: " + userJSON);
         }

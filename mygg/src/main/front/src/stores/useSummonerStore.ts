@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { IItem } from "../interfaces/itemType";
 
-
 interface ISummonerStore {
   summoner: IItem[] | null;
   setSummoner: (newData: IItem[]) => void;

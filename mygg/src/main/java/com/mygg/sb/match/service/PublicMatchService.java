@@ -2,15 +2,21 @@ package com.mygg.sb.match.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,10 +25,15 @@ import com.mygg.sb.match.MatchInfoDTO;
 import com.mygg.sb.exception.custom.DataNotFoundException;
 import com.mygg.sb.match.MatchDTO;
 import com.mygg.sb.match.MetadataDTO;
+import com.mygg.sb.match.analist.dto.MRecentMatchDTO;
+import com.mygg.sb.match.analist.entity.MRecentMatchEntity;
+import com.mygg.sb.match.analist.entity.RecenetMatchDataEntity;
 import com.mygg.sb.match.entity.MMatchEntity;
 import com.mygg.sb.match.entity.MMatchInfoEntity;
 import com.mygg.sb.match.entity.MMetadataEntity;
+import com.mygg.sb.match.entity.MParticipantsEntity;
 import com.mygg.sb.match.repository.MMatchesRepository;
+import com.mygg.sb.match.repository.MMatchesRepositoryCustomImpl;
 import com.mygg.sb.match.repository.UserMatchesRepository;
 import com.mygg.sb.statics.api.RiotApiClient;
 import com.mygg.sb.statics.api.RiotSeasonConstants;
@@ -52,6 +63,7 @@ public class PublicMatchService
 		private final UserMatchesRepository userMatchesRepo;
 		private final UserRepository userRepository;
 		private final MMatchesRepository mMatchesRepository;
+		private final MMatchesRepositoryCustomImpl mMatchesRepositoryCustomImpl;
 		private final UserService userService;
 		private final ModelMapper modelMapper;
 		private final int count = 99; 		// api에 요청할 찾을 데이터 수
@@ -59,7 +71,7 @@ public class PublicMatchService
 		private final int limitRequestForSecond = 20; // 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 		private final int limitRequestFor2Min = 100; // 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 
-		// DB에서 꺼내서 데이터를 보여준다.
+		// DB에서 꺼내기) DB에서 페이지만큼 데이터를 꺼내서 리턴한다
 		@Transactional
 		public ResponseEntity<List<MatchDTO>> findMatchDataInDB(String name, String tag, Pageable page) throws Exception
 			{
@@ -86,7 +98,7 @@ public class PublicMatchService
 
 			}
 
-		// 전적갱신 버튼을 눌렀을 때 Riot API에서 데이터를 갖고 와서 최신화하는 메소드
+		// RiotApi DB 최신화) 전적갱신 버튼을 눌렀을 때 Riot API에서 데이터를 갖고 와서 최신화하는 메소드
 		@Transactional
 		public ResponseEntity<String> updateMatchDataForAPI(String _name, String _tag) throws Exception
 			{
@@ -109,17 +121,18 @@ public class PublicMatchService
 				LocalDateTime dateLastUpdatTime = user.getLastUpdateDate();
 
 				long stampLastUpdateTime = DateTimeUtils.localDateTimeToSeconsEpoch(dateLastUpdatTime);
-
+				
+				System.out.println("=== test user.puuid: " + user.getPuuid());
+				System.out.println("=== test stampLastUpdateTime: " + stampLastUpdateTime);
 				try
 					{
 						// 2. 타임 스탬프 값을 기준으로 api에 요청해서 matchID들을 갖고 온다.
 						List<String> matchIds = getMatchIDsForAPI(user.getPuuid(), stampLastUpdateTime);
-						System.out.println("=== size: " + matchIds.size());
+						System.out.println("=== test size: " + matchIds.size());
 						// 3. ID값들을 DTO로 변환하고 저장한다.
 						for (int i = 0; i < matchIds.size(); i++)
 							{
 								// api에 ID의 데이터 요청
-								System.out.println("=== matchIds.get(i) : " + matchIds.get(i));
 								MatchDTO dto = changeJSONToDTOMatchData(matchIds.get(i));
 
 								if (dto != null)
@@ -136,7 +149,26 @@ public class PublicMatchService
 
 			}
 
+		// 통계) DB에서 최근 전적 통계를 보여주는 메소드
+		public ResponseEntity<List<RecenetMatchDataEntity>> getRecentData(String _name, String _tag) throws Exception
+			{
+				UserDTO user = userService.searchUser(_name, _tag);
+				
+				if(user == null)
+					{
+						// user 에 대한 정보 받아오지 못하면 error 출력
+						throw new Exception("getRecentData 메소드에서 user 데이터를 받아오지 못했습니다.");
+					}
+				
+			    // MongoDB Aggregation Pipeline
+				List<RecenetMatchDataEntity> result
+				 = mMatchesRepositoryCustomImpl.getRecentMatchStatsForUser(user.getPuuid());
+
+			    // 결과 반환
+			    return ResponseEntity.status(HttpStatus.OK).body(result);
+			}
 		// ----------------------------- 함수에서 쓰일 함수들 ---------------------------------
+		// 매치데이터를 DB에서 페이징해서 갖고 온다
 		private Page<MMatchEntity> getMatchDataInDB(String puuid, Pageable page)
 			{
 				// DB에서 matchEntity 20개 받아오는 함수
@@ -146,10 +178,26 @@ public class PublicMatchService
 				return mMatchesRepository.findByInfoParticipantsPuuid(puuid, page);
 			}
 
+		public List<MatchDTO> getMatchDataInDB(String puuid) throws Exception{
+			// puuid를 통해 MongoDB에 저장되어있는 소환사의 매치데이터 list 받아옴
+			List<MMatchEntity> tmp = mMatchesRepository.findByInfoParticipantsPuuid(puuid);
+			// 받아온 데이터를 반환해 줄 list<DTO> 생성
+			List<MatchDTO> list = new ArrayList<>();
+			// 검색한 유저의 매치데이터가 없으면(개수가 1보다 작으면) null 반환
+			if(tmp.size() < 1){
+				throw new DataNotFoundException("해당하는 유저가 없거나 매치데이터가 존재하지 않습니다.");
+			}
+			// 받아온 데이터를 DTO로 변환하여 list에 저장
+			tmp.forEach(entity -> list.add(getEntityToDto(entity)));
+			// 변환된 list 반환
+			return list;
+		}
+
 		// api에 요청하여 match id들을 갖고오는 함수
 		private List<String> getMatchIDsForAPI(String puuid, long startTime) throws Exception
 			{
 				// API에 요청해서 전적갱신 시간 ~ 현재까지의 데이터를 조회한다
+				// 조회 시작시간이 시즌 시작일보다 과거라면, 시즌 시작일부터 조회한다.
 				startTime = (startTime < RiotSeasonConstants.getNowStartSeasonTimeStamp())
 						? RiotSeasonConstants.getNowStartSeasonTimeStamp()
 						: startTime;
@@ -166,16 +214,21 @@ public class PublicMatchService
 				// 인덱스가 발견된 경우에는 루프를 종료한다
 				while (arrStr.length >= count)
 					{
+						System.out.println("=== test start: " + start); 
+						System.out.println("=== test getNowTimeStamp: " + RiotSeasonConstants.getNowTimeStamp());
 						// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
 						arrStr = RiotApiClient.getMatchList(puuid, start, count, startTime,
 								RiotSeasonConstants.getNowTimeStamp());
 
 						start += count;
 
+						System.out.println("=== test arrStr: " + arrStr.length);
+						
 						// list에 [0]최근 ~ [size()-1]오래된 순으로 저장한다.
 						for (int i = 0; i < arrStr.length; i++)
 							{
-								System.out.println("=== arrStr " + i + " " + arrStr[i] + " "+ mMatchesRepository.existsById(arrStr[i]));
+								System.out.println("=== test arrStr[i]: " + arrStr[i]);
+								
 								if(!mMatchesRepository.existsById(arrStr[i]))
 									listUserMatches.add(arrStr[i]);
 							}
@@ -226,9 +279,9 @@ public class PublicMatchService
 				result.setMetadata(metadata);
 				result.setInfo(info);
 
-				System.out.println("result: " + result +
-								   "\n matchId: " + result.getMatchId()
-								   + "\n match: " + result.getMetadata().getParticipants().get(0));
+//				System.out.println("result: " + result +
+//								   "\n matchId: " + result.getMatchId()
+//								   + "\n match: " + result.getMetadata().getParticipants().get(0));
 				return result;
 			}
 

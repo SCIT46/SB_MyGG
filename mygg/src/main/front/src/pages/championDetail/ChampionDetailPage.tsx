@@ -106,25 +106,6 @@ const SkillImg = styled.img`
   }
 `;
 
-const ChampionDescriptionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 60rem;
-
-  @media (max-width: 60rem) {
-    width: 80%;
-  }
-`;
-
-const ChampionDescriptionContent = styled.p`
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: ${({ theme }) => theme.colors.text.secondary};
-`;
-
 // '/champion/:id' 라우트 이동시 랜더링 되는 컴포넌트
 export default function ChampionDetailPage() {
   const { id } = useParams();

@@ -14,10 +14,10 @@ import com.mygg.sb.match.entity.MMatchEntity;
 @Repository
 public interface MMatchesRepository extends MongoRepository<MMatchEntity, String>
 	{
-		public Optional<MMatchEntity> findByInfoParticipantsPuuid(String puuid);
+		public List<MMatchEntity> findByInfoParticipantsPuuid(String puuid);
 
 		//@Query(value = "{ 'info.participants.puuid': ?0 }", sort = "{ 'info.gameEndTimestamp': 1 }")
 		public Page<MMatchEntity> findByInfoParticipantsPuuidOrderByInfoGameEndTimestamp(String puuid, Pageable pageable);
 
-		public Page<MMatchEntity> findByInfoParticipantsPuuid(String puuid, Pageable page);	
+		public Page<MMatchEntity> findByInfoParticipantsPuuid(String puuid, Pageable page);		
 	}

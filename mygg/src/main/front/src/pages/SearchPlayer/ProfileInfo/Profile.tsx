@@ -121,7 +121,6 @@ export default function Profile({
 }: IProfileProps) {
   const version = useCurrentVersionStore((state) => state.version);
   const [isLoading, setIsLoading] = useState(false);
-  const [isRecentRenewed, setIsRecentRenewed] = useState(false);
   const { setRefreshKey } = useMatchRefreshStore();
   const navigate = useNavigate();
 

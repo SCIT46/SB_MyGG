@@ -28,14 +28,10 @@ public class RiotSeasonConstants
 		
 		public static final long getNowTimeStamp() 
 		{
-<<<<<<< HEAD
-		    return Instant.now().getEpochSecond();
-=======
 			// return System.currentTimeMillis()/1000;
-		    return Instant.ofEpochMilli(System.currentTimeMillis())
-	                  .atZone(ZoneId.of("UTC"))
-	                  .toEpochSecond();
->>>>>>> 3690374fe2aef20333f046dfb27e0d444cd82d19
+			return Instant.ofEpochMilli(System.currentTimeMillis())
+						.atZone(ZoneId.of("UTC"))
+						.toEpochSecond();
 		};
 
 	}

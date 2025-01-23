@@ -9,6 +9,7 @@ import com.mygg.sb.exception.custom.DataNotFoundException;
 import com.mygg.sb.exception.custom.RiotApiBadRequest;
 import com.mygg.sb.exception.custom.RiotApiForbidden;
 import com.mygg.sb.exception.custom.RiotApiNotFound;
+import com.mygg.sb.exception.custom.RiotApiTooManyRequests;
 import com.mygg.sb.exception.dto.ErrorDTO;
 
 @RestControllerAdvice
@@ -31,5 +32,10 @@ public class CustomExceptionHandler {
     @ExceptionHandler(RiotApiBadRequest.class)
     public ResponseEntity<ErrorDTO> handleRiotApiBadRequest(RiotApiBadRequest e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDTO(400,HttpStatus.BAD_REQUEST, "API 요청에 문제가 있습니다.", e.getMessage()));
+    }
+
+    @ExceptionHandler(RiotApiTooManyRequests.class)
+    public ResponseEntity<ErrorDTO> handleRiotApiTooManyRequests(RiotApiTooManyRequests e) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(new ErrorDTO(429,HttpStatus.TOO_MANY_REQUESTS, "API의 요청 제한을 초과했습니다.", e.getMessage()));
     }
 }

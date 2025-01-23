@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import com.mygg.sb.exception.custom.RiotApiBadRequest;
 import com.mygg.sb.exception.custom.RiotApiForbidden;
 import com.mygg.sb.exception.custom.RiotApiNotFound;
+import com.mygg.sb.exception.custom.RiotApiTooManyRequests;
 import com.mygg.sb.statics.api.RiotApiConstants;
 
 public class UrlToJson {
@@ -56,6 +57,8 @@ public class UrlToJson {
                 throw new RiotApiNotFound("Riot API 응답이 올바르지 않습니다.");
             case 400:
                 throw new RiotApiBadRequest("Riot API 요청이 올바르지 않습니다.");
+            case 429:
+                throw new RiotApiTooManyRequests("Riot API의 요청 제한을 초과했습니다.");
             default:    //unexpected exception
                 throw new RuntimeException("Riot API Error 코드: " + responseCode + ", 응답: " + userJSON);
         }

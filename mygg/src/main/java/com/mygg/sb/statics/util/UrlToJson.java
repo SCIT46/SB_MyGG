@@ -60,9 +60,11 @@ public class UrlToJson {
             case 429:
                 // 429: api리퀘스트 초과
                 // 25/2/5 추가: 라이엇 API 리미트 초과 → Retry-After 값을 가져옴
-                String retryAfter = connection.getHeaderField("Retry-After");
-                return "error429@" + retryAfter;
-                // throw new RiotApiTooManyRequests("Riot API의 요청 제한을 초과했습니다." + waitTime + "초 후에 다시 시도하세요");
+                String retryAfter         = connection.getHeaderField("Retry-After");
+                String xAppRateLimit      = connection.getHeaderField("X-App-Rate-Limit");
+                String xAppRateLimitCount = connection.getHeaderField("X-App-Rate-Limit-Count");
+                throw new RiotApiTooManyRequests("Riot API의 요청 제한을 초과했습니다.", 
+                        xAppRateLimit, retryAfter, xAppRateLimitCount);
             default:    //unexpected exception
                 throw new RuntimeException("Riot API Error 코드: " + responseCode + ", 응답: " + userJSON);
         }

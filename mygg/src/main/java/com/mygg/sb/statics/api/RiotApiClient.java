@@ -125,20 +125,6 @@ public class RiotApiClient {
         // url을 json으로 변환
         String matchJSON = UrlToJson.urlToJson(UrlToJson.urlConvertor("matchInfo", matchId));
 
-        // 25/2/5 api request 요청이 넘을 경우 요청에 필요한 남은 시간값과 함께 리턴
-        // 429: api리퀘스트 초과
-        // 25/2/5 추가: 라이엇 API 리미트 초과 → Retry-After 값을 가져옴
-        if(matchJSON.contains("error429"))
-        {
-            String[] str = matchJSON.split("@");
-            int time = Integer.parseInt(str[1]); // 초 단위로 시간 정보 반환
-            JSONObject object = new JSONObject();
-            object.put("error429", "429");
-            object.put("time", time);
-
-            return object;
-        }
-
         // JSON 데이터를 분석해주는 JSONParser 객체 생성
         JSONParser parser = new JSONParser();
         

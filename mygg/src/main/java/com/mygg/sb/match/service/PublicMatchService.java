@@ -20,13 +20,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.mygg.sb.match.MatchInfoDTO;
 import com.mygg.sb.exception.custom.DataNotFoundException;
 import com.mygg.sb.exception.custom.RiotApiTooManyRequests;
 import com.mygg.sb.match.MatchDTO;
-import com.mygg.sb.match.MatchError429DTO;
 import com.mygg.sb.match.MetadataDTO;
 import com.mygg.sb.match.analist.dto.MRecentMatchDTO;
 import com.mygg.sb.match.analist.entity.MRecentMatchEntity;
@@ -66,13 +66,14 @@ public class PublicMatchService {
 	private final UserRepository userRepository;
 	private final MMatchesRepository mMatchesRepository;
 	private final MMatchesRepositoryCustomImpl mMatchesRepositoryCustomImpl;
+	private final GlobalMatchQueueService queueService;	// 25/2/7 큐 시스템 service로 뺌뺌
 	private final UserService userService;
 	private final ModelMapper modelMapper;
 	private final int count = 99; // api에 요청할 찾을 데이터 수
 	private final int pageSize = 20; // 화면상 전적 데이터 보여줄 개수
 	private final int limitRequestForSecond = 20; // 초당 요청제한 갯수(데이터 크기X, 데이터 요청임)
 	private final int limitRequestFor2Min = 100; // 2분당 요청제한 갯수(데이터 크기X, 데이터 요청임)
-	private final ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<String>(); // 25/2/5 큐 시스템 추가
+	
 
 	// DB에서 꺼내기) DB에서 페이지만큼 데이터를 꺼내서 리턴한다
 	@Transactional
@@ -99,14 +100,14 @@ public class PublicMatchService {
 
 	// RiotApi DB 최신화) 전적갱신 버튼을 눌렀을 때 Riot API에서 데이터를 갖고 와서 최신화하는 메소드
 	@Transactional
-	public ResponseEntity<String> updateMatchDataForAPI(String _name, String _tag) throws Exception {
-		// Todo) DB에 있는 User 전적버튼 시간 갱신
-		// DB에 있는 매치ID면 API에 요청 안 보내기.
-
+	@Async
+	public ResponseEntity<String> updateMatchDataForAPI(String _name, String _tag) throws Exception 
+	{	
 		// 1. user의 전적갱신 타임스탬프를 갖고 온다.
 		UserDTO user = userService.searchUser(_name, _tag);
 
-		if (user == null) {
+		if (user == null) 
+		{
 			throw new DataNotFoundException("err: matchDataUpdateForAPI에서 DB에서 user를 못 찾았습니다.");
 		}
 
@@ -118,36 +119,39 @@ public class PublicMatchService {
 
 		long stampLastUpdateTime = DateTimeUtils.localDateTimeToSeconsEpoch(dateLastUpdatTime);
 
-		//System.out.println("=== test user.puuid: " + user.getPuuid());
-		//System.out.println("=== test stampLastUpdateTime: " + stampLastUpdateTime);
+		List<String> matchIds = new ArrayList<>();
+		int curDataIndex = 0;	// 429 에러 뜰 경우 쓸 인덱스스
 		try {
 			// 2. 타임 스탬프 값을 기준으로 api에 요청해서 matchID들을 갖고 온다.
-			List<String> matchIds = getMatchIDsForAPI(user.getPuuid(), stampLastUpdateTime);
-			//System.out.println("=== test size: " + matchIds.size());
+			getMatchIDsForAPI(user.getPuuid(), stampLastUpdateTime, matchIds);
+
 			// 3. ID값들을 DTO로 변환하고 저장한다.
 			for (int i = 0; i < matchIds.size(); i++) {
 				// api에 ID의 데이터 요청
+				curDataIndex = i;
 				MatchDTO dto = changeJSONToDTOMatchData(matchIds.get(i));
 
-				// 25/2/6 error 429 리퀘스트 초과시 예외처리
-				if (dto.getMatchId().equals("error429"))
+				if (dto != null) 
 				{
-					MatchError429DTO error429dto = (MatchError429DTO) dto;
-					String waitTime = error429dto.getWaitTime();
-					
-					queue.addAll(matchIds.subList(i, matchIds.size() - 1));
-					throw new RiotApiTooManyRequests("Riot API의 요청 제한을 초과했습니다." + waitTime + "초 후에 다시 시도하세요");
-				}
-				else if (dto != null) {
 					mMatchesRepository.save(getDTOToEntity(dto));
 				}
 			}
 
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body("good succeced");
-		} catch (Exception e) {
+		}
+		catch(RiotApiTooManyRequests ee)
+		{
+			// 리퀘스트 api 제한 초과시 throw 발생시킨다.
+			if (matchIds != null)
+			{
+				queueService.addAll(matchIds.subList(curDataIndex, matchIds.size()));
+			}
+
+			throw ee;
+		}
+		catch (Exception e) {
 			throw new Exception("DTO Entity 변환 과정 중 에러가 발생했습니다" + e.getMessage());
 		}
-
 	}
 
 	// 통계) DB에서 최근 전적 통계를 보여주는 메소드
@@ -192,7 +196,8 @@ public class PublicMatchService {
 	}
 
 	// api에 요청하여 match id들을 갖고오는 함수
-	private List<String> getMatchIDsForAPI(String puuid, long startTime) throws Exception {
+	private void getMatchIDsForAPI(String puuid, long startTime, List<String> listUserMatches) throws Exception 
+	{
 		// API에 요청해서 전적갱신 시간 ~ 현재까지의 데이터를 조회한다
 		// 조회 시작시간이 시즌 시작일보다 과거라면, 시즌 시작일부터 조회한다.
 		startTime = (startTime < RiotSeasonConstants.getNowStartSeasonTimeStamp())
@@ -200,40 +205,50 @@ public class PublicMatchService {
 				: startTime;
 
 		// 1. api에 요청해서 최근 매치 데이터 100개를 갖고 오는 로직
-		List<String> listUserMatches = new ArrayList<>(); // matchId들이 저장된 곳
 		String[] arrStr = new String[100]; // 매치 ID 저장할 곳(KR_...)
 		int start = 0; // 찾기 시작하는 위치
 
-		// --------------------- api로부터 데이터 탐색
-		// --------------------------------------------------------------
+		// --------------------- api로부터 데이터 탐색 ---------------------
 		// 종료조건:
 		// - 매치 데이터에 기간을 두고, 그 기간 안의 데이터가 100개가 아닌 경우 혹은
 		// 인덱스가 발견된 경우에는 루프를 종료한다
-		while (arrStr.length >= count) {
-			//System.out.println("=== test start: " + start);
-			//System.out.println("=== test getNowTimeStamp: " + RiotSeasonConstants.getNowTimeStamp());
-			// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
-			arrStr = RiotApiClient.getMatchList(puuid, start, count, startTime,
-					RiotSeasonConstants.getNowTimeStamp());
+		while (arrStr.length >= count) 
+		{
+			try {
+				// arrStr: 일정 기간 동안의 matchID 100 개를 갖고 온다
+				arrStr = RiotApiClient.getMatchList(puuid, start, count, startTime,
+						RiotSeasonConstants.getNowTimeStamp());
 
-			start += count;
+				start += count;
 
-			//System.out.println("=== test arrStr: " + arrStr.length);
+				// list에 최근부터 ~ 오래된 순으로 저장한다.
+				for (int i = 0; i < arrStr.length; i++) 
+				{
+					// DB에 이미 존재한다면 API 요청 대상에서 제외한다
+					if (!mMatchesRepository.existsById(arrStr[i]))
+						listUserMatches.add(arrStr[i]);
+				}
+			} 
+			 catch (RiotApiTooManyRequests e) 
+			{
+				String s1 = e.getRetryAfter();
+				String s2 = e.getXAppRateLimit();
+				String s3 = e.getXAppRateLimitCount();
 
-			// list에 [0]최근 ~ [size()-1]오래된 순으로 저장한다.
-			for (int i = 0; i < arrStr.length; i++) {
-				//System.out.println("=== test arrStr[i]: " + arrStr[i]);
-
-				if (!mMatchesRepository.existsById(arrStr[i]))
-					listUserMatches.add(arrStr[i]);
+				System.out.println("================================");
+				System.out.println("riot api request 요청수 초과 에러 발생");
+				System.out.printf("%d %d %d", s1, s2, s3);
+				throw e; //RiotApiTooManyRequests("request too many",s1, s2, s3);
 			}
-		}
+			catch(Exception e)
+			{
+				throw e;
+			}
 
-		// 0: 최근, size()-1: 오래된 데이터
-		return listUserMatches;
+		}
 	}
 
-	// api에 요청하여 matchId를 Json matchData로 바꿔서 List<matchDTO>로 변환해서 반환
+	// api에 요청하여 matchId를 Json matchData로 반환
 	public MatchDTO changeJSONToDTOMatchData(String matchId) throws Exception {
 		// matchid를 api에게 요청해서 받아오고 MatchDTO를 반환하는 함수
 
@@ -241,22 +256,12 @@ public class PublicMatchService {
 		MetadataDTO metadata = new MetadataDTO();
 		MatchInfoDTO info = new MatchInfoDTO();
 
-		// matchId로 매치 정보(JSONObject) 변환 // String 형태의 JSON 데이터를 JSONObject(HashMap)형
-		// jsonObject로 변환
 		// 예외처리) 이미 DB내에 해당 매치 정보가 있으면 api에 데이터를 요청하지 않음
-		if (mMatchesRepository.existsById(matchId)) {
-			return null;
-		}
+		if (mMatchesRepository.existsById(matchId)) return null;
 
 		// 매치 아이디를 JSONObject로 반환하는 곳
 		JSONObject jsonObject = RiotApiClient.getMatchInfo(matchId); // (JSONObject) parser.parse(matchJSON);
-		String _str = jsonObject.get("error429") != null? (String)jsonObject.get("error429") : null;
-		if(_str != null)
-		{
-			MatchDTO dto = new MatchError429DTO((String)jsonObject.get("time"));
-			dto.setMatchId(_str);
-			return dto;
-		}
+
 		JsonToDTOMapper mapper = new JsonToDTOMapper();
 
 		// result = mapper.mapToDto(jsonObject, MatchDTO.class);

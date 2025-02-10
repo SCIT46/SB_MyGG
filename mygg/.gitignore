@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### ignore React Builded View Files ###
+/src/main/resources/static/static/**
+

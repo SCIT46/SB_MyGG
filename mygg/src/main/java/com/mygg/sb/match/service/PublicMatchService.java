@@ -215,12 +215,15 @@ public class PublicMatchService
 				while (arrStr.length >= count)
 					{
 						System.out.println("=== test start: " + start); 
+						System.out.println("=== test getNowTimeStamp: " + RiotSeasonConstants.getNowTimeStamp());
 						// arrStr: 일정 기간 내에 100개의 게임 매치ID를 갖고 온다
 						arrStr = RiotApiClient.getMatchList(puuid, start, count, startTime,
 								RiotSeasonConstants.getNowTimeStamp());
 
 						start += count;
 
+						System.out.println("=== test arrStr: " + arrStr.length);
+						
 						// list에 [0]최근 ~ [size()-1]오래된 순으로 저장한다.
 						for (int i = 0; i < arrStr.length; i++)
 							{

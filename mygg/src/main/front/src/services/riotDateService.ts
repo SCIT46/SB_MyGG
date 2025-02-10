@@ -110,3 +110,14 @@ export const updateUser = async (
   const data = await apiClient.get(`/user/update/${userName}/${tagLine}`);
   return data;
 };
+
+// (13) 최근 전적 20개, DB에서 조회
+export const getRecentMatch = async (
+  userName: string,
+  tagLine: string
+): Promise<any> => {
+  const { data } = await apiClient.get(
+    `/match/recentData/${userName}/${tagLine}`
+  );
+  return data;
+};

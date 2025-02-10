@@ -146,7 +146,7 @@ export default function SearchPlayerPage() {
             tier={user?.tier}
             wins={user?.wins}
           />
-          <ChampInfo />
+          <ChampInfo gameName={user?.gameName} tagLine={user?.tagLine} />
         </LeftContainer>
         <Match
           userName={user?.gameName}

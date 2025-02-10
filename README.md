@@ -8,9 +8,10 @@ MyGG는 League of Legends 게임의 전적 검색 및 통계 분석을 제공하
 ## 🛠 기술 스택
 ### Backend
 - Java 17
-- Spring Boot
+- Spring Boot 3.x
 - JPA/Hibernate
 - MySQL
+- MongoDB
   
 ### Frontend
 - React

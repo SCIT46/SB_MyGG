@@ -43,7 +43,7 @@ jobs:
       run: |
         mkdir -p ./src/main/resources
         echo "${{ secrets.DATABASE_SETTING }}" >> ./src/main/resources/application.properties
-        echo "api_key = ${{ secrets.YML }}" >> ./src/main/resources/application.properties
+        echo "api_key = ${{ secrets.PROD_API_KEY }}" >> ./src/main/resources/application.properties
       shell: bash
 
       # Gradle 빌드 및 테스트

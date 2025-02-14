@@ -77,6 +77,7 @@ public class PublicMatchService {
 
 	// DB에서 꺼내기) DB에서 페이지만큼 데이터를 꺼내서 리턴한다
 	@Transactional
+	@Async
 	public ResponseEntity<List<MatchDTO>> findMatchDataInDB(String name, String tag, Pageable page) throws Exception {
 		try {
 			UserDTO user = userService.searchUser(name, tag);
@@ -95,7 +96,6 @@ public class PublicMatchService {
 		} catch (Exception e) {
 			throw new Exception("matchData DB err: " + e.getMessage());
 		}
-
 	}
 
 	// RiotApi DB 최신화) 전적갱신 버튼을 눌렀을 때 Riot API에서 데이터를 갖고 와서 최신화하는 메소드

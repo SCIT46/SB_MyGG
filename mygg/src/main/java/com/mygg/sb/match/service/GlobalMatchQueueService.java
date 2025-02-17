@@ -18,8 +18,6 @@ public class GlobalMatchQueueService
 {
     private final ConcurrentLinkedQueue<String> globalQueue = new ConcurrentLinkedQueue<>();
     private PublicMatchService publicMatchService;
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();  // 하나의 쓰레드만 사용
-    private boolean isQueueProcessing = false;  // 큐 처리가 진행 중인지 여부
 
     @Lazy // 지연 로딩 적용
     @Autowired
@@ -37,23 +35,23 @@ public class GlobalMatchQueueService
     	
         try 
         {
-        	System.out.println("======================= run 작동 =======================");
-        	System.out.println("globalQueue size: " + globalQueue.size());
+        	// System.out.println("======================= run 작동 =======================");
+        	// System.out.println("globalQueue size: " + globalQueue.size());
         	
         	publicMatchService.changeJSONToDTOMatchData(globalQueue.peek());
         	globalQueue.poll();
         } 
         catch (RiotApiTooManyRequests e) 
         {
-        	System.out.println("======================= sleep 작동 =======================");
-        	System.out.println(Integer.parseInt(e.getRetryAfter()));
+        	// System.out.println("======================= sleep 작동 =======================");
+        	// System.out.println(Integer.parseInt(e.getRetryAfter()));
         	
             Thread.sleep(Integer.parseInt(e.getRetryAfter()));
         }
         catch (Exception e)
         {
-        	System.out.println("======================= exception Err=======================");
-        	System.out.println(e.getMessage());
+        	// System.out.println("======================= exception Err=======================");
+        	// System.out.println(e.getMessage());
             throw new Exception("Queue System에서 에러가 발생했습니다" + e.getMessage());
         }
     }
@@ -61,10 +59,10 @@ public class GlobalMatchQueueService
     // 매치 ID를 큐에 추가
     public void addAll(List<String> matchIds) 
     {
-    	System.out.println("================== addAll 작동 ==================");
-    	System.out.println(matchIds);
+    	// System.out.println("================== addAll 작동 ==================");
+    	// System.out.println(matchIds);
     	
-    	matchIds.forEach(name->System.out.println(name));
+    	// matchIds.forEach(name->System.out.println(name));
     	
         globalQueue.addAll(matchIds);
     }

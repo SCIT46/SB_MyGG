@@ -155,7 +155,9 @@ public class PublicMatchService {
 	}
 
 	// 통계) DB에서 최근 전적 통계를 보여주는 메소드
-	public ResponseEntity<List<RecenetMatchDataEntity>> getRecentData(String _name, String _tag) throws Exception {
+	@Transactional
+	public ResponseEntity<List<RecenetMatchDataEntity>> getRecentData(String _name, String _tag) throws Exception 
+	{
 		UserDTO user = userService.searchUser(_name, _tag);
 
 		if (user == null) {

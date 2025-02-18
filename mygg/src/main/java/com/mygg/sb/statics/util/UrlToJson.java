@@ -58,7 +58,13 @@ public class UrlToJson {
             case 400:
                 throw new RiotApiBadRequest("Riot API 요청이 올바르지 않습니다.");
             case 429:
-                throw new RiotApiTooManyRequests("Riot API의 요청 제한을 초과했습니다.");
+                // 429: api리퀘스트 초과
+                // 25/2/5 추가: 라이엇 API 리미트 초과 → Retry-After 값을 가져옴
+                String retryAfter         = connection.getHeaderField("Retry-After");
+                String xAppRateLimit      = connection.getHeaderField("X-App-Rate-Limit");
+                String xAppRateLimitCount = connection.getHeaderField("X-App-Rate-Limit-Count");
+                throw new RiotApiTooManyRequests("Riot API의 요청 제한을 초과했습니다.", 
+                        xAppRateLimit, retryAfter, xAppRateLimitCount);
             default:    //unexpected exception
                 throw new RuntimeException("Riot API Error 코드: " + responseCode + ", 응답: " + userJSON);
         }

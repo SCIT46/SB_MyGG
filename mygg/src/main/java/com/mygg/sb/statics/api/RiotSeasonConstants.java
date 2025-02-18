@@ -26,6 +26,7 @@ public class RiotSeasonConstants
 		public static final long SEASON_2024_SPLIT1_START = (LocalDateTime.of(2024, 1, 10, 12, 0)).atZone(ZoneId.of("UTC")).toEpochSecond(); 
 		public static final LocalDateTime SEASON_2024_SPLIT1_END = LocalDateTime.of(2024, 5, 15, 2, 0);
 		
+<<<<<<< HEAD
 		public static final long getNowTimeStamp() 
 		{
 			// return System.currentTimeMillis()/1000;
@@ -33,5 +34,8 @@ public class RiotSeasonConstants
 						.atZone(ZoneId.of("UTC"))
 						.toEpochSecond();
 		};
+=======
+		public static final long getNowTimeStamp() { return Instant.now().getEpochSecond(); };
+>>>>>>> queueSystem
 
 	}

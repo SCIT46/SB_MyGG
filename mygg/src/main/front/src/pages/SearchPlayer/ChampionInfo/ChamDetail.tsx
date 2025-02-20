@@ -1,24 +1,20 @@
 import styled from "styled-components";
+import IRecentAnaylsis from "../../../interfaces/IRecentAnaylsis";
+import ChampionImage from "../../../components/ImageUI/ChampionImage";
 
 const ChampContainer = styled.div`
+  margin-top: 10px;
   width: 90%;
   background-color: #dbdbdb;
-  height: 60px;
+  height: 40px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 10px;
-  margin-bottom: 10px;
+  padding: 5px;
 `;
 
-const ChampImg = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-  background-color: beige;
-  margin-left: 8px;
-`;
 const ChamNameSpan = styled.div`
   margin-left: -7px;
 `;
@@ -45,18 +41,21 @@ const WinRateContainer = styled.div`
   margin-left: 5px;
 `;
 
-export default function ChampDetail() {
+export default function ChampDetail({ data }: { data: IRecentAnaylsis }) {
+  console.log(data);
   return (
     <ChampContainer>
-      <ChampImg />
-      <ChamNameSpan>챔피언</ChamNameSpan>
+      <ChampionImage championId={data.championName} width={35} height={35} />
+      <ChamNameSpan>{data.championName}</ChamNameSpan>
       <KdaContainer>
-        <ChamKdaSpan>3.33 kda</ChamKdaSpan>
-        <ChamKdaDetailSpan>10 / 6 / 10</ChamKdaDetailSpan>
+        <ChamKdaSpan>{data.kda.toFixed(2)} kda</ChamKdaSpan>
+        <ChamKdaDetailSpan>
+          {data.kill} / {data.death} / {data.assist}
+        </ChamKdaDetailSpan>
       </KdaContainer>
       <WinRateContainer>
-        <ChamWinRateSpan>60 %</ChamWinRateSpan>
-        <ChamGameSpan>200 게임</ChamGameSpan>
+        <ChamWinRateSpan> %</ChamWinRateSpan>
+        <ChamGameSpan>{data.gameCnt} 게임</ChamGameSpan>
       </WinRateContainer>
     </ChampContainer>
   );

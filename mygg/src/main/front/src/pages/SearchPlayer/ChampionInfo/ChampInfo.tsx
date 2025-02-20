@@ -29,7 +29,7 @@ export default function ChampInfo({
       setRecentAnaylsis(data);
       console.log(data);
     });
-  }, []);
+  }, [gameName, tagLine]);
   return (
     <ChampInfoContainer>
       {recentAnaylsis.map((data, index) => (

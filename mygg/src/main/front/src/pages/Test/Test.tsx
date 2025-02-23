@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { getRecentMatch } from "../../services/riotDateService";
 import ChampionImage from "../../components/ImageUI/ChampionImage";
 

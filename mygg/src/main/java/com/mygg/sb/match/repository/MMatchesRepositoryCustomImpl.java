@@ -27,7 +27,7 @@ public class MMatchesRepositoryCustomImpl implements MMatchesRepositoryCustom
 					    Aggregation.match(Criteria.where("info.participants.puuid").is(puuid)),
 					    Aggregation.sort(Sort.by(Sort.Order.desc("info.gameEndTimestamp"))),
 //					    Aggregation.limit(20),
-					    Aggregation.match(Criteria.where("info.queueId").is(420)),	// 420: soloRank 440: FreeRank
+					    Aggregation.match(Criteria.where("info.queueId").in(420, 440)),	// 420: soloRank 440: FreeRank
 					    Aggregation.unwind("info.participants"),
 					    Aggregation.match(Criteria.where("info.participants.puuid").is(puuid)),
 					    Aggregation.group("info.participants.championId")

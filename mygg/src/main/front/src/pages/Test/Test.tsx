@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { getRecentMatch } from "../../services/riotDateService";
 import ChampionImage from "../../components/ImageUI/ChampionImage";
-
-const GradientBackground = styled.div`
-  margin: 0;
-  min-height: 100vh;
-  color: #333;
-  font-family: sans-serif;
-`;
 
 interface IRecentAnaylsis {
   championId: number;
